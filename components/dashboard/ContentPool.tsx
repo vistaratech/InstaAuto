@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { createBrowserClient } from "@supabase/ssr"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -10,12 +9,6 @@ import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { Loader2, Plus, Trash2, Upload, Film, Link as LinkIcon, CheckCircle, FileJson, Instagram, Search } from "lucide-react"
 import { toast } from "sonner"
-
-// Initialize Authenticated Supabase Client
-const supabase = createBrowserClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-)
 
 interface ContentItem {
     id: string
@@ -296,18 +289,24 @@ export function ContentPool({ userId }: ContentPoolProps) {
                             addLog(`Processing Item ${i + 1}/${toImport.length}...`)
                             const safeBlob = await processVideoSafe(finalVideoUrl)
 
-                            // Upload Safe Blob to Supabase
-                            const fileName = `${userId}/remix_${Date.now()}_${i}.webm`
-                            addLog("7. Uploading Remix to Cloud...")
+                            // Upload Safe Blob to local server uploads directory
+                            addLog("7. Uploading Remix to local storage...")
+                            const formData = new FormData()
+                            formData.append("file", safeBlob, `remix_${Date.now()}_${i}.webm`)
+                            formData.append("userId", userId)
 
-                            const { error: uploadError } = await supabase.storage
-                                .from('reels')
-                                .upload(fileName, safeBlob)
+                            const uploadRes = await fetch("/api/upload", {
+                                method: "POST",
+                                body: formData
+                            })
 
-                            if (uploadError) throw uploadError
+                            if (!uploadRes.ok) {
+                                const errData = await uploadRes.json()
+                                throw new Error(errData.error || "Local upload failed")
+                            }
 
-                            const { data: { publicUrl } } = supabase.storage.from('reels').getPublicUrl(fileName)
-                            finalVideoUrl = publicUrl
+                            const uploadData = await uploadRes.json()
+                            finalVideoUrl = uploadData.publicUrl
                             addLog("8. Upload Success!")
 
                         } catch (remixErr: any) {
@@ -366,15 +365,22 @@ export function ContentPool({ userId }: ContentPoolProps) {
                     const fileExt = file.name.split('.').pop()
                     const fileName = `${userId}/${Date.now()}-${i}.${fileExt}`
 
-                    const { error: uploadError } = await supabase.storage
-                        .from('reels')
-                        .upload(fileName, file)
+                    const formData = new FormData()
+                    formData.append("file", file)
+                    formData.append("userId", userId)
 
-                    if (uploadError) throw uploadError
+                    const uploadRes = await fetch("/api/upload", {
+                        method: "POST",
+                        body: formData
+                    })
 
-                    const { data: { publicUrl } } = supabase.storage
-                        .from('reels')
-                        .getPublicUrl(fileName)
+                    if (!uploadRes.ok) {
+                        const errData = await uploadRes.json()
+                        throw new Error(errData.error || "Local upload failed")
+                    }
+
+                    const uploadData = await uploadRes.json()
+                    const publicUrl = uploadData.publicUrl
 
                     const finalCaption = caption || file.name.replace(/\.[^/.]+$/, "")
 

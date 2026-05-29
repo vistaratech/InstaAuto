@@ -1,5 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { createServerClient } from "@supabase/ssr"
+import { getSupabaseServerClient } from "@/lib/supabase-server"
 
 /**
  * POST /api/instagram/send-message
@@ -20,9 +20,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Missing required fields: user_id, recipient_id, message" }, { status: 400 })
     }
 
-    const supabase = createServerClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!, {
-      cookies: {},
-    })
+    const supabase = await getSupabaseServerClient()
 
     // Get user's access token
     const { data: user, error: userError } = await supabase
