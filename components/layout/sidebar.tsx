@@ -26,7 +26,7 @@ export function Sidebar({ className, username = "Demo User", onLogout, onNavigat
           <Instagram className="w-5 h-5" />
         </div>
         <div>
-          <h2 className="font-bold text-base tracking-tight text-white leading-none">InstaAuto</h2>
+          <h2 className="font-bold text-base tracking-tight text-white leading-none">Insta Autobot</h2>
           <span className="text-[10px] uppercase font-bold text-neutral-500 tracking-widest">Pro</span>
         </div>
       </div>

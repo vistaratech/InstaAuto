@@ -20,7 +20,7 @@ export function LandingPage() {
           <div className="w-8 h-8 bg-white text-black rounded-lg flex items-center justify-center">
             <Zap className="w-4 h-4" />
           </div>
-          <span className="text-lg font-bold tracking-tight">InstaAuto</span>
+          <span className="text-lg font-bold tracking-tight">Insta Autobot</span>
         </div>
         <Button
           onClick={handleLogin}
@@ -46,7 +46,7 @@ export function LandingPage() {
 
           <p className="text-lg text-neutral-500 max-w-lg mx-auto leading-relaxed">
             Set keyword triggers on comments & DMs. 
-            Let <strong className="text-white">InstaAuto</strong> handle the replies — 
+            Let <strong className="text-white">Insta Autobot</strong> handle the replies — 
             so you can focus on creating content.
           </p>
 
