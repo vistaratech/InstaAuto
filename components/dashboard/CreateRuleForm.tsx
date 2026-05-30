@@ -249,8 +249,8 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess }: CreateRuleF
               onClick={() => { setSelectedReel(reel); setShowReelPicker(false) }}
               className="w-full p-3 flex items-center gap-3 hover:bg-white/5 transition-colors text-left border-b border-white/5 last:border-0"
             >
-              {reel.image_url ? (
-                <img src={reel.image_url} alt="" className="w-10 h-10 rounded object-cover opacity-80" />
+              {reel.media_url || reel.thumbnail_url ? (
+                <img src={reel.thumbnail_url || reel.media_url} alt="" className="w-10 h-10 rounded object-cover opacity-80" />
               ) : (
                 <div className="w-10 h-10 rounded bg-white/5 flex items-center justify-center">
                   <Film className="w-4 h-4 text-neutral-600" />
@@ -398,8 +398,8 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess }: CreateRuleF
             >
               {selectedReel ? (
                 <>
-                  {selectedReel.image_url && (
-                    <img src={selectedReel.image_url} alt="" className="w-10 h-10 rounded object-cover" />
+                  {(selectedReel.media_url || selectedReel.thumbnail_url) && (
+                    <img src={selectedReel.thumbnail_url || selectedReel.media_url} alt="" className="w-10 h-10 rounded object-cover" />
                   )}
                   <div className="flex-1 min-w-0">
                     <p className="text-sm text-white truncate">{selectedReel.caption || 'No caption'}</p>

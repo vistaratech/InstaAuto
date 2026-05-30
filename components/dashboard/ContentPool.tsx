@@ -91,7 +91,7 @@ export function ContentPool({ userId }: ContentPoolProps) {
                 const data = await res.json()
                 // FILTER: User only calls for Reels/Videos
                 const allImport = data.data || []
-                const onlyReels = allImport.filter((m: any) => m.media_type === "VIDEO" || m.media_type === "REELS")
+                const onlyReels = allImport.filter((m: any) => m.media_type === "VIDEO" || m.media_type === "REELS" || m.media_type === "IMAGE" || m.media_type === "CAROUSEL_ALBUM")
                 setIgMedia(onlyReels)
             } else {
                 toast.error("Failed to fetch media")
@@ -121,10 +121,10 @@ export function ContentPool({ userId }: ContentPoolProps) {
             if (res.ok) {
                 // FILTER: User only calls for Reels/Videos
                 const allImport = data.data || []
-                const onlyReels = allImport.filter((m: any) => m.media_type === "VIDEO" || m.media_type === "REELS")
+                const onlyReels = allImport.filter((m: any) => m.media_type === "VIDEO" || m.media_type === "REELS" || m.media_type === "IMAGE" || m.media_type === "CAROUSEL_ALBUM")
                 setIgMedia(onlyReels)
 
-                if (onlyReels.length === 0) toast.info("No reels found (Images filtered out)")
+                if (onlyReels.length === 0) toast.info("No reels/posts found")
             } else {
                 toast.error(data.error || "Failed to spy")
             }
@@ -575,9 +575,9 @@ export function ContentPool({ userId }: ContentPoolProps) {
                                                 `}
                                                     >
                                                         {m.media_type === "VIDEO" || m.media_type === "REELS" ? (
-                                                            <video src={m.media_url} className="w-full h-full object-cover" />
+                                                            <img src={m.thumbnail_url || m.media_url} alt="" className="w-full h-full object-cover" />
                                                         ) : (
-                                                            <img src={m.media_url || m.thumbnail_url} className="w-full h-full object-cover" />
+                                                            <img src={m.media_url || m.thumbnail_url} alt="" className="w-full h-full object-cover" />
                                                         )}
                                                         {selectedIgMedia.includes(m.id) && (
                                                             <div className="absolute inset-0 bg-blue-500/30 flex items-center justify-center">
@@ -718,9 +718,9 @@ function MediaGrid({ media, selected, onToggle }: { media: ExternalMedia[], sele
                         `}
                     >
                         {item.media_type === "VIDEO" || item.media_type === "REELS" ? (
-                            <video src={item.media_url} className="w-full h-full object-cover" />
+                            <img src={item.thumbnail_url || item.media_url} alt="" className="w-full h-full object-cover" />
                         ) : (
-                            <img src={item.media_url || item.thumbnail_url} className="w-full h-full object-cover" />
+                            <img src={item.media_url || item.thumbnail_url} alt="" className="w-full h-full object-cover" />
                         )}
                         {isSelected && (
                             <div className="absolute inset-0 bg-blue-500/30 flex items-center justify-center">
