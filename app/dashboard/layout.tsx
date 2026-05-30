@@ -10,7 +10,7 @@ export default function DashboardLayout({
 }: {
     children: React.ReactNode
 }) {
-    const { username, logout, isLoading } = useInstagramSession()
+    const { username, logout, isLoading, error } = useInstagramSession()
 
     if (isLoading) {
         return (
@@ -40,6 +40,11 @@ export default function DashboardLayout({
                 </header>
 
                 <main className="flex-1 relative overflow-auto">
+                    {error && (
+                        <div className="bg-red-500/10 border border-red-500/30 text-red-400 px-4 py-3 text-sm m-4 rounded-lg">
+                            ⚠️ Login Error: {error}
+                        </div>
+                    )}
                     {children}
                 </main>
             </div>
