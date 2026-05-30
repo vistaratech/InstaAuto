@@ -1,4 +1,4 @@
-import { Client } from 'pg';
+import { Pool } from 'pg';
 import fs from 'fs';
 import path from 'path';
 
@@ -28,6 +28,9 @@ loadEnv();
 
 const connectionString = process.env.DATABASE_URL;
 
+// Module-level connection pool (shared across all queries, max 10 connections)
+const pool = connectionString ? new Pool({ connectionString, max: 10 }) : null;
+
 class NeonQueryBuilder {
   private tableName: string;
   private action: 'SELECT' | 'INSERT' | 'UPDATE' | 'DELETE' = 'SELECT';
@@ -37,6 +40,7 @@ class NeonQueryBuilder {
   private upsertData: any = null;
   private onConflictCol: string | null = null;
   private filters: { col: string; op: string; val: any }[] = [];
+  private orFilters: string | null = null;
   private orderByCol: string | null = null;
   private orderAscending: boolean = true;
   private limitValue: number | null = null;
@@ -126,6 +130,11 @@ class NeonQueryBuilder {
     return this;
   }
 
+  or(filterString: string) {
+    this.orFilters = filterString;
+    return this;
+  }
+
   // Handle Thenable for async/await support
   async then(onfulfilled?: (value: any) => any, onrejected?: (reason: any) => any) {
     try {
@@ -139,14 +148,13 @@ class NeonQueryBuilder {
   }
 
   private async execute() {
-    if (!connectionString) {
+    if (!pool) {
       return { data: null, error: new Error('DATABASE_URL is not set in environment variables.'), count: null };
     }
 
-    const client = new Client({ connectionString });
+    const client = await pool.connect();
     
     try {
-      await client.connect();
 
       let queryText = '';
       const queryValues: any[] = [];
@@ -224,18 +232,39 @@ class NeonQueryBuilder {
           queryText = `DELETE FROM ${this.tableName}`;
         }
 
-        // Apply filters
-        if (this.filters.length > 0) {
-          const filterClauses = this.filters.map(f => {
-            let op = f.op;
-            if (f.val === null) {
-              if (op === '=') return `${f.col} IS NULL`;
-              if (op === '<>') return `${f.col} IS NOT NULL`;
-            }
-            queryValues.push(f.val);
-            return `${f.col} ${op} $${paramCounter++}`;
-          });
-          queryText += ` WHERE ${filterClauses.join(' AND ')}`;
+        // Apply filters (AND conditions + OR groups)
+        {
+          const whereParts: string[] = [];
+
+          if (this.filters.length > 0) {
+            const filterClauses = this.filters.map(f => {
+              let op = f.op;
+              if (f.val === null) {
+                if (op === '=') return `${f.col} IS NULL`;
+                if (op === '<>') return `${f.col} IS NOT NULL`;
+              }
+              queryValues.push(f.val);
+              return `${f.col} ${op} $${paramCounter++}`;
+            });
+            whereParts.push(...filterClauses);
+          }
+
+          if (this.orFilters) {
+            const orParts = this.orFilters.split(',').map(part => {
+              const dotParts = part.trim().split('.');
+              const col = dotParts[0];
+              const op = dotParts[1];
+              const val = dotParts.slice(2).join('.');
+              const sqlOp = op === 'eq' ? '=' : op === 'neq' ? '<>' : op === 'gte' ? '>=' : op === 'lte' ? '<=' : '=';
+              queryValues.push(val);
+              return `${col} ${sqlOp} $${paramCounter++}`;
+            });
+            whereParts.push(`(${orParts.join(' OR ')})`);
+          }
+
+          if (whereParts.length > 0) {
+            queryText += ` WHERE ${whereParts.join(' AND ')}`;
+          }
         }
       }
 
@@ -285,7 +314,7 @@ class NeonQueryBuilder {
       console.error(`[Neon Client Error] Query failed on table ${this.tableName}: ${err.message}`);
       return { data: null, error: err, count: null };
     } finally {
-      await client.end();
+      client.release();
     }
   }
 }

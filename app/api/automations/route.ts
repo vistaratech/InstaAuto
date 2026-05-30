@@ -72,9 +72,10 @@ export async function POST(request: NextRequest) {
 export async function DELETE(request: NextRequest) {
   try {
     const id = request.nextUrl.searchParams.get("id")
-    if (!id) return NextResponse.json({ error: "Missing id" }, { status: 400 })
+    const userId = request.nextUrl.searchParams.get("userId")
+    if (!id || !userId) return NextResponse.json({ error: "Missing id or userId" }, { status: 400 })
     const supabase = await getSupabaseServerClient()
-    const { error } = await supabase.from("automations").delete().eq("id", id)
+    const { error } = await supabase.from("automations").delete().eq("id", id).eq("user_id", userId)
     if (error) throw error
     return NextResponse.json({ success: true })
   } catch (error) {

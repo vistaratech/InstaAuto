@@ -17,7 +17,7 @@ interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
 export function Sidebar({ className, username = "Demo User", onLogout, onNavigate, ...props }: SidebarProps) {
   const pathname = usePathname()
 
-  const isActive = (path: string) => pathname === path
+  const isActive = (path: string) => path === "/dashboard" ? pathname === path : pathname.startsWith(path)
 
   return (
     <aside className={cn("flex flex-col", className)} {...props}>
@@ -97,7 +97,7 @@ export function Sidebar({ className, username = "Demo User", onLogout, onNavigat
             <p className="text-xs font-bold text-white truncate">{username}</p>
             <div className="flex items-center gap-1">
               <div className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
-              <p className="text-[10px] text-neutral-500">Pro Plan</p>
+              <p className="text-[10px] text-neutral-500">Active</p>
             </div>
           </div>
           <Button

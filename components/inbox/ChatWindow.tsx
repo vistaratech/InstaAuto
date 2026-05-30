@@ -1,7 +1,7 @@
 "use client"
 
-import { useEffect, useState, useRef } from "react"
-import { Send, Loader2, MoreVertical, Phone, Video, Zap, ChevronLeft } from "lucide-react"
+import { useEffect, useState, useRef, useCallback } from "react"
+import { Send, Loader2, MoreVertical, Zap, ChevronLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import type { Message } from "@/types/db"
@@ -23,26 +23,40 @@ export function ChatWindow({ conversationId, recipientId, recipientName, userId,
     const [automations, setAutomations] = useState<any[]>([])
     const bottomRef = useRef<HTMLDivElement>(null)
 
+    const fetchMessages = useCallback(async () => {
+        if (!conversationId) return
+        setLoading(true)
+        try {
+            const res = await fetch(`/api/inbox/messages?conversationId=${conversationId}&userId=${userId}`)
+            const data = await res.json()
+            if (Array.isArray(data)) {
+                setMessages(data)
+            }
+        } catch (error) {
+            console.error("Failed to load messages", error)
+        } finally {
+            setLoading(false)
+        }
+    }, [conversationId, userId])
+
+    useEffect(() => {
+        fetchMessages()
+    }, [fetchMessages])
+
+    // Poll for new messages every 10 seconds
     useEffect(() => {
         if (!conversationId) return
-
-        const fetchMessages = async () => {
-            setLoading(true)
-            try {
-                const res = await fetch(`/api/inbox/messages?conversationId=${conversationId}`)
-                const data = await res.json()
-                if (Array.isArray(data)) {
-                    setMessages(data)
-                }
-            } catch (error) {
-                console.error("Failed to load messages", error)
-            } finally {
-                setLoading(false)
-            }
-        }
-
-        fetchMessages()
-    }, [conversationId])
+        const interval = window.setInterval(() => {
+            // Silent refresh without loading spinner
+            fetch(`/api/inbox/messages?conversationId=${conversationId}&userId=${userId}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (Array.isArray(data)) setMessages(data)
+                })
+                .catch(() => {})
+        }, 10000)
+        return () => window.clearInterval(interval)
+    }, [conversationId, userId])
 
     // Fetch automations for quick reply
     useEffect(() => {
@@ -124,15 +138,12 @@ export function ChatWindow({ conversationId, recipientId, recipientName, userId,
                     <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-purple-500 to-pink-500 shrink-0" />
                     <div className="min-w-0">
                         <h3 className="font-bold text-white text-sm truncate">@{recipientName}</h3>
-                        <span className="hidden md:flex items-center gap-1.5 text-[10px] text-green-400">
-                            <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
-                            Online via Instagram
+                        <span className="hidden md:flex items-center gap-1.5 text-[10px] text-muted-foreground">
+                            via Instagram
                         </span>
                     </div>
                 </div>
                 <div className="flex items-center gap-1">
-                    <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-white hidden md:flex"><Phone className="w-4 h-4" /></Button>
-                    <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-white hidden md:flex"><Video className="w-4 h-4" /></Button>
                     <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-white"><MoreVertical className="w-4 h-4" /></Button>
                 </div>
             </div>

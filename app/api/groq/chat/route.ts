@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-const AI_PROXY_URL = "https://triderai.vercel.app/api/chat";
+const AI_PROXY_URL = process.env.AI_PROXY_URL || "https://triderai.vercel.app/api/chat";
 
 export async function POST(req: Request) {
   const gatewaySecret = process.env.GATEWAY_SECRET;

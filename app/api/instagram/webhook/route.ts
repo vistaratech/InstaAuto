@@ -1,5 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { getSupabaseServerClient } from "@/lib/supabase-server"
+import crypto from "crypto"
 
 const WEBHOOK_VERIFY_TOKEN = process.env.INSTAGRAM_WEBHOOK_VERIFY_TOKEN || "your_verify_token"
 
@@ -17,7 +18,19 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json()
+    // Verify Meta webhook signature
+    const signature = request.headers.get("x-hub-signature-256")
+    const appSecret = process.env.INSTAGRAM_APP_SECRET
+    const rawBody = await request.text()
+    if (appSecret && signature) {
+      const expectedSig = "sha256=" + crypto.createHmac("sha256", appSecret).update(rawBody).digest("hex")
+      if (signature !== expectedSig) {
+        console.error("[v0] ❌ Invalid webhook signature")
+        return NextResponse.json({ error: "Invalid signature" }, { status: 403 })
+      }
+    }
+
+    const body = JSON.parse(rawBody)
     if (!body.entry) return NextResponse.json({ ok: true })
     const supabase = await getSupabaseServerClient()
 
@@ -157,8 +170,8 @@ export async function POST(request: NextRequest) {
 
             // Priority 2: Specific Post + Keyword Match
             if (!match) {
-              match = automations.find(
-                (a) =>
+              match = commentAutomations.find(
+                (a: any) =>
                   a.specific_media_id === mediaId &&
                   a.trigger_type === "keyword" &&
                   a.trigger_value
@@ -319,7 +332,7 @@ export async function POST(request: NextRequest) {
             console.log(`✨ Story automation matched: ${match.name}`)
 
             try {
-              const content = JSON.parse(match.response_content)
+              const content = match.response_content
               const apiBody: any = { recipient: { id: senderId } }
 
               if (content.message) {
@@ -476,8 +489,12 @@ export async function POST(request: NextRequest) {
               match = automations.find((a) => a.trigger_type === "postback" && a.trigger_value === triggerValue)
             }
           } else {
-            match = automations.find(
-              (a) =>
+            // Filter to DM-only automations (exclude comment/story triggers)
+            const dmAutomations = automations.filter(
+              (a: any) => a.trigger_source === 'dm' || !a.trigger_source
+            )
+            match = dmAutomations.find(
+              (a: any) =>
                 a.trigger_type === "keyword" &&
                 a.trigger_value.split(",").some((k: string) => new RegExp(`\\b${k.trim()}\\b`, "i").test(triggerValue)),
             )
@@ -582,7 +599,8 @@ STRICT RULES — follow every single one:
                   { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(typingBody) },
                 ).catch(() => {})
 
-                const aiRes = await fetch("https://triderai.vercel.app/api/chat", {
+                const aiProxyUrl = process.env.AI_PROXY_URL || "https://triderai.vercel.app/api/chat"
+                const aiRes = await fetch(aiProxyUrl, {
                   method: "POST",
                   headers: {
                     "Content-Type": "application/json",

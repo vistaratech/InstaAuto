@@ -387,7 +387,7 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess }: CreateRuleF
       {(triggerSource === 'comment' || triggerSource === 'story') && (
         <div className="space-y-2">
           <Label className="text-[11px] text-neutral-400 font-bold uppercase tracking-wider ml-1">
-            {replyToAll ? 'Post Select Karo (Required)' :
+            {replyToAll ? 'Select Post (Required)' :
               triggerSource === 'story' ? 'Story (Optional)' : 'Post/Reel (Optional)'}
           </Label>
           <div className="relative">

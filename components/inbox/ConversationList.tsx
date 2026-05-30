@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 import { Search, Loader2, UserCircle } from "lucide-react"
 import { cn } from "@/lib/utils"
 import type { Conversation } from "@/types/db"
@@ -14,26 +14,42 @@ interface ConversationListProps {
 export function ConversationList({ userId, selectedId, onSelect }: ConversationListProps) {
     const [conversations, setConversations] = useState<Conversation[]>([])
     const [loading, setLoading] = useState(true)
+    const [searchQuery, setSearchQuery] = useState("")
+
+    const fetchConversations = useCallback(async () => {
+        if (!userId) return
+        try {
+            const res = await fetch(`/api/inbox/conversations?userId=${userId}`)
+            const data = await res.json()
+            if (Array.isArray(data)) {
+                setConversations(data)
+            }
+        } catch (error) {
+            console.error("Failed to load conversations", error)
+        } finally {
+            setLoading(false)
+        }
+    }, [userId])
 
     useEffect(() => {
-        if (!userId) return
-
-        const fetchConversations = async () => {
-            try {
-                const res = await fetch(`/api/inbox/conversations?userId=${userId}`)
-                const data = await res.json()
-                if (Array.isArray(data)) {
-                    setConversations(data)
-                }
-            } catch (error) {
-                console.error("Failed to load conversations", error)
-            } finally {
-                setLoading(false)
-            }
-        }
-
         fetchConversations()
-    }, [userId])
+    }, [fetchConversations])
+
+    // Poll for new conversations every 15 seconds
+    useEffect(() => {
+        if (!userId) return
+        const interval = window.setInterval(() => {
+            fetchConversations()
+        }, 15000)
+        return () => window.clearInterval(interval)
+    }, [userId, fetchConversations])
+
+    // Filter conversations by search query
+    const filtered = searchQuery.trim()
+        ? conversations.filter(c =>
+            c.recipient_username.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+        : conversations
 
     if (loading) {
         return (
@@ -52,17 +68,19 @@ export function ConversationList({ userId, selectedId, onSelect }: ConversationL
                     <input
                         className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-2 text-sm text-white focus:outline-none focus:border-purple-500/50 placeholder:text-muted-foreground/50 transition-all"
                         placeholder="Search messages..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
                     />
                 </div>
             </div>
 
             <div className="flex-1 overflow-y-auto p-2 space-y-1">
-                {conversations.length === 0 ? (
+                {filtered.length === 0 ? (
                     <div className="text-center py-10 text-muted-foreground text-sm">
-                        No conversations yet.
+                        {searchQuery ? "No matching conversations." : "No conversations yet."}
                     </div>
                 ) : (
-                    conversations.map((conv) => (
+                    filtered.map((conv) => (
                         <div
                             key={conv.id}
                             onClick={() => onSelect(conv.id, conv.recipient_username, conv.recipient_id.toString())}
@@ -89,7 +107,7 @@ export function ConversationList({ userId, selectedId, onSelect }: ConversationL
                                     </span>
                                 </div>
                                 <p className="text-xs text-muted-foreground truncate">
-                                    Open to view conversation
+                                    Tap to view conversation
                                 </p>
                             </div>
                         </div>

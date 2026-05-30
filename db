@@ -1,3 +1,9 @@
+-- ============================================================
+-- InstaAuto — Consolidated Database Schema
+-- Includes all columns from migrations
+-- ============================================================
+
+-- Table: public.users
 CREATE TABLE IF NOT EXISTS public.users (
   id bigint PRIMARY KEY,
   username text UNIQUE,
@@ -6,13 +12,15 @@ CREATE TABLE IF NOT EXISTS public.users (
   created_at timestamptz DEFAULT CURRENT_TIMESTAMP,
   updated_at timestamptz DEFAULT CURRENT_TIMESTAMP,
   business_account_id bigint,
-  page_id text
+  page_id text,
+  groq_auto_reply_enabled boolean DEFAULT false,
+  ai_context text DEFAULT NULL
 );
 
 -- Table: public.conversations
 CREATE TABLE IF NOT EXISTS public.conversations (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id bigint NOT NULL,
+  user_id bigint NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
   recipient_id bigint NOT NULL,
   recipient_username text NOT NULL,
   last_message_at timestamptz DEFAULT CURRENT_TIMESTAMP,
@@ -23,8 +31,8 @@ CREATE TABLE IF NOT EXISTS public.conversations (
 -- Table: public.messages
 CREATE TABLE IF NOT EXISTS public.messages (
   id text PRIMARY KEY,
-  conversation_id uuid,
-  user_id bigint,
+  conversation_id uuid REFERENCES public.conversations(id) ON DELETE CASCADE,
+  user_id bigint REFERENCES public.users(id),
   sender_id bigint,
   sender_username text,
   content text,
@@ -48,11 +56,12 @@ CREATE TABLE IF NOT EXISTS public.automations (
   name text NOT NULL,
   trigger_type text NOT NULL,
   trigger_value text NOT NULL,
-  response_type text DEFAULT 'text'::text,
+  trigger_source text NOT NULL DEFAULT 'comment' CHECK (trigger_source IN ('comment', 'dm', 'story')),
+  response_type text DEFAULT 'pro',
   is_active boolean DEFAULT true,
   created_at timestamptz DEFAULT CURRENT_TIMESTAMP,
   updated_at timestamptz DEFAULT CURRENT_TIMESTAMP,
-  response_content jsonb,
+  response_content jsonb NOT NULL,
   media_selection jsonb,
   selected_reel_id text,
   specific_media_id text
@@ -61,7 +70,7 @@ CREATE TABLE IF NOT EXISTS public.automations (
 -- Table: public.media_cache
 CREATE TABLE IF NOT EXISTS public.media_cache (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id bigint NOT NULL,
+  user_id bigint NOT NULL REFERENCES public.users(id),
   media_id text NOT NULL,
   media_type text NOT NULL,
   caption text,
@@ -70,28 +79,65 @@ CREATE TABLE IF NOT EXISTS public.media_cache (
   permalink text,
   media_product_type text,
   timestamp timestamptz,
-  cached_at timestamptz DEFAULT CURRENT_TIMESTAMP
+  cached_at timestamptz DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE(user_id, media_id)
 );
-
--- Foreign key constraints
-ALTER TABLE public.media_cache
-  ADD CONSTRAINT media_cache_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id);
-
-ALTER TABLE public.conversations
-  ADD CONSTRAINT conversations_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id);
-
-ALTER TABLE public.messages
-  ADD CONSTRAINT messages_conversation_id_fkey FOREIGN KEY (conversation_id) REFERENCES public.conversations(id);
-
-ALTER TABLE public.messages
-  ADD CONSTRAINT messages_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 -- Table: public.ice_breakers
 CREATE TABLE IF NOT EXISTS public.ice_breakers (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id bigint NOT NULL,
+  user_id bigint NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
   question text NOT NULL,
   response text NOT NULL,
   is_active boolean DEFAULT true,
   created_at timestamptz DEFAULT CURRENT_TIMESTAMP
 );
+
+-- Table: public.content_pool (Reels Scheduler)
+CREATE TABLE IF NOT EXISTS public.content_pool (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id bigint NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
+  video_url text NOT NULL,
+  caption text,
+  cover_url text,
+  thumbnail_url text,
+  is_active boolean DEFAULT true,
+  sequence_index serial,
+  created_at timestamptz DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Table: public.scheduler_config
+CREATE TABLE IF NOT EXISTS public.scheduler_config (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id bigint NOT NULL UNIQUE REFERENCES public.users(id) ON DELETE CASCADE,
+  is_running boolean DEFAULT false,
+  interval_minutes integer DEFAULT 240,
+  start_time text DEFAULT '09:00',
+  end_time text DEFAULT '21:00',
+  current_sequence_index integer DEFAULT 0,
+  next_run_at timestamptz,
+  last_run_at timestamptz,
+  created_at timestamptz DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Table: public.reels_posts (Publish Log)
+CREATE TABLE IF NOT EXISTS public.reels_posts (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id bigint NOT NULL REFERENCES public.users(id),
+  content_pool_id uuid,
+  video_url text,
+  caption text,
+  ig_container_id text,
+  ig_media_id text,
+  status text DEFAULT 'PENDING',
+  error_message text,
+  published_at timestamptz,
+  created_at timestamptz DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Indexes
+CREATE INDEX IF NOT EXISTS idx_conversations_user_id ON public.conversations(user_id);
+CREATE INDEX IF NOT EXISTS idx_messages_conversation_id ON public.messages(conversation_id);
+CREATE INDEX IF NOT EXISTS idx_automations_user_id ON public.automations(user_id);
+CREATE INDEX IF NOT EXISTS idx_media_cache_user_id ON public.media_cache(user_id);
+CREATE INDEX IF NOT EXISTS idx_content_pool_user_id ON public.content_pool(user_id);

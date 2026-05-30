@@ -52,7 +52,7 @@ export default function PublisherPage() {
                             </CardHeader>
                             <CardContent className="space-y-3 text-sm text-neutral-400">
                                 <p>• <strong>Consistency is Key:</strong> Set a comfortable interval like 4-6 hours to keep your feed active.</p>
-                                <p>• <strong>Mix it Up:</strong> Add at least 5-10 clips to avoiding repetitive content.</p>
+                                <p>• <strong>Mix it Up:</strong> Add at least 5-10 clips to avoid repetitive content.</p>
                                 <p>• <strong>Monitor:</strong> Check your Instagram insights to see which time windows perform best and adjust your schedule.</p>
                             </CardContent>
                         </Card>

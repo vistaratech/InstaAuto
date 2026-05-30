@@ -1,11 +1,11 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { Suspense, useEffect, useState } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
 import { LandingPage } from "@/components/layout/landing-page"
 import { Loader2, AlertCircle } from "lucide-react"
 
-export default function Home() {
+function HomeContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [processing, setProcessing] = useState(false)
@@ -56,3 +56,14 @@ export default function Home() {
   return <LandingPage />
 }
 
+export default function Home() {
+  return (
+    <Suspense fallback={
+      <div className="flex h-screen items-center justify-center bg-black">
+        <Loader2 className="h-8 w-8 animate-spin text-white" />
+      </div>
+    }>
+      <HomeContent />
+    </Suspense>
+  )
+}

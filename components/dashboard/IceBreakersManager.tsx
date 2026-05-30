@@ -65,7 +65,7 @@ export function IceBreakersManager() {
             })
             const data = await res.json()
             if (data.success) {
-                toast.success("Ice Breakers saved & synced usually!")
+                toast.success("Ice Breakers saved & synced successfully!")
             } else {
                 toast.error("Failed to save")
             }
@@ -76,7 +76,7 @@ export function IceBreakersManager() {
         }
     }
 
-    if (isLoading || fetching && !breakers.length) {
+    if (isLoading || (fetching && !breakers.length)) {
         return <div className="p-10 flex justify-center"><Loader2 className="animate-spin text-purple-500" /></div>
     }
 

@@ -4,13 +4,22 @@ import { Sidebar } from "@/components/layout/sidebar"
 import { MobileNav } from "@/components/layout/mobile-nav"
 import { useInstagramSession } from "@/hooks/use-instagram-session"
 import { Loader2 } from "lucide-react"
+import { useRouter } from "next/navigation"
+import { useEffect } from "react"
 
 export default function DashboardLayout({
     children,
 }: {
     children: React.ReactNode
 }) {
-    const { username, logout, isLoading, error } = useInstagramSession()
+    const { username, userId, logout, isLoading, error } = useInstagramSession()
+    const router = useRouter()
+
+    useEffect(() => {
+        if (!isLoading && !userId) {
+            router.replace("/")
+        }
+    }, [isLoading, userId, router])
 
     if (isLoading) {
         return (

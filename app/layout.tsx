@@ -37,7 +37,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`font-sans antialiased`}>
+      <body className={`${_geist.className} font-sans antialiased`}>
         {children}
         <Analytics />
         <Toaster />

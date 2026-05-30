@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import { Card } from "@/components/ui/card"
 import { useInstagramSession } from "@/hooks/use-instagram-session"
 import { Activity, Users, MessageCircle, Zap, Loader2 } from "lucide-react"
+import Link from "next/link"
 
 interface DashboardStats {
     metrics: {
@@ -126,14 +127,14 @@ export default function DashboardPage() {
                 <Card className="p-6 bg-white/5 border-white/10 backdrop-blur-sm">
                     <h3 className="font-bold text-white mb-4">Quick Actions</h3>
                     <div className="grid grid-cols-2 gap-4">
-                        <div className="h-24 rounded-xl border border-dashed border-white/20 flex flex-col items-center justify-center hover:bg-white/5 cursor-pointer transition-colors group">
+                        <Link href="/dashboard/automations" className="h-24 rounded-xl border border-dashed border-white/20 flex flex-col items-center justify-center hover:bg-white/5 cursor-pointer transition-colors group">
                             <Zap className="w-6 h-6 text-muted-foreground group-hover:text-purple-400 mb-2" />
                             <span className="text-xs font-medium text-muted-foreground">New Rule</span>
-                        </div>
-                        <div className="h-24 rounded-xl border border-dashed border-white/20 flex flex-col items-center justify-center hover:bg-white/5 cursor-pointer transition-colors group">
+                        </Link>
+                        <Link href="/dashboard/inbox" className="h-24 rounded-xl border border-dashed border-white/20 flex flex-col items-center justify-center hover:bg-white/5 cursor-pointer transition-colors group">
                             <Users className="w-6 h-6 text-muted-foreground group-hover:text-pink-400 mb-2" />
                             <span className="text-xs font-medium text-muted-foreground">View Audience</span>
-                        </div>
+                        </Link>
                     </div>
                 </Card>
             </div>

@@ -82,7 +82,7 @@ export default function AutomationsPage() {
     }, [userId, fetchAutomations])
 
     const handleDeleteRule = async (id: string) => {
-        await fetch(`/api/automations?id=${id}`, { method: "DELETE" })
+        await fetch(`/api/automations?id=${id}&userId=${userId}`, { method: "DELETE" })
         fetchAutomations()
     }
 
