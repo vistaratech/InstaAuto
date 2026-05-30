@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
 
         const { data, error } = await supabase
             .from("scheduler_config")
-            .upsert({ user_id: userId, ...updates }) // upsert on PK
+            .upsert({ user_id: userId, ...updates }, { onConflict: 'user_id' }) // upsert on PK
             .select()
             .single()
 
