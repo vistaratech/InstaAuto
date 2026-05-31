@@ -54,19 +54,19 @@ export function ConversationList({ userId, selectedId, onSelect }: ConversationL
     if (loading) {
         return (
             <div className="flex items-center justify-center h-full">
-                <Loader2 className="w-6 h-6 text-purple-500 animate-spin" />
+                <Loader2 className="w-6 h-6 text-primary animate-spin" />
             </div>
         )
     }
 
     return (
-        <div className="flex flex-col h-full border-r border-white/5 bg-black/20 w-full md:w-[350px]">
-            <div className="p-4 border-b border-white/5">
-                <h2 className="text-lg font-bold text-white mb-4">Inbox</h2>
+        <div className="flex flex-col h-full w-full">
+            <div className="p-4 border-b border-border">
+                <h2 className="text-lg font-bold text-foreground mb-4">Inbox</h2>
                 <div className="relative">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                     <input
-                        className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-2 text-sm text-white focus:outline-none focus:border-purple-500/50 placeholder:text-muted-foreground/50 transition-all"
+                        className="w-full bg-secondary/80 border border-border rounded-xl pl-10 pr-4 py-2 text-sm text-foreground focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/20 placeholder:text-muted-foreground/50 transition-all"
                         placeholder="Search messages..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
@@ -74,7 +74,7 @@ export function ConversationList({ userId, selectedId, onSelect }: ConversationL
                 </div>
             </div>
 
-            <div className="flex-1 overflow-y-auto p-2 space-y-1">
+            <div className="flex-1 overflow-y-auto p-2 space-y-1 scrollbar-hide">
                 {filtered.length === 0 ? (
                     <div className="text-center py-10 text-muted-foreground text-sm">
                         {searchQuery ? "No matching conversations." : "No conversations yet."}
@@ -87,18 +87,18 @@ export function ConversationList({ userId, selectedId, onSelect }: ConversationL
                             className={cn(
                                 "p-3 rounded-lg flex items-center gap-3 cursor-pointer transition-colors border border-transparent",
                                 selectedId === conv.id
-                                    ? "bg-purple-500/10 border-purple-500/20"
-                                    : "hover:bg-white/5 hover:border-white/5"
-                            )}
+                                    ? "bg-primary/10 border-primary/20"
+                                    : "hover:bg-secondary/40 hover:border-border"
+                             )}
                         >
-                            <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-purple-500/20 to-blue-500/20 flex items-center justify-center shrink-0">
-                                <UserCircle className="w-6 h-6 text-white/50" />
+                            <div className="w-12 h-12 rounded-full bg-secondary border border-border flex items-center justify-center shrink-0">
+                                <UserCircle className="w-6 h-6 text-muted-foreground" />
                             </div>
                             <div className="flex-1 min-w-0 text-left">
                                 <div className="flex items-center justify-between mb-0.5">
                                     <span className={cn(
                                         "font-semibold text-sm truncate",
-                                        selectedId === conv.id ? "text-purple-300" : "text-white"
+                                        selectedId === conv.id ? "text-primary" : "text-foreground"
                                     )}>
                                         {conv.recipient_username}
                                     </span>
@@ -117,3 +117,4 @@ export function ConversationList({ userId, selectedId, onSelect }: ConversationL
         </div>
     )
 }
+

@@ -14,6 +14,10 @@ async function inspect() {
     const autRes = await client.query("SELECT id, user_id, name, trigger_type, trigger_value, trigger_source, is_active FROM automations");
     console.log(autRes.rows);
 
+    console.log("\n=== CONVERSATIONS ===");
+    const convsRes = await client.query("SELECT * FROM conversations");
+    console.log(convsRes.rows);
+
     console.log("\n=== RECENT MESSAGES ===");
     const msgRes = await client.query("SELECT id, conversation_id, sender_username, content, created_at, is_from_instagram FROM messages ORDER BY created_at DESC LIMIT 5");
     console.log(msgRes.rows);
