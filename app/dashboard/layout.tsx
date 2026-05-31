@@ -23,18 +23,18 @@ export default function DashboardLayout({
 
     if (isLoading) {
         return (
-            <div className="flex h-screen items-center justify-center bg-black text-white">
-                <Loader2 className="h-8 w-8 animate-spin text-white" />
+            <div className="flex h-screen items-center justify-center bg-background text-foreground">
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
             </div>
         )
     }
 
     return (
-        <div className="flex min-h-screen bg-black text-foreground">
+        <div className="flex min-h-screen bg-background text-foreground transition-colors duration-300">
             {/* Desktop Sidebar */}
             <div className="hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0 z-50">
                 <Sidebar
-                    className="h-full border-r border-white/10 bg-black/50 backdrop-blur-xl"
+                    className="h-full border-r border-sidebar-border bg-sidebar"
                     username={username || "User"}
                     onLogout={logout}
                 />
@@ -43,14 +43,14 @@ export default function DashboardLayout({
             {/* Main Content Area */}
             <div className="flex-1 flex flex-col md:pl-64 transition-all duration-300">
                 {/* Mobile Header (Visible only on small screens) */}
-                <header className="md:hidden h-16 border-b border-white/10 bg-black flex items-center justify-between px-4 sticky top-0 z-40">
-                    <span className="font-bold text-lg tracking-tight text-white">Insta Autobot</span>
+                <header className="md:hidden h-16 border-b border-border bg-card flex items-center justify-between px-4 sticky top-0 z-40 transition-colors duration-300">
+                    <span className="font-bold text-lg tracking-tight text-foreground">Insta Autobot</span>
                     <MobileNav username={username || "User"} onLogout={logout} />
                 </header>
 
                 <main className="flex-1 relative overflow-auto">
                     {error && (
-                        <div className="bg-red-500/10 border border-red-500/30 text-red-400 px-4 py-3 text-sm m-4 rounded-lg">
+                        <div className="bg-destructive/10 border border-destructive/30 text-destructive px-4 py-3 text-sm m-4 rounded-lg">
                             ⚠️ Login Error: {error}
                         </div>
                     )}
@@ -60,3 +60,4 @@ export default function DashboardLayout({
         </div>
     )
 }
+

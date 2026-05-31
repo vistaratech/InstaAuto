@@ -4,78 +4,89 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Minimal B/W Theme */
-  --background: oklch(0.05 0 0); /* Pure black */
-  --foreground: oklch(0.98 0 0); /* White */
+  /* Premium Minimal Light Theme (Slate & Deep Purple Accents) */
+  --background: oklch(0.99 0.003 260); /* Clean paper white */
+  --foreground: oklch(0.15 0.01 260);  /* Deep charcoal-slate */
   
-  --card: oklch(0.08 0 0);
-  --card-foreground: oklch(0.98 0 0);
+  --card: oklch(1 0 0);                /* Pure white */
+  --card-foreground: oklch(0.15 0.01 260);
   
-  --popover: oklch(0.08 0 0);
-  --popover-foreground: oklch(0.98 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.15 0.01 260);
 
-  /* Primary is now White for high contrast */
-  --primary: oklch(0.98 0 0);
-  --primary-foreground: oklch(0.05 0 0);
+  /* Primary is a vibrant royal indigo/violet */
+  --primary: oklch(0.52 0.19 275);
+  --primary-foreground: oklch(0.99 0.003 260);
 
-  /* Secondary is Dark Gray */
-  --secondary: oklch(0.2 0 0);
-  --secondary-foreground: oklch(0.98 0 0);
+  /* Secondary is a light cool gray */
+  --secondary: oklch(0.95 0.006 260);
+  --secondary-foreground: oklch(0.15 0.01 260);
 
-  --muted: oklch(0.15 0 0);
-  --muted-foreground: oklch(0.6 0 0);
+  --muted: oklch(0.96 0.005 260);
+  --muted-foreground: oklch(0.45 0.01 260);
   
-  --accent: oklch(0.15 0 0);
-  --accent-foreground: oklch(0.98 0 0);
+  --accent: oklch(0.93 0.015 275);    /* Soft pastel lavender */
+  --accent-foreground: oklch(0.4 0.15 275);
 
-  --destructive: oklch(0.5 0.2 27); /* Keeping red for errors but slightly desaturated */
-  --destructive-foreground: oklch(0.98 0 0);
+  --destructive: oklch(0.60 0.18 20);  /* Coral Red */
+  --destructive-foreground: oklch(0.99 0.003 260);
 
-  --border: oklch(0.15 0 0);
-  --input: oklch(0.15 0 0);
-  --ring: oklch(0.25 0 0);
+  --border: oklch(0.92 0.005 260);
+  --input: oklch(0.94 0.005 260);
+  --ring: oklch(0.52 0.19 275 / 0.3);
 
-  --radius: 0.5rem;
+  --radius: 0.75rem; /* Smoother, more modern rounded corners */
 
-  --sidebar: oklch(0.05 0 0);
-  --sidebar-foreground: oklch(0.7 0 0);
-  --sidebar-primary: oklch(0.98 0 0);
-  --sidebar-border: oklch(0.12 0 0);
-  --sidebar-accent: oklch(0.12 0 0);
-  --sidebar-accent-foreground: oklch(0.98 0 0);
-  --sidebar-ring: oklch(0.25 0 0);
+  --sidebar: oklch(0.97 0.004 260);    /* Subtle grey sidebar background */
+  --sidebar-foreground: oklch(0.35 0.01 260);
+  --sidebar-primary: oklch(0.52 0.19 275);
+  --sidebar-border: oklch(0.93 0.004 260);
+  --sidebar-accent: oklch(0.94 0.008 275);
+  --sidebar-accent-foreground: oklch(0.4 0.15 275);
+  --sidebar-ring: oklch(0.52 0.19 275 / 0.2);
 }
 
 .dark {
-  /* Same as root since we are enforcing Dark Mode B/W */
-  --background: oklch(0.05 0 0);
-  --foreground: oklch(0.98 0 0);
-  --card: oklch(0.08 0 0);
-  --card-foreground: oklch(0.98 0 0);
-  --popover: oklch(0.08 0 0);
-  --popover-foreground: oklch(0.98 0 0);
-  --primary: oklch(0.98 0 0);
-  --primary-foreground: oklch(0.05 0 0);
-  --secondary: oklch(0.2 0 0);
-  --secondary-foreground: oklch(0.98 0 0);
-  --muted: oklch(0.15 0 0);
-  --muted-foreground: oklch(0.6 0 0);
-  --accent: oklch(0.15 0 0);
-  --accent-foreground: oklch(0.98 0 0);
-  --destructive: oklch(0.5 0.2 27);
-  --destructive-foreground: oklch(0.98 0 0);
-  --border: oklch(0.15 0 0);
-  --input: oklch(0.15 0 0);
-  --ring: oklch(0.25 0 0);
-  --sidebar: oklch(0.05 0 0);
-  --sidebar-foreground: oklch(0.7 0 0);
-  --sidebar-primary: oklch(0.98 0 0);
-  --sidebar-primary-foreground: oklch(0.05 0 0);
-  --sidebar-accent: oklch(0.12 0 0);
-  --sidebar-accent-foreground: oklch(0.98 0 0);
-  --sidebar-border: oklch(0.12 0 0);
-  --sidebar-ring: oklch(0.25 0 0);
+  /* Premium Dark Obsidian Theme (Deep Cosmic Slate & Neon Violet) */
+  --background: oklch(0.11 0.011 260); /* Sleek obsidian/slate background */
+  --foreground: oklch(0.98 0.003 260); /* Off-white */
+  
+  --card: oklch(0.14 0.015 260);       /* Glossy dark card */
+  --card-foreground: oklch(0.98 0.003 260);
+  
+  --popover: oklch(0.14 0.015 260);
+  --popover-foreground: oklch(0.98 0.003 260);
+
+  /* Primary is a glowing neon violet/purple */
+  --primary: oklch(0.68 0.18 280);
+  --primary-foreground: oklch(0.11 0.011 260);
+
+  /* Secondary is a dark gray-blue */
+  --secondary: oklch(0.19 0.012 260);
+  --secondary-foreground: oklch(0.98 0.003 260);
+
+  --muted: oklch(0.17 0.012 260);
+  --muted-foreground: oklch(0.65 0.01 260);
+  
+  --accent: oklch(0.18 0.03 280);      /* Elegant deep violet glow */
+  --accent-foreground: oklch(0.85 0.05 280);
+
+  --destructive: oklch(0.55 0.16 20);
+  --destructive-foreground: oklch(0.98 0.003 260);
+
+  --border: oklch(0.19 0.012 260);
+  --input: oklch(0.18 0.012 260);
+  --ring: oklch(0.68 0.18 280 / 0.4);
+
+  --sidebar: oklch(0.09 0.01 260);     /* Slightly darker sidebar for contrast */
+  --sidebar-foreground: oklch(0.7 0.01 260);
+  --sidebar-primary: oklch(0.68 0.18 280);
+  --sidebar-border: oklch(0.15 0.01 260);
+  --sidebar-accent: oklch(0.16 0.015 260);
+  --sidebar-accent-foreground: oklch(0.98 0.003 260);
+  --sidebar-ring: oklch(0.68 0.18 280 / 0.3);
 }
+
 
 @theme inline {
   --font-sans: "Geist", "Geist Fallback";
@@ -124,12 +135,12 @@
 
 /* Minimal Utilities */
 .glass-panel {
-  @apply bg-black/40 backdrop-blur-md border border-white/10;
+  @apply bg-card/50 backdrop-blur-md border border-border;
 }
 
 /* Removed Instagram gradients, replaced with minimal text styles if needed */
 .text-minimal-gradient {
-  @apply text-white;
+  @apply text-foreground;
 }
 
 .hover-glow {
