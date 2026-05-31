@@ -51,7 +51,7 @@ export default function DashboardLayout({
             <button
                 onClick={handleToggleCollapse}
                 className={cn(
-                    "hidden md:flex fixed top-[20px] z-50 w-8 h-8 rounded-full border border-border bg-card text-muted-foreground hover:text-foreground shadow-md hover:shadow-lg flex items-center justify-center cursor-pointer transition-all duration-300 hover:scale-110 active:scale-95",
+                    "hidden md:flex fixed top-[20px] z-[60] w-8 h-8 rounded-full border border-border bg-card text-muted-foreground hover:text-foreground shadow-md hover:shadow-lg flex items-center justify-center cursor-pointer transition-all duration-300 hover:scale-110 active:scale-95",
                     isCollapsed ? "left-[48px]" : "left-[240px]"
                 )}
                 title={isCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
@@ -65,7 +65,7 @@ export default function DashboardLayout({
 
             {/* Desktop Sidebar */}
             <div className={cn(
-                "hidden md:flex md:flex-col md:fixed md:inset-y-0 z-50 transition-all duration-300",
+                "hidden md:flex md:flex-col md:fixed md:inset-y-0 z-40 transition-all duration-300",
                 isCollapsed ? "md:w-16" : "md:w-64"
             )}>
                 <Sidebar
