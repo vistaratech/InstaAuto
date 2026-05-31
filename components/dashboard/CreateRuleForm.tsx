@@ -195,16 +195,16 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess }: CreateRuleF
             }}
             className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 ${
               s === step
-                ? "bg-white text-black scale-110 shadow-lg shadow-white/20"
+                ? "bg-foreground text-background scale-110 shadow-lg shadow-foreground/10"
                 : s < step
-                  ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 cursor-pointer hover:scale-105"
-                  : "bg-white/5 text-neutral-600 border border-white/10"
+                  ? "bg-emerald-500/20 text-emerald-500 dark:text-emerald-400 border border-emerald-500/30 cursor-pointer hover:scale-105"
+                  : "bg-secondary text-muted-foreground border border-border"
             }`}
           >
             {s < step ? <Check className="w-3.5 h-3.5" /> : s}
           </button>
           {s < 3 && (
-            <div className={`w-8 h-px transition-colors duration-500 ${s < step ? "bg-emerald-500/50" : "bg-white/10"}`} />
+            <div className={`w-8 h-px transition-colors duration-500 ${s < step ? "bg-emerald-500/50" : "bg-border"}`} />
           )}
         </div>
       ))}
@@ -221,22 +221,22 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess }: CreateRuleF
 
     if (loadingReels) {
       return (
-        <div className="absolute top-full left-0 right-0 mt-2 p-4 bg-neutral-950 border border-white/10 rounded-xl text-center z-50">
-          <p className="text-neutral-400 text-sm">Loading media...</p>
+        <div className="absolute top-full left-0 right-0 mt-2 p-4 bg-popover border border-border rounded-xl text-center z-50">
+          <p className="text-muted-foreground text-sm">Loading media...</p>
         </div>
       )
     }
 
     if (filteredReels.length === 0) {
       return (
-        <div className="absolute top-full left-0 right-0 mt-2 p-4 bg-neutral-950 border border-white/10 rounded-xl text-center z-50">
-          <p className="text-neutral-500 text-sm">{triggerSource === 'story' ? 'No active stories' : 'No posts found'}</p>
+        <div className="absolute top-full left-0 right-0 mt-2 p-4 bg-popover border border-border rounded-xl text-center z-50">
+          <p className="text-muted-foreground text-sm">{triggerSource === 'story' ? 'No active stories' : 'No posts found'}</p>
         </div>
       )
     }
 
     return (
-      <div className="absolute top-full left-0 right-0 mt-2 max-h-56 overflow-y-auto bg-neutral-950 border border-white/10 rounded-xl z-50 shadow-2xl">
+      <div className="absolute top-full left-0 right-0 mt-2 max-h-56 overflow-y-auto bg-popover border border-border rounded-xl z-50 shadow-2xl">
         {filteredReels.map((reel: any) => {
           const isStory = reel.media_type === 'STORY' || reel.media_product_type === 'STORY'
           if (triggerSource === 'story' && !isStory) return null
@@ -247,18 +247,18 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess }: CreateRuleF
               key={reel.id}
               type="button"
               onClick={() => { setSelectedReel(reel); setShowReelPicker(false) }}
-              className="w-full p-3 flex items-center gap-3 hover:bg-white/5 transition-colors text-left border-b border-white/5 last:border-0"
+              className="w-full p-3 flex items-center gap-3 hover:bg-secondary transition-colors text-left border-b border-border last:border-0"
             >
               {reel.media_url || reel.thumbnail_url ? (
                 <img src={reel.thumbnail_url || reel.media_url} alt="" className="w-10 h-10 rounded object-cover opacity-80" />
               ) : (
-                <div className="w-10 h-10 rounded bg-white/5 flex items-center justify-center">
-                  <Film className="w-4 h-4 text-neutral-600" />
+                <div className="w-10 h-10 rounded bg-secondary flex items-center justify-center">
+                  <Film className="w-4 h-4 text-muted-foreground" />
                 </div>
               )}
               <div className="flex-1 min-w-0">
-                <p className="text-sm text-white truncate">{reel.caption || 'Untitled'}</p>
-                <span className="text-[10px] text-neutral-500 uppercase">{label}</span>
+                <p className="text-sm text-foreground truncate">{reel.caption || 'Untitled'}</p>
+                <span className="text-[10px] text-muted-foreground uppercase">{label}</span>
               </div>
             </button>
           )
@@ -288,7 +288,7 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess }: CreateRuleF
               </div>
             )}
           </div>
-          <p className="text-[10px] text-neutral-600 mt-1 text-right">Preview — this is how the DM will look</p>
+          <p className="text-[10px] text-muted-foreground mt-1 text-right">Preview — this is how the DM will look</p>
         </div>
       </div>
     )
@@ -299,12 +299,12 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess }: CreateRuleF
   const renderStep1 = () => (
     <div className="space-y-5 animate-in fade-in slide-in-from-right-4 duration-300">
       <div>
-        <h3 className="text-lg font-bold text-white mb-1">
+        <h3 className="text-lg font-bold text-foreground mb-1">
           {triggerSource === 'comment' ? '💬 When to reply?' :
             triggerSource === 'dm' ? '📩 When to reply?' :
               '📸 Story trigger'}
         </h3>
-        <p className="text-xs text-neutral-500">
+        <p className="text-xs text-muted-foreground">
           {triggerSource === 'comment' 
             ? 'Auto-reply when someone comments these keywords.'
             : triggerSource === 'dm'
@@ -327,8 +327,8 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess }: CreateRuleF
               onClick={() => setStoryTriggerType(key)}
               className={`p-3 rounded-xl border transition-all flex flex-col items-center gap-1.5 ${
                 storyTriggerType === key
-                  ? 'border-white bg-white text-black shadow-lg shadow-white/10'
-                  : 'border-white/10 text-neutral-400 hover:bg-white/5 hover:border-white/20'
+                  ? 'border-foreground bg-foreground text-background shadow-lg shadow-foreground/10'
+                  : 'border-border text-muted-foreground hover:bg-secondary hover:border-border'
               }`}
             >
               {icon}
@@ -344,22 +344,22 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess }: CreateRuleF
           type="button"
           onClick={() => setReplyToAll(!replyToAll)}
           className={`w-full p-4 rounded-xl border transition-all flex items-center gap-3 ${
-            replyToAll ? 'border-emerald-500/50 bg-emerald-500/10' : 'border-white/10 hover:border-white/20 hover:bg-white/5'
+            replyToAll ? 'border-emerald-500/50 bg-emerald-500/10' : 'border-border hover:border-muted-foreground/30 hover:bg-secondary'
           }`}
         >
           <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-            replyToAll ? 'bg-emerald-500/20 text-emerald-400' : 'bg-white/5 text-neutral-500'
+            replyToAll ? 'bg-emerald-500/20 text-emerald-500 dark:text-emerald-400' : 'bg-secondary text-muted-foreground'
           }`}>
             <Sparkles className="w-5 h-5" />
           </div>
           <div className="text-left flex-1">
-            <p className={`text-sm font-bold ${replyToAll ? 'text-emerald-400' : 'text-white'}`}>Reply to All Comments</p>
-            <p className="text-[11px] text-neutral-500">Auto-reply to every comment on a specific post</p>
+            <p className={`text-sm font-bold ${replyToAll ? 'text-emerald-500 dark:text-emerald-400' : 'text-foreground'}`}>Reply to All Comments</p>
+            <p className="text-[11px] text-muted-foreground">Auto-reply to every comment on a specific post</p>
           </div>
           <div className={`w-5 h-5 rounded-full border-2 transition-all ${
-            replyToAll ? 'border-emerald-500 bg-emerald-500' : 'border-white/20'
+            replyToAll ? 'border-emerald-500 bg-emerald-500' : 'border-border'
           }`}>
-            {replyToAll && <Check className="w-3 h-3 text-black m-auto mt-0.5" />}
+            {replyToAll && <Check className="w-3 h-3 text-black dark:text-white m-auto mt-0.5" />}
           </div>
         </button>
       )}
@@ -367,7 +367,7 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess }: CreateRuleF
       {/* Keyword input — conditional */}
       {!(triggerSource === 'comment' && replyToAll) && !(triggerSource === 'story' && storyTriggerType === 'mention') && (
         <div className="space-y-2">
-          <Label className="text-[11px] text-neutral-400 font-bold uppercase tracking-wider ml-1">
+          <Label className="text-[11px] text-muted-foreground font-bold uppercase tracking-wider ml-1">
             {triggerSource === 'story' && storyTriggerType === 'reaction' ? 'Emoji Filter (optional)' : 'Keywords'}
           </Label>
           <TagInput
@@ -379,14 +379,14 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess }: CreateRuleF
                   'e.g. hello, hi, menu'
             }
           />
-          <p className="text-[10px] text-neutral-600 ml-1">Press Enter or comma to add</p>
+          <p className="text-[10px] text-muted-foreground ml-1">Press Enter or comma to add</p>
         </div>
       )}
 
       {/* Post/Reel picker */}
       {(triggerSource === 'comment' || triggerSource === 'story') && (
         <div className="space-y-2">
-          <Label className="text-[11px] text-neutral-400 font-bold uppercase tracking-wider ml-1">
+          <Label className="text-[11px] text-muted-foreground font-bold uppercase tracking-wider ml-1">
             {replyToAll ? 'Select Post (Required)' :
               triggerSource === 'story' ? 'Story (Optional)' : 'Post/Reel (Optional)'}
           </Label>
@@ -394,7 +394,7 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess }: CreateRuleF
             <button
               type="button"
               onClick={() => setShowReelPicker(!showReelPicker)}
-              className="w-full p-3 rounded-xl border border-white/10 bg-white/[0.02] hover:bg-white/5 transition-colors text-left flex items-center gap-3"
+              className="w-full p-3 rounded-xl border border-border bg-secondary/30 hover:bg-secondary/60 transition-colors text-left flex items-center gap-3"
             >
               {selectedReel ? (
                 <>
@@ -402,12 +402,12 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess }: CreateRuleF
                     <img src={selectedReel.thumbnail_url || selectedReel.media_url} alt="" className="w-10 h-10 rounded object-cover" />
                   )}
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm text-white truncate">{selectedReel.caption || 'No caption'}</p>
-                    <p className="text-[10px] text-emerald-400">✓ Selected</p>
+                    <p className="text-sm text-foreground truncate">{selectedReel.caption || 'No caption'}</p>
+                    <p className="text-[10px] text-emerald-500">✓ Selected</p>
                   </div>
                 </>
               ) : (
-                <span className="text-sm text-neutral-500">
+                <span className="text-sm text-muted-foreground">
                   {replyToAll ? '📌 Select a post...' : '📌 Optional — applies to any post (tap to pick)'}
                 </span>
               )}
@@ -422,8 +422,8 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess }: CreateRuleF
   const renderStep2 = () => (
     <div className="space-y-5 animate-in fade-in slide-in-from-right-4 duration-300">
       <div>
-        <h3 className="text-lg font-bold text-white mb-1">✉️ What to send?</h3>
-        <p className="text-xs text-neutral-500">Type the auto-reply message — this goes as a DM.</p>
+        <h3 className="text-lg font-bold text-foreground mb-1">✉️ What to send?</h3>
+        <p className="text-xs text-muted-foreground">Type the auto-reply message — this goes as a DM.</p>
       </div>
 
       {/* Response type toggle */}
@@ -432,7 +432,9 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess }: CreateRuleF
           type="button"
           onClick={() => setType("text")}
           className={`p-3 rounded-xl border transition-all flex items-center gap-2 ${
-            type === "text" ? 'border-white bg-white text-black' : 'border-white/10 text-neutral-400 hover:bg-white/5'
+            type === "text"
+              ? "border-foreground bg-foreground text-background shadow-lg shadow-foreground/10"
+              : "border-border text-muted-foreground hover:bg-secondary hover:border-border"
           }`}
         >
           <MessageCircle className="w-4 h-4" />
@@ -442,7 +444,9 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess }: CreateRuleF
           type="button"
           onClick={() => setType("card")}
           className={`p-3 rounded-xl border transition-all flex items-center gap-2 ${
-            type === "card" ? 'border-white bg-white text-black' : 'border-white/10 text-neutral-400 hover:bg-white/5'
+            type === "card"
+              ? "border-foreground bg-foreground text-background shadow-lg shadow-foreground/10"
+              : "border-border text-muted-foreground hover:bg-secondary hover:border-border"
           }`}
         >
           <Send className="w-4 h-4" />
@@ -455,51 +459,51 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess }: CreateRuleF
           <Textarea
             value={messageText}
             onChange={(e) => setMessageText(e.target.value)}
-            className="bg-white/[0.03] border-white/10 min-h-[100px] focus:bg-white/5 transition-colors resize-none"
+            className="bg-secondary/30 border-border min-h-[100px] focus:bg-secondary/50 focus:ring-1 focus:ring-ring transition-colors resize-none"
             placeholder="Type your auto-reply message here..."
           />
-          <p className="text-[10px] text-neutral-600 text-right">{messageText.length}/1000</p>
+          <p className="text-[10px] text-muted-foreground text-right">{messageText.length}/1000</p>
         </div>
       ) : (
         <div className="space-y-3">
-          <div className="space-y-2 p-4 rounded-xl bg-white/[0.02] border border-white/5">
+          <div className="space-y-2 p-4 rounded-xl bg-secondary/20 border border-border">
             <Input
               value={cardTitle}
               onChange={(e) => setCardTitle(e.target.value)}
-              className="bg-transparent border-white/10 font-bold"
+              className="bg-background border-border font-bold text-foreground"
               placeholder="Card Title"
             />
             <Input
               value={cardSubtitle}
               onChange={(e) => setCardSubtitle(e.target.value)}
-              className="bg-transparent border-white/10 text-sm"
+              className="bg-background border-border text-sm text-foreground"
               placeholder="Subtitle (Optional)"
             />
             <Input
               value={cardImage}
               onChange={(e) => setCardImage(e.target.value)}
-              className="bg-transparent border-white/10 text-xs"
+              className="bg-background border-border text-xs text-foreground"
               placeholder="Image URL (https://...)"
             />
           </div>
 
           <div className="space-y-2">
             <div className="flex justify-between items-center">
-              <span className="text-[11px] text-neutral-400 font-bold uppercase tracking-wider">Buttons ({buttons.length}/3)</span>
-              <Button size="sm" variant="ghost" onClick={handleAddButton} disabled={buttons.length >= 3} className="h-7 text-xs hover:bg-white/10">
+              <span className="text-[11px] text-muted-foreground font-bold uppercase tracking-wider">Buttons ({buttons.length}/3)</span>
+              <Button size="sm" variant="ghost" onClick={handleAddButton} disabled={buttons.length >= 3} className="h-7 text-xs hover:bg-secondary">
                 <Plus className="w-3 h-3 mr-1" /> Add
               </Button>
             </div>
             {buttons.map((btn) => (
-              <div key={btn.id} className="flex gap-2 items-center bg-white/5 p-2 rounded-lg border border-white/10 animate-in fade-in">
+              <div key={btn.id} className="flex gap-2 items-center bg-secondary/40 p-2 rounded-lg border border-border animate-in fade-in">
                 <Input
                   value={btn.title}
                   onChange={(e) => updateButton(btn.id, "title", e.target.value)}
-                  className="h-8 text-xs flex-1 bg-transparent border-none px-2"
+                  className="h-8 text-xs flex-1 bg-background border border-border px-2 text-foreground"
                   placeholder="Label"
                 />
                 <Select value={btn.type} onValueChange={(v) => updateButton(btn.id, "type", v as any)}>
-                  <SelectTrigger className="h-8 w-[80px] text-[10px] bg-black/20 border-0">
+                  <SelectTrigger className="h-8 w-[80px] text-[10px] bg-background border border-border">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -510,7 +514,7 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess }: CreateRuleF
                 <Input
                   value={btn.type === "web_url" ? btn.url : btn.payload}
                   onChange={(e) => updateButton(btn.id, btn.type === "web_url" ? "url" : "payload", e.target.value)}
-                  className="h-8 text-xs flex-1 bg-transparent border-none px-2"
+                  className="h-8 text-xs flex-1 bg-background border border-border px-2 text-foreground"
                   placeholder={btn.type === "web_url" ? "https://..." : "Keyword"}
                 />
                 <Button size="icon" variant="ghost" onClick={() => removeButton(btn.id)} className="h-6 w-6 text-red-500 hover:bg-red-500/10">
@@ -529,16 +533,16 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess }: CreateRuleF
   const renderStep3 = () => (
     <div className="space-y-5 animate-in fade-in slide-in-from-right-4 duration-300">
       <div>
-        <h3 className="text-lg font-bold text-white mb-1">🚀 Ready to launch!</h3>
-        <p className="text-xs text-neutral-500">Name it, set options, and you're good to go.</p>
+        <h3 className="text-lg font-bold text-foreground mb-1">🚀 Ready to launch!</h3>
+        <p className="text-xs text-muted-foreground">Name it, set options, and you're good to go.</p>
       </div>
 
       <div className="space-y-2">
-        <Label className="text-[11px] text-neutral-400 font-bold uppercase tracking-wider ml-1">Automation Name</Label>
+        <Label className="text-[11px] text-muted-foreground font-bold uppercase tracking-wider ml-1">Automation Name</Label>
         <Input
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="bg-white/[0.03] border-white/10 focus:bg-white/5"
+          className="bg-secondary/30 border-border focus:bg-secondary/50"
           placeholder="e.g. Welcome Reply, Price Info"
         />
       </div>
@@ -547,46 +551,46 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess }: CreateRuleF
         type="button"
         onClick={() => setCheckFollow(!checkFollow)}
         className={`w-full p-4 rounded-xl border transition-all flex items-center gap-3 ${
-          checkFollow ? 'border-amber-500/50 bg-amber-500/10' : 'border-white/10 hover:border-white/20 hover:bg-white/5'
+          checkFollow ? 'border-amber-500/50 bg-amber-500/10' : 'border-border hover:border-muted-foreground/30 hover:bg-secondary'
         }`}
       >
         <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-          checkFollow ? 'bg-amber-500/20 text-amber-400' : 'bg-white/5 text-neutral-500'
+          checkFollow ? 'bg-amber-500/20 text-amber-500 dark:text-amber-400' : 'bg-secondary text-muted-foreground'
         }`}>
           <Lock className="w-5 h-5" />
         </div>
         <div className="text-left flex-1">
-          <p className={`text-sm font-bold ${checkFollow ? 'text-amber-400' : 'text-white'}`}>Follow Gate</p>
-          <p className="text-[11px] text-neutral-500">Only reply to your followers</p>
+          <p className={`text-sm font-bold ${checkFollow ? 'text-amber-500 dark:text-amber-400' : 'text-foreground'}`}>Follow Gate</p>
+          <p className="text-[11px] text-muted-foreground">Only reply to your followers</p>
         </div>
         <div className={`w-5 h-5 rounded-full border-2 transition-all ${
-          checkFollow ? 'border-amber-500 bg-amber-500' : 'border-white/20'
+          checkFollow ? 'border-amber-500 bg-amber-500' : 'border-border'
         }`}>
-          {checkFollow && <Check className="w-3 h-3 text-black m-auto mt-0.5" />}
+          {checkFollow && <Check className="w-3 h-3 text-black dark:text-white m-auto mt-0.5" />}
         </div>
       </button>
 
       {/* Summary card */}
-      <div className="p-4 rounded-xl bg-white/[0.03] border border-white/5 space-y-3">
-        <p className="text-[10px] text-neutral-500 uppercase tracking-wider font-bold">Summary</p>
+      <div className="p-4 rounded-xl bg-secondary/30 border border-border space-y-3">
+        <p className="text-[10px] text-muted-foreground uppercase tracking-wider font-bold">Summary</p>
         <div className="flex items-center gap-2 text-sm">
-          <span className="text-neutral-500">When:</span>
-          <span className="text-white font-medium">
+          <span className="text-muted-foreground font-medium">When:</span>
+          <span className="text-foreground font-semibold">
             {replyToAll ? 'Any comment' :
               triggerSource === 'story' && storyTriggerType === 'mention' ? 'Story mention' :
                 triggers.length > 0 ? triggers.join(", ") : 'All messages'}
           </span>
         </div>
         <div className="flex items-center gap-2 text-sm">
-          <span className="text-neutral-500">Reply:</span>
-          <span className="text-white font-medium truncate">
+          <span className="text-muted-foreground font-medium">Reply:</span>
+          <span className="text-foreground font-semibold truncate">
             {type === 'text' ? messageText.slice(0, 40) + (messageText.length > 40 ? '...' : '') : `Card: ${cardTitle}`}
           </span>
         </div>
         {checkFollow && (
           <div className="flex items-center gap-2 text-sm">
-            <span className="text-neutral-500">Gate:</span>
-            <span className="text-amber-400 font-medium">Followers only</span>
+            <span className="text-muted-foreground font-medium">Gate:</span>
+            <span className="text-amber-500 dark:text-amber-400 font-semibold">Followers only</span>
           </div>
         )}
       </div>
@@ -608,7 +612,7 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess }: CreateRuleF
           <Button
             variant="ghost"
             onClick={() => setStep(step - 1)}
-            className="flex-1 h-11 rounded-xl border border-white/10 hover:bg-white/5 text-neutral-400"
+            className="flex-1 h-11 rounded-xl border border-border hover:bg-secondary text-muted-foreground"
           >
             <ArrowLeft className="w-4 h-4 mr-2" /> Back
           </Button>
@@ -621,7 +625,7 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess }: CreateRuleF
               if (step === 2 && !canProceedStep2()) return
               setStep(step + 1)
             }}
-            className="flex-1 bg-white text-black hover:bg-white/90 font-bold h-11 rounded-xl shadow-lg shadow-white/5 active:scale-95 transition-all"
+            className="flex-1 bg-foreground text-background hover:bg-foreground/90 font-bold h-11 rounded-xl shadow-lg shadow-foreground/5 active:scale-95 transition-all"
           >
             Next <ArrowRight className="w-4 h-4 ml-2" />
           </Button>
