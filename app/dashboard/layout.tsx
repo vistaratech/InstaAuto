@@ -1,11 +1,12 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import { Sidebar } from "@/components/layout/sidebar"
 import { MobileNav } from "@/components/layout/mobile-nav"
 import { useInstagramSession } from "@/hooks/use-instagram-session"
-import { Loader2 } from "lucide-react"
+import { Loader2, ChevronLeft, ChevronRight } from "lucide-react"
 import { useRouter } from "next/navigation"
-import { useEffect } from "react"
+import { cn } from "@/lib/utils"
 
 export default function DashboardLayout({
     children,
@@ -14,6 +15,21 @@ export default function DashboardLayout({
 }) {
     const { username, userId, logout, isLoading, error } = useInstagramSession()
     const router = useRouter()
+    const [isCollapsed, setIsCollapsed] = useState(false)
+
+    // Load collapsed state preference from localStorage
+    useEffect(() => {
+        const saved = localStorage.getItem("sidebar-collapsed")
+        if (saved === "true") {
+            setIsCollapsed(true)
+        }
+    }, [])
+
+    const handleToggleCollapse = () => {
+        const nextState = !isCollapsed
+        setIsCollapsed(nextState)
+        localStorage.setItem("sidebar-collapsed", String(nextState))
+    }
 
     useEffect(() => {
         if (!isLoading && !userId) {
@@ -30,18 +46,41 @@ export default function DashboardLayout({
     }
 
     return (
-        <div className="flex min-h-screen bg-background text-foreground transition-colors duration-300">
+        <div className="flex min-h-screen bg-background text-foreground transition-colors duration-300 relative">
+            {/* Collapse Toggle Button (Desktop Only) */}
+            <button
+                onClick={handleToggleCollapse}
+                className={cn(
+                    "hidden md:flex fixed top-7 z-50 w-5 h-5 rounded-full border border-sidebar-border bg-background text-muted-foreground hover:text-foreground shadow-sm hover:shadow flex items-center justify-center cursor-pointer transition-all duration-300",
+                    isCollapsed ? "left-[54px]" : "left-[246px]"
+                )}
+                title={isCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
+            >
+                {isCollapsed ? (
+                    <ChevronRight className="w-3 h-3" />
+                ) : (
+                    <ChevronLeft className="w-3 h-3" />
+                )}
+            </button>
+
             {/* Desktop Sidebar */}
-            <div className="hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0 z-50">
+            <div className={cn(
+                "hidden md:flex md:flex-col md:fixed md:inset-y-0 z-50 transition-all duration-300",
+                isCollapsed ? "md:w-16" : "md:w-64"
+            )}>
                 <Sidebar
                     className="h-full border-r border-sidebar-border bg-sidebar"
                     username={username || "User"}
                     onLogout={logout}
+                    isCollapsed={isCollapsed}
                 />
             </div>
 
             {/* Main Content Area */}
-            <div className="flex-1 flex flex-col md:pl-64 transition-all duration-300">
+            <div className={cn(
+                "flex-1 flex flex-col transition-all duration-300",
+                isCollapsed ? "md:pl-16" : "md:pl-64"
+            )}>
                 {/* Mobile Header (Visible only on small screens) */}
                 <header className="md:hidden h-16 border-b border-border bg-card flex items-center justify-between px-4 sticky top-0 z-40 transition-colors duration-300">
                     <span className="font-bold text-lg tracking-tight text-foreground">Insta Autobot</span>
@@ -60,4 +99,5 @@ export default function DashboardLayout({
         </div>
     )
 }
+
 
