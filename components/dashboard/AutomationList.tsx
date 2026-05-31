@@ -36,12 +36,12 @@ export function AutomationList({ automations, onDelete, userId }: AutomationList
 
   if (automations.length === 0) {
     return (
-      <div className="rounded-2xl border border-dashed border-white/10 bg-white/[0.02] p-12 text-center">
-        <div className="w-16 h-16 mx-auto mb-4 bg-white/5 rounded-2xl flex items-center justify-center border border-white/10">
-          <Zap className="w-7 h-7 text-neutral-600" />
+      <div className="rounded-2xl border border-dashed border-border bg-card/40 p-12 text-center shadow-sm">
+        <div className="w-16 h-16 mx-auto mb-4 bg-secondary rounded-2xl flex items-center justify-center border border-border">
+          <Zap className="w-7 h-7 text-muted-foreground" />
         </div>
-        <h3 className="text-base font-bold text-white mb-1">No automations yet</h3>
-        <p className="text-sm text-neutral-500 max-w-sm mx-auto">
+        <h3 className="text-base font-bold text-foreground mb-1">No automations yet</h3>
+        <p className="text-sm text-muted-foreground max-w-sm mx-auto">
           Create your first automation above — it just takes 30 seconds.
         </p>
       </div>
@@ -51,9 +51,9 @@ export function AutomationList({ automations, onDelete, userId }: AutomationList
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-xs font-bold uppercase tracking-widest text-neutral-500 flex items-center gap-2">
+        <h2 className="text-xs font-bold uppercase tracking-widest text-muted-foreground/80 flex items-center gap-2">
           Active Rules
-          <span className="bg-white/10 text-white px-2 py-0.5 rounded-full text-[10px]">{automations.length}</span>
+          <span className="bg-primary/10 text-primary px-2 py-0.5 rounded-full text-[10px]">{automations.length}</span>
         </h2>
       </div>
 
@@ -61,7 +61,7 @@ export function AutomationList({ automations, onDelete, userId }: AutomationList
         {/* Global rules */}
         {globalRules.length > 0 && (
           <div className="space-y-2">
-            <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-blue-400 ml-1">
+            <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-blue-500 dark:text-blue-400 ml-1">
               <Globe className="w-3 h-3" /> Global
             </div>
             {globalRules.map((rule, idx) => (
@@ -73,7 +73,7 @@ export function AutomationList({ automations, onDelete, userId }: AutomationList
         {/* Post-specific rules */}
         {postSpecificRules.length > 0 && (
           <div className="space-y-2">
-            <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-pink-400 ml-1">
+            <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-pink-500 dark:text-pink-400 ml-1">
               <Instagram className="w-3 h-3" /> Post Specific
             </div>
             {postSpecificRules.map((rule, idx) => (
@@ -102,42 +102,42 @@ function RuleCard({ rule, onDelete, index, isSpecific, mediaUrl }: {
 
   return (
     <div
-      className="group p-4 rounded-xl border border-white/5 bg-white/[0.02] hover:bg-white/[0.04] hover:border-white/10 transition-all duration-200"
+      className="group p-4 rounded-xl border border-border bg-card hover:bg-secondary/40 hover:border-primary/20 transition-all duration-200 shadow-sm"
       style={{ animationDelay: `${index * 60}ms` }}
     >
       <div className="flex items-start gap-3">
         {/* Left icon */}
         {isSpecific ? (
-          <div className="w-10 h-10 rounded-lg overflow-hidden bg-white/5 shrink-0 border border-white/10">
+          <div className="w-10 h-10 rounded-lg overflow-hidden bg-secondary shrink-0 border border-border">
             {mediaUrl ? (
               <img src={mediaUrl} alt="" className="w-full h-full object-cover" />
             ) : (
               <div className="w-full h-full flex items-center justify-center">
-                <Instagram className="w-4 h-4 text-neutral-600" />
+                <Instagram className="w-4 h-4 text-muted-foreground" />
               </div>
             )}
           </div>
         ) : (
           <div className="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center border border-blue-500/20 shrink-0">
-            <Globe className="w-4 h-4 text-blue-400" />
+            <Globe className="w-4 h-4 text-blue-500" />
           </div>
         )}
 
         {/* Content */}
         <div className="flex-1 min-w-0 space-y-2">
           <div className="flex items-center justify-between">
-            <h4 className="text-sm font-bold text-white truncate">{rule.name}</h4>
+            <h4 className="text-sm font-bold text-foreground truncate">{rule.name}</h4>
             {confirming ? (
               <div className="flex items-center gap-1 animate-in fade-in">
-                <Button size="sm" variant="ghost" onClick={() => setConfirming(false)} className="h-7 text-xs text-neutral-500">Cancel</Button>
-                <Button size="sm" onClick={() => onDelete(rule.id)} className="h-7 text-xs bg-red-500/20 text-red-400 hover:bg-red-500/30 border border-red-500/20">Delete</Button>
+                <Button size="sm" variant="ghost" onClick={() => setConfirming(false)} className="h-7 text-xs text-muted-foreground hover:bg-secondary">Cancel</Button>
+                <Button size="sm" onClick={() => onDelete(rule.id)} className="h-7 text-xs bg-red-500/20 text-red-600 hover:bg-red-500/30 border border-red-500/20">Delete</Button>
               </div>
             ) : (
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={() => setConfirming(true)}
-                className="h-7 w-7 text-neutral-600 hover:text-red-400 hover:bg-red-500/10 opacity-0 group-hover:opacity-100 transition-all"
+                className="h-7 w-7 text-muted-foreground hover:text-red-500 hover:bg-red-500/10 opacity-0 group-hover:opacity-100 transition-all cursor-pointer"
               >
                 <Trash2 className="w-3.5 h-3.5" />
               </Button>
@@ -149,29 +149,29 @@ function RuleCard({ rule, onDelete, index, isSpecific, mediaUrl }: {
             {/* Keywords */}
             <div className="flex items-center gap-1 flex-wrap">
               {keywords.slice(0, 3).map((kw, i) => (
-                <Badge key={i} variant="secondary" className="bg-white/5 text-neutral-300 border border-white/10 text-[10px] font-mono px-1.5 py-0">
+                <Badge key={i} variant="secondary" className="bg-secondary text-muted-foreground border border-border text-[10px] font-mono px-1.5 py-0">
                   {kw}
                 </Badge>
               ))}
               {keywords.length > 3 && (
-                <span className="text-[10px] text-neutral-600">+{keywords.length - 3}</span>
+                <span className="text-[10px] text-muted-foreground">+{keywords.length - 3}</span>
               )}
             </div>
 
-            <ArrowRight className="w-3 h-3 text-neutral-600 shrink-0" />
+            <ArrowRight className="w-3 h-3 text-muted-foreground shrink-0" />
 
             {/* Response type */}
             <div className="flex items-center gap-1.5">
               {isCard ? (
-                <Send className="w-3 h-3 text-blue-400" />
+                <Send className="w-3 h-3 text-blue-500" />
               ) : (
-                <MessageCircle className="w-3 h-3 text-emerald-400" />
+                <MessageCircle className="w-3 h-3 text-emerald-500" />
               )}
-              <span className="text-[11px] text-neutral-400 truncate max-w-[120px]">{responsePreview}</span>
+              <span className="text-[11px] text-muted-foreground truncate max-w-[120px]">{responsePreview}</span>
             </div>
 
             {rule.response_content?.check_follow && (
-              <Badge variant="secondary" className="bg-amber-500/10 text-amber-400 border border-amber-500/20 text-[10px] px-1.5 py-0">
+              <Badge variant="secondary" className="bg-amber-500/10 text-amber-500 border border-amber-500/20 text-[10px] px-1.5 py-0">
                 <Lock className="w-2.5 h-2.5 mr-0.5" /> Follow
               </Badge>
             )}

@@ -86,8 +86,8 @@ export default function AutomationsPage() {
         fetchAutomations()
     }
 
-    if (isSessionLoading) return <div className="h-screen flex items-center justify-center bg-black"><div className="w-6 h-6 border-2 border-white/20 border-t-white rounded-full animate-spin" /></div>
-    if (!userId) return <div className="h-screen flex items-center justify-center bg-black text-neutral-500">Please log in</div>
+    if (isSessionLoading) return <div className="h-screen flex items-center justify-center bg-background"><div className="w-6 h-6 border-2 border-primary/20 border-t-primary rounded-full animate-spin" /></div>
+    if (!userId) return <div className="h-screen flex items-center justify-center bg-background text-muted-foreground">Please log in</div>
 
     const filteredAutomations = automations.filter(a => a.trigger_source === activeTab)
     const counts = {
@@ -103,28 +103,28 @@ export default function AutomationsPage() {
     ]
 
     return (
-        <div className="min-h-screen bg-black p-4 md:p-8">
+        <div className="min-h-screen bg-background p-4 md:p-8 text-foreground transition-colors duration-300">
             <div className="max-w-3xl mx-auto space-y-6">
                 {/* Header */}
                 <div className="flex items-center justify-between">
                     <div>
-                        <h1 className="text-2xl font-bold text-white tracking-tight flex items-center gap-2">
-                            <Zap className="w-5 h-5 text-yellow-400" />
+                        <h1 className="text-2xl font-bold text-foreground tracking-tight flex items-center gap-2">
+                            <Zap className="w-5 h-5 text-yellow-500" />
                             Automations
                         </h1>
-                        <p className="text-neutral-500 text-sm mt-0.5">
+                        <p className="text-muted-foreground text-sm mt-0.5">
                             {automations.length} active rule{automations.length !== 1 ? 's' : ''}
                         </p>
                     </div>
                     <div className="flex items-center gap-2">
                         {/* AI Auto-Reply Toggle */}
                         {aiLoading ? (
-                            <Loader2 className="w-4 h-4 text-neutral-500 animate-spin" />
+                            <Loader2 className="w-4 h-4 text-muted-foreground animate-spin" />
                         ) : (
                             <>
                                 <button
                                     onClick={() => setShowAiContext(!showAiContext)}
-                                    className="p-2 rounded-xl bg-white/5 border border-white/10 text-neutral-500 hover:text-white hover:bg-white/10 transition-all"
+                                    className="p-2 rounded-xl bg-secondary border border-border text-muted-foreground hover:text-foreground hover:bg-secondary/80 transition-all cursor-pointer"
                                     title="AI Settings"
                                 >
                                     <Brain className="w-3.5 h-3.5" />
@@ -132,10 +132,10 @@ export default function AutomationsPage() {
                                 <button
                                     onClick={handleToggleAI}
                                     disabled={aiToggling}
-                                    className={`flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold tracking-wide uppercase transition-all ${
+                                    className={`flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold tracking-wide uppercase transition-all cursor-pointer ${
                                         aiEnabled
-                                            ? 'bg-purple-500/10 border border-purple-500/30 text-purple-400 hover:bg-purple-500/20'
-                                            : 'bg-white/5 border border-white/10 text-neutral-500 hover:bg-white/10'
+                                            ? 'bg-primary/10 border border-primary/30 text-primary hover:bg-primary/20'
+                                            : 'bg-secondary border border-border text-muted-foreground hover:bg-secondary/80'
                                     }`}
                                 >
                                     <Sparkles className={`w-3.5 h-3.5 ${aiToggling ? 'animate-pulse' : ''}`} />
@@ -145,10 +145,10 @@ export default function AutomationsPage() {
                         )}
                         <button
                             onClick={() => setShowCreateForm(!showCreateForm)}
-                            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all active:scale-95 ${
+                            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all active:scale-95 cursor-pointer ${
                                 showCreateForm 
-                                    ? 'bg-white/10 text-white border border-white/20' 
-                                    : 'bg-white text-black hover:bg-white/90 shadow-lg shadow-white/5'
+                                    ? 'bg-secondary text-foreground border border-border' 
+                                    : 'bg-primary text-primary-foreground hover:bg-primary/90 shadow-md shadow-primary/15'
                             }`}
                         >
                             <Plus className={`w-4 h-4 transition-transform duration-200 ${showCreateForm ? 'rotate-45' : ''}`} />
@@ -159,23 +159,23 @@ export default function AutomationsPage() {
 
                 {/* AI Context Panel */}
                 {showAiContext && (
-                    <div className="rounded-2xl border border-purple-500/20 bg-purple-500/5 p-5 animate-in fade-in slide-in-from-top-2 duration-200 space-y-3">
+                    <div className="rounded-2xl border border-primary/20 bg-primary/5 p-5 animate-in fade-in slide-in-from-top-2 duration-200 space-y-3 shadow-sm">
                         <div className="flex items-center gap-2">
-                            <Brain className="w-4 h-4 text-purple-400" />
-                            <span className="text-sm font-semibold text-purple-300">AI Personality Context</span>
+                            <Brain className="w-4 h-4 text-primary" />
+                            <span className="text-sm font-semibold text-primary">AI Personality Context</span>
                         </div>
-                        <p className="text-xs text-neutral-500">Tell AI about your account — niche, products, tone, what to say/avoid. More context = more human replies.</p>
+                        <p className="text-xs text-muted-foreground">Tell AI about your account — niche, products, tone, what to say/avoid. More context = more human replies.</p>
                         <textarea
                             value={aiContext}
                             onChange={e => setAiContext(e.target.value)}
                             placeholder={`e.g. This is a fitness coaching account. I sell online training programs (₹2999/mo). My tone is motivating but chill. If someone asks about pricing, tell them to DM for a free consultation. Never promise specific results.`}
                             rows={4}
-                            className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder:text-neutral-600 resize-none focus:outline-none focus:border-purple-500/50 transition-colors"
+                            className="w-full bg-secondary/60 border border-border rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/50 resize-none focus:outline-none focus:border-primary/50 transition-colors"
                         />
                         <button
                             onClick={handleSaveAiContext}
                             disabled={aiContextSaving}
-                            className="px-4 py-2 rounded-xl bg-purple-500 hover:bg-purple-400 text-white text-xs font-bold transition-all disabled:opacity-50"
+                            className="px-4 py-2 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground text-xs font-bold transition-all disabled:opacity-50 cursor-pointer shadow-sm shadow-primary/10"
                         >
                             {aiContextSaving ? 'Saving...' : aiContextSaved ? 'Saved ✓' : 'Save Context'}
                         </button>
@@ -183,22 +183,22 @@ export default function AutomationsPage() {
                 )}
 
                 {/* Pill Tabs */}
-                <div className="flex gap-1 bg-white/5 p-1 rounded-xl border border-white/5">
+                <div className="flex gap-1 bg-secondary p-1 rounded-xl border border-border transition-colors duration-300">
                     {tabs.map((tab) => (
                         <button
                             key={tab.key}
                             onClick={() => setActiveTab(tab.key)}
-                            className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-medium transition-all ${
+                            className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-medium transition-all cursor-pointer ${
                                 activeTab === tab.key
-                                    ? 'bg-white text-black shadow-sm'
-                                    : 'text-neutral-500 hover:text-white hover:bg-white/5'
+                                    ? 'bg-background text-foreground shadow-sm border border-border/40'
+                                    : 'text-muted-foreground hover:text-foreground hover:bg-card/50'
                             }`}
                         >
                             {tab.icon}
                             <span className="hidden sm:inline">{tab.label}</span>
                             {tab.count > 0 && (
-                                <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold ${
-                                    activeTab === tab.key ? 'bg-black/10 text-black' : 'bg-white/10 text-white'
+                                <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold transition-all ${
+                                    activeTab === tab.key ? 'bg-primary/10 text-primary' : 'bg-card text-muted-foreground border border-border'
                                 }`}>
                                     {tab.count}
                                 </span>
@@ -209,7 +209,7 @@ export default function AutomationsPage() {
 
                 {/* Create Form (Collapsible) */}
                 {showCreateForm && (
-                    <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 animate-in fade-in slide-in-from-top-2 duration-300">
+                    <div className="rounded-2xl border border-border bg-card/40 p-6 animate-in fade-in slide-in-from-top-2 duration-300 shadow-sm">
                         <CreateRuleForm
                             userId={userId}
                             triggerSource={activeTab}
@@ -223,7 +223,7 @@ export default function AutomationsPage() {
 
                 {/* Ice Breakers (DM only) */}
                 {activeTab === 'dm' && (
-                    <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6">
+                    <div className="rounded-2xl border border-border bg-card/40 p-6 shadow-sm">
                         <IceBreakersManager />
                     </div>
                 )}
@@ -231,7 +231,7 @@ export default function AutomationsPage() {
                 {/* Automation List */}
                 {isLoading ? (
                     <div className="flex items-center justify-center py-16">
-                        <div className="w-6 h-6 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+                        <div className="w-6 h-6 border-2 border-primary/20 border-t-primary rounded-full animate-spin" />
                     </div>
                 ) : (
                     <AutomationList
@@ -244,3 +244,4 @@ export default function AutomationsPage() {
         </div>
     )
 }
+

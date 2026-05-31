@@ -12,7 +12,7 @@ export default function PublisherPage() {
     if (isLoading) {
         return (
             <div className="flex items-center justify-center min-h-[50vh]">
-                <Loader2 className="w-8 h-8 animate-spin text-white/20" />
+                <Loader2 className="w-8 h-8 animate-spin text-primary" />
             </div>
         )
     }
@@ -20,19 +20,19 @@ export default function PublisherPage() {
     if (!userId) {
         return (
             <div className="flex flex-col items-center justify-center min-h-[50vh] text-center p-4">
-                <h2 className="text-xl font-semibold text-white mb-2">Login Required</h2>
-                <p className="text-neutral-400">Please connect your Instagram account to access this feature.</p>
+                <h2 className="text-xl font-semibold text-foreground mb-2">Login Required</h2>
+                <p className="text-muted-foreground">Please connect your Instagram account to access this feature.</p>
             </div>
         )
     }
 
     return (
-        <div className="space-y-6 max-w-5xl mx-auto pb-20">
+        <div className="space-y-6 max-w-5xl mx-auto pb-20 p-4 md:p-8">
             <div className="flex flex-col gap-2">
                 <h1 className="text-3xl font-bold bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 bg-clip-text text-transparent w-fit">
                     Reels Publisher
                 </h1>
-                <p className="text-neutral-400">
+                <p className="text-muted-foreground">
                     Upload content and schedule automated rotation for consistent engagement.
                 </p>
             </div>
@@ -46,11 +46,11 @@ export default function PublisherPage() {
                     <div className="sticky top-6">
                         <SchedulerSettings userId={userId} />
 
-                        <Card className="mt-6 bg-gradient-to-br from-purple-900/20 to-blue-900/20 border-white/10">
+                        <Card className="mt-6 bg-gradient-to-br from-primary/5 to-accent/5 border-border shadow-sm">
                             <CardHeader>
-                                <CardTitle className="text-lg text-white">Automation Tips</CardTitle>
+                                <CardTitle className="text-lg text-foreground font-bold">Automation Tips</CardTitle>
                             </CardHeader>
-                            <CardContent className="space-y-3 text-sm text-neutral-400">
+                            <CardContent className="space-y-3 text-sm text-muted-foreground">
                                 <p>• <strong>Consistency is Key:</strong> Set a comfortable interval like 4-6 hours to keep your feed active.</p>
                                 <p>• <strong>Mix it Up:</strong> Add at least 5-10 clips to avoid repetitive content.</p>
                                 <p>• <strong>Monitor:</strong> Check your Instagram insights to see which time windows perform best and adjust your schedule.</p>
@@ -62,3 +62,4 @@ export default function PublisherPage() {
         </div>
     )
 }
+
