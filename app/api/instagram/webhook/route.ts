@@ -245,15 +245,84 @@ export async function POST(request: NextRequest) {
                 }
               }
 
-              console.log("[v0] 📤 DM Body:", JSON.stringify(apiBody))
               try {
                 const dmRes = await fetch(
                   `https://graph.instagram.com/v24.0/me/messages?access_token=${encodeURIComponent(user.access_token)}`,
                   { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(apiBody) },
                 )
                 const dmJson = await dmRes.json()
-                if (dmJson.error) console.error("[v0] 🔴 Private DM Failed:", JSON.stringify(dmJson.error))
-                else console.log("[v0] 🟢 Private DM Sent!", dmJson)
+                if (dmJson.error) {
+                  console.error("[v0] 🔴 Private DM Failed:", JSON.stringify(dmJson.error))
+                } else {
+                  console.log("[v0] 🟢 Private DM Sent!", dmJson)
+
+                  // Save comment trigger and DM reply to DB
+                  try {
+                    let { data: conv } = await supabase
+                      .from("conversations")
+                      .select("id")
+                      .eq("user_id", user.id)
+                      .eq("recipient_id", senderId)
+                      .single()
+
+                    if (!conv) {
+                      let realUsername = `cnt_${senderId.slice(0, 5)}...`
+                      try {
+                        const profileUrl = `https://graph.instagram.com/v24.0/${senderId}?fields=username&access_token=${user.access_token}`
+                        const profileRes = await fetch(profileUrl)
+                        const profileData = await profileRes.json()
+                        if (profileData.username) {
+                          realUsername = profileData.username
+                        }
+                      } catch (e) {
+                        console.error("[v0] Failed to fetch username in comment DM log", e)
+                      }
+
+                      const { data: newConv } = await supabase
+                        .from("conversations")
+                        .insert({
+                          user_id: user.id,
+                          recipient_id: senderId,
+                          recipient_username: realUsername,
+                          last_message_at: new Date().toISOString(),
+                        })
+                        .select("id")
+                        .single()
+                      conv = newConv
+                    } else {
+                      await supabase
+                        .from("conversations")
+                        .update({ last_message_at: new Date().toISOString() })
+                        .eq("id", conv.id)
+                    }
+
+                    if (conv) {
+                      // Save comment trigger as incoming message
+                      await supabase.from("messages").insert({
+                        id: `mid_cmt_trig_${Date.now()}_${Math.random()}`,
+                        conversation_id: conv.id,
+                        user_id: user.id,
+                        sender_id: senderId,
+                        sender_username: "User",
+                        content: `💬 Commented: "${change.value.text}"`,
+                        is_from_instagram: true,
+                      })
+
+                      // Save outgoing DM reply
+                      await supabase.from("messages").insert({
+                        id: dmJson.message_id || `mid_cmt_reply_${Date.now()}_${Math.random()}`,
+                        conversation_id: conv.id,
+                        user_id: user.id,
+                        sender_id: user.business_account_id,
+                        sender_username: user.username,
+                        content: content.message || `[Sent rich card: "${content.card?.title || 'Card'}"]`,
+                        is_from_instagram: false,
+                      })
+                    }
+                  } catch (dbErr) {
+                    console.error("[v0] Failed to log comment automation to DB:", dbErr)
+                  }
+                }
               } catch (e) {
                 console.error("[v0] 🔴 Private DM Network Error:", e)
               }

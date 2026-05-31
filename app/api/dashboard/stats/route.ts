@@ -34,14 +34,22 @@ export async function GET(request: NextRequest) {
             .eq("user_id", userId)
             .eq("is_from_instagram", false)
 
-        // 5. Recent Activity (Last 5 messages sent by bot)
+        // 5. Recent Activity (Last N messages, both triggers and replies)
+        const limitStr = request.nextUrl.searchParams.get("limit")
+        let limit = 15
+        if (limitStr) {
+            const parsed = parseInt(limitStr, 10)
+            if (!isNaN(parsed) && parsed > 0) {
+                limit = Math.min(parsed, 100)
+            }
+        }
+
         const { data: recentMessages } = await supabase
             .from("messages")
-            .select("id, content, created_at, sender_username, conversation_id, recipient:conversations(recipient_username)")
+            .select("id, content, created_at, sender_username, conversation_id, is_from_instagram, recipient:conversations(recipient_username)")
             .eq("user_id", userId)
-            .eq("is_from_instagram", false)
             .order("created_at", { ascending: false })
-            .limit(5)
+            .limit(limit)
 
         return NextResponse.json({
             metrics: {
