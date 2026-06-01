@@ -16,6 +16,26 @@ export default function DashboardLayout({
     const { username, userId, logout, isLoading, error } = useInstagramSession()
     const router = useRouter()
     const [isCollapsed, setIsCollapsed] = useState(false)
+    const [profilePictureUrl, setProfilePictureUrl] = useState<string | undefined>(undefined)
+
+    // Fetch Instagram profile picture dynamically
+    useEffect(() => {
+        if (!userId) return
+
+        const fetchProfilePicture = async () => {
+            try {
+                const res = await fetch(`/api/instagram/profile-picture?userId=${userId}`)
+                const data = await res.json()
+                if (data.success && data.profilePictureUrl) {
+                    setProfilePictureUrl(data.profilePictureUrl)
+                }
+            } catch (err) {
+                console.error("Failed to fetch profile picture:", err)
+            }
+        }
+
+        fetchProfilePicture()
+    }, [userId])
 
     // Load collapsed state preference from localStorage
     useEffect(() => {
@@ -71,6 +91,7 @@ export default function DashboardLayout({
                 <Sidebar
                     className="h-full border-r border-sidebar-border bg-sidebar"
                     username={username || "User"}
+                    profilePictureUrl={profilePictureUrl}
                     onLogout={logout}
                     isCollapsed={isCollapsed}
                 />
@@ -84,7 +105,7 @@ export default function DashboardLayout({
                 {/* Mobile Header (Visible only on small screens) */}
                 <header className="md:hidden h-16 border-b border-border bg-card flex items-center justify-between px-4 sticky top-0 z-40 transition-colors duration-300">
                     <span className="font-bold text-lg tracking-tight text-foreground">DMSpark</span>
-                    <MobileNav username={username || "User"} onLogout={logout} />
+                    <MobileNav username={username || "User"} profilePictureUrl={profilePictureUrl} onLogout={logout} />
                 </header>
 
                 <main className="flex-1 relative overflow-auto">

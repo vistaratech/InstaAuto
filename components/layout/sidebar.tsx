@@ -22,13 +22,14 @@ import { useTheme } from "next-themes"
 
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
   username?: string
+  profilePictureUrl?: string
   className?: string
   onLogout?: () => void
   onNavigate?: () => void
   isCollapsed?: boolean
 }
 
-export function Sidebar({ className, username = "Demo User", onLogout, onNavigate, isCollapsed = false, ...props }: SidebarProps) {
+export function Sidebar({ className, username = "Demo User", profilePictureUrl, onLogout, onNavigate, isCollapsed = false, ...props }: SidebarProps) {
   const pathname = usePathname()
   const { theme, setTheme } = useTheme()
   const [mounted, setMounted] = React.useState(false)
@@ -157,8 +158,12 @@ export function Sidebar({ className, username = "Demo User", onLogout, onNavigat
           "flex items-center rounded-xl bg-sidebar-accent/30 border border-sidebar-border backdrop-blur-sm group",
           isCollapsed ? "justify-center p-2" : "gap-3 px-3 py-3"
         )}>
-          <div className="w-9 h-9 rounded-full bg-secondary border border-sidebar-border flex items-center justify-center shadow-inner shrink-0">
-            <span className="text-xs font-bold text-foreground">{username.charAt(0).toUpperCase()}</span>
+          <div className="w-9 h-9 rounded-full bg-secondary border border-sidebar-border flex items-center justify-center shadow-inner shrink-0 overflow-hidden">
+            {profilePictureUrl ? (
+              <img src={profilePictureUrl} alt={username} className="w-full h-full object-cover" />
+            ) : (
+              <span className="text-xs font-bold text-foreground">{username.charAt(0).toUpperCase()}</span>
+            )}
           </div>
           {!isCollapsed && (
             <>
