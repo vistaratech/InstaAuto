@@ -71,15 +71,15 @@ export default function DashboardLayout({
             <button
                 onClick={handleToggleCollapse}
                 className={cn(
-                    "hidden md:inline-flex fixed top-[28px] z-[60] w-8 h-8 rounded-full border border-border bg-card text-muted-foreground hover:text-foreground shadow-md hover:shadow-lg items-center justify-center cursor-pointer transition-all duration-300 hover:scale-110 active:scale-95",
-                    isCollapsed ? "left-[48px]" : "left-[240px]"
+                    "hidden md:inline-flex fixed top-[36px] z-[60] w-6 h-6 rounded-full border border-border bg-card text-muted-foreground hover:text-foreground shadow-md hover:shadow-lg items-center justify-center cursor-pointer transition-all duration-300 hover:scale-110 active:scale-95",
+                    isCollapsed ? "left-[52px]" : "left-[244px]"
                 )}
                 title={isCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
             >
                 {isCollapsed ? (
-                    <ChevronRight className="w-4 h-4" />
+                    <ChevronRight className="w-3.5 h-3.5" />
                 ) : (
-                    <ChevronLeft className="w-4 h-4" />
+                    <ChevronLeft className="w-3.5 h-3.5" />
                 )}
             </button>
 
