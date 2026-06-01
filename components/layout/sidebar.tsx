@@ -42,34 +42,16 @@ export function Sidebar({ className, username = "Demo User", profilePictureUrl, 
 
   return (
     <aside className={cn("flex flex-col bg-sidebar border-r border-sidebar-border text-sidebar-foreground h-full transition-all duration-300", className)} {...props}>
-      <div className={cn("flex flex-col shrink-0 select-none", isCollapsed ? "p-4 justify-center items-center" : "p-4")}>
+      <div className={cn("flex shrink-0 select-none", isCollapsed ? "p-4 justify-center items-center" : "p-6 items-center gap-3")}>
         {isCollapsed ? (
-          <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center p-1.5 shadow-md border border-slate-150 hover:scale-105 transition-transform duration-300 shrink-0 cursor-pointer">
-            <img src="/logo.png" alt="DMSpark" className="w-full h-full object-contain shrink-0" />
-          </div>
+          <img src="/logo.png" alt="DMSpark" className="w-9 h-9 object-contain shrink-0" />
         ) : (
-          <div className="w-full rounded-2xl border border-sidebar-border bg-sidebar-accent/15 dark:bg-white/5 backdrop-blur-sm p-3 flex items-center gap-3 shadow-inner relative overflow-hidden group hover:border-blue-500/25 transition-all duration-300 hover:shadow-md hover:shadow-blue-500/5">
-            {/* Ambient hover glow inside the card */}
-            <div className="absolute top-[-20%] right-[-20%] w-16 h-16 rounded-full bg-blue-500/5 blur-xl pointer-events-none group-hover:bg-blue-500/10 transition-all duration-500" />
-            
-            {/* Clean logo tile inside the card */}
-            <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center p-1.5 shadow-sm border border-slate-100 shrink-0">
-              <img src="/logo.png" alt="DMSpark" className="w-full h-full object-contain shrink-0" />
-            </div>
-            
-            {/* Title, Badge and compliance subtitle */}
-            <div className="space-y-0.5 min-w-0">
-              <div className="flex items-center gap-1.5">
-                <span className="font-extrabold text-sm tracking-tight text-foreground truncate">DMSpark</span>
-                <span className="text-[8px] uppercase font-black tracking-widest text-blue-600 dark:text-blue-400 bg-blue-500/10 dark:bg-blue-400/10 border border-blue-500/20 dark:border-blue-400/20 px-1.5 py-0.2 rounded shrink-0">
-                  Pro
-                </span>
-              </div>
-              <p className="text-[8px] text-muted-foreground font-black tracking-tight uppercase truncate">
-                Instagram Automator
-              </p>
-            </div>
-          </div>
+          <>
+            <img src="/logo.png" alt="DMSpark" className="w-10 h-10 object-contain shrink-0" />
+            <span className="font-black text-2xl tracking-tight text-[#1a73e8] leading-none">
+              DMSpark
+            </span>
+          </>
         )}
       </div>
 
