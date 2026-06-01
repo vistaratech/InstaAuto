@@ -147,12 +147,13 @@ function FlowBuilderContent() {
             }
 
             const isFollowGate = rule.response_content?.check_follow
+            const delaySec = rule.response_content?.delay_seconds
             const responseMsg = rule.response_content?.message || rule.response_content?.card?.title || "Welcome to DMSpark!"
             
             const messageNode: Node = {
               id: "message-node",
               type: "message",
-              x: isFollowGate ? 680 : 380,
+              x: (isFollowGate || delaySec) ? 640 : 360,
               y: 180,
               title: rule.name || "Auto-Reply Message",
               content: responseMsg,
@@ -162,12 +163,37 @@ function FlowBuilderContent() {
             const newNodesList = [triggerNode, messageNode]
             const newConnectionsList: Connection[] = []
 
-            if (isFollowGate) {
+            if (isFollowGate && delaySec) {
               const followNode: Node = {
                 id: "follow-check-node",
                 type: "action",
-                x: 380,
+                x: 360,
                 y: 280,
+                title: "Follower Check",
+                content: "Followers Only Gate",
+                extra: "Gate check active"
+              }
+              const delayNode: Node = {
+                id: "delay-node",
+                type: "delay",
+                x: 360,
+                y: 80,
+                title: "Wait Delay",
+                content: String(delaySec),
+                extra: "seconds"
+              }
+              newNodesList.push(followNode, delayNode)
+              newConnectionsList.push(
+                { id: "c-t-f", fromId: "trigger-node", toId: "follow-check-node" },
+                { id: "c-f-d", fromId: "follow-check-node", toId: "delay-node" },
+                { id: "c-d-m", fromId: "delay-node", toId: "message-node" }
+              )
+            } else if (isFollowGate) {
+              const followNode: Node = {
+                id: "follow-check-node",
+                type: "action",
+                x: 360,
+                y: 200,
                 title: "Follower Check",
                 content: "Followers Only Gate",
                 extra: "Gate check active"
@@ -176,6 +202,21 @@ function FlowBuilderContent() {
               newConnectionsList.push(
                 { id: "c-t-f", fromId: "trigger-node", toId: "follow-check-node" },
                 { id: "c-f-m", fromId: "follow-check-node", toId: "message-node" }
+              )
+            } else if (delaySec) {
+              const delayNode: Node = {
+                id: "delay-node",
+                type: "delay",
+                x: 360,
+                y: 200,
+                title: "Wait Delay",
+                content: String(delaySec),
+                extra: "seconds"
+              }
+              newNodesList.push(delayNode)
+              newConnectionsList.push(
+                { id: "c-t-d", fromId: "trigger-node", toId: "delay-node" },
+                { id: "c-d-m", fromId: "delay-node", toId: "message-node" }
               )
             } else {
               newConnectionsList.push(
@@ -314,39 +355,35 @@ function FlowBuilderContent() {
           return
         }
 
-        // Trace the connected nodes to find which message node is actually connected
+        // Trace the connected nodes using a BFS path traversal to find the message node, delay seconds, and follow check status
         let connectedMessageNode: Node | null = null
         let isFollowGateActive = false
+        let delaySeconds = 0
 
-        // Check trigger connections
-        const nextConnections = connections.filter(c => c.fromId === triggerNode.id)
-        
-        // Check if we connect to Follower Check action
-        const followConn = nextConnections.find(c => {
-          const target = nodes.find(n => n.id === c.toId)
-          return target?.type === "action" && target.title === "Follower Check"
-        })
+        const visited = new Set<string>()
+        const queue: string[] = [triggerNode.id]
 
-        if (followConn) {
-          isFollowGateActive = true
-          // Trace outgoing connections from Follower Check
-          const nextConn = connections.find(c => c.fromId === followConn.toId)
-          if (nextConn) {
-            const target = nodes.find(n => n.id === nextConn.toId)
-            if (target?.type === "message") {
-              connectedMessageNode = target
-            }
+        while (queue.length > 0) {
+          const currId = queue.shift()!
+          if (visited.has(currId)) continue
+          visited.add(currId)
+
+          const currNode = nodes.find(n => n.id === currId)
+          if (!currNode) continue
+
+          if (currNode.type === "message") {
+            connectedMessageNode = currNode
+          } else if (currNode.type === "delay") {
+            delaySeconds = parseInt(currNode.content) || 0
+          } else if (currNode.type === "action" && currNode.title === "Follower Check") {
+            isFollowGateActive = true
           }
-        } else {
-          // Check direct connection to message node
-          const directConn = nextConnections.find(c => {
-            const target = nodes.find(n => n.id === c.toId)
-            return target?.type === "message"
-          })
-          if (directConn) {
-            const target = nodes.find(n => n.id === directConn.toId)
-            if (target?.type === "message") {
-              connectedMessageNode = target
+
+          // Add outgoing connections
+          const outgoing = connections.filter(c => c.fromId === currId)
+          for (const c of outgoing) {
+            if (!visited.has(c.toId)) {
+              queue.push(c.toId)
             }
           }
         }
@@ -375,7 +412,8 @@ function FlowBuilderContent() {
             trigger_value: triggerValue,
             content: {
               message: replyText,
-              check_follow: isFollowGateActive
+              check_follow: isFollowGateActive,
+              delay_seconds: delaySeconds
             },
             specific_media_id: specificMediaId
           })
@@ -462,16 +500,17 @@ function FlowBuilderContent() {
           <div className="absolute inset-0 bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none" />
           
           {/* Floating Canvas Dock / Toolbar */}
-          <div className="absolute top-4 left-4 right-4 z-30 flex items-center justify-between bg-card/90 backdrop-blur-md px-4 py-2.5 rounded-2xl border border-border shadow-sm flex-wrap gap-3">
-            <span className="text-xs font-bold text-muted-foreground flex items-center gap-1.5 shrink-0">
-              <Compass className="w-4 h-4 text-primary animate-pulse" /> Flow Dock
+          <div className="absolute top-4 left-4 right-4 z-30 flex items-center justify-between bg-card/85 backdrop-blur-lg px-4 py-3 rounded-2xl border border-border/80 shadow-md shadow-black/5 flex-wrap gap-3">
+            <span className="text-xs font-extrabold text-foreground flex items-center gap-2 bg-gradient-to-r from-primary/10 to-indigo-500/10 border border-primary/20 px-3 py-1 rounded-full shadow-sm">
+              <Compass className="w-4 h-4 text-primary animate-pulse" /> 
+              <span className="bg-gradient-to-r from-primary to-indigo-500 bg-clip-text text-transparent">Flow Dock</span>
             </span>
-            <div className="flex items-center gap-2 flex-wrap">
+            <div className="flex items-center gap-2.5 flex-wrap">
               <Button
                 onClick={() => addNewNode("message")}
                 size="sm"
                 variant="outline"
-                className="h-8 rounded-xl text-xs font-semibold hover:bg-blue-500/10 hover:text-blue-500 hover:border-blue-500/30 transition-all cursor-pointer flex items-center gap-1 bg-transparent"
+                className="h-9 rounded-xl text-xs font-bold hover:bg-blue-500 hover:text-white hover:border-blue-500 border-blue-500/25 text-blue-500 transition-all duration-300 cursor-pointer flex items-center gap-1.5 bg-blue-500/5 shadow-sm shadow-blue-500/5 hover:shadow-blue-500/15"
               >
                 <Plus className="w-3.5 h-3.5" /> Message
               </Button>
@@ -479,7 +518,7 @@ function FlowBuilderContent() {
                 onClick={() => addNewNode("delay")}
                 size="sm"
                 variant="outline"
-                className="h-8 rounded-xl text-xs font-semibold hover:bg-amber-500/10 hover:text-amber-500 hover:border-amber-500/30 transition-all cursor-pointer flex items-center gap-1 bg-transparent"
+                className="h-9 rounded-xl text-xs font-bold hover:bg-amber-500 hover:text-white hover:border-amber-500 border-amber-500/25 text-amber-500 transition-all duration-300 cursor-pointer flex items-center gap-1.5 bg-amber-500/5 shadow-sm shadow-amber-500/5 hover:shadow-amber-500/15"
               >
                 <Plus className="w-3.5 h-3.5" /> Delay
               </Button>
@@ -487,7 +526,7 @@ function FlowBuilderContent() {
                 onClick={() => addNewNode("action")}
                 size="sm"
                 variant="outline"
-                className="h-8 rounded-xl text-xs font-semibold hover:bg-purple-500/10 hover:text-purple-500 hover:border-purple-500/30 transition-all cursor-pointer flex items-center gap-1 bg-transparent"
+                className="h-9 rounded-xl text-xs font-bold hover:bg-purple-500 hover:text-white hover:border-purple-500 border-purple-500/25 text-purple-500 transition-all duration-300 cursor-pointer flex items-center gap-1.5 bg-purple-500/5 shadow-sm shadow-purple-500/5 hover:shadow-purple-500/15"
               >
                 <Plus className="w-3.5 h-3.5" /> Action
               </Button>

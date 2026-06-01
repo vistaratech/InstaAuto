@@ -244,6 +244,11 @@ export async function POST(request: NextRequest) {
                   },
                 }
               }
+              // Handle delay_seconds if present
+              if (content.delay_seconds && content.delay_seconds > 0) {
+                console.log(`[v0] ⏳ Delaying comment DM by ${content.delay_seconds} seconds...`)
+                await new Promise((resolve) => setTimeout(resolve, content.delay_seconds * 1000))
+              }
 
               try {
                 const dmRes = await fetch(
@@ -427,6 +432,12 @@ export async function POST(request: NextRequest) {
                     },
                   },
                 }
+              }
+
+              // Handle delay_seconds if present
+              if (content.delay_seconds && content.delay_seconds > 0) {
+                console.log(`[v0] ⏳ Delaying story DM by ${content.delay_seconds} seconds...`)
+                await new Promise((resolve) => setTimeout(resolve, content.delay_seconds * 1000))
               }
 
               await fetch(
@@ -869,6 +880,12 @@ STRICT RULES — follow every single one:
                 },
               },
             }
+          }
+
+          // Handle delay_seconds if present
+          if (content.delay_seconds && content.delay_seconds > 0) {
+            console.log(`[v0] ⏳ Delaying reply DM by ${content.delay_seconds} seconds...`)
+            await new Promise((resolve) => setTimeout(resolve, content.delay_seconds * 1000))
           }
 
           // SEND REPLY
