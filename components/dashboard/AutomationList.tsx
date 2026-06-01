@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Trash2, Globe, Instagram, Zap, ArrowRight, Lock, MessageCircle, Send, Compass } from "lucide-react"
+import { Trash2, Globe, Instagram, Zap, ArrowRight, Lock, MessageCircle, Send, Compass, Eye } from "lucide-react"
 import { useRouter } from "next/navigation"
 import type { Automation } from "@/lib/types"
 
@@ -11,9 +11,10 @@ interface AutomationListProps {
   automations: Automation[]
   onDelete: (id: string) => void
   userId: string
+  onPreview?: (rule: Automation) => void
 }
 
-export function AutomationList({ automations, onDelete, userId }: AutomationListProps) {
+export function AutomationList({ automations, onDelete, userId, onPreview }: AutomationListProps) {
   const [mediaMap, setMediaMap] = useState<Record<string, string>>({})
   const router = useRouter()
 
@@ -67,7 +68,7 @@ export function AutomationList({ automations, onDelete, userId }: AutomationList
               <Globe className="w-3 h-3" /> Global
             </div>
             {globalRules.map((rule, idx) => (
-              <RuleCard key={rule.id} rule={rule} onDelete={onDelete} index={idx} router={router} />
+              <RuleCard key={rule.id} rule={rule} onDelete={onDelete} index={idx} router={router} onPreview={onPreview} />
             ))}
           </div>
         )}
@@ -79,7 +80,7 @@ export function AutomationList({ automations, onDelete, userId }: AutomationList
               <Instagram className="w-3 h-3" /> Post Specific
             </div>
             {postSpecificRules.map((rule, idx) => (
-              <RuleCard key={rule.id} rule={rule} onDelete={onDelete} index={idx} mediaUrl={mediaMap[rule.specific_media_id || ""]} isSpecific router={router} />
+              <RuleCard key={rule.id} rule={rule} onDelete={onDelete} index={idx} mediaUrl={mediaMap[rule.specific_media_id || ""]} isSpecific router={router} onPreview={onPreview} />
             ))}
           </div>
         )}
@@ -88,13 +89,14 @@ export function AutomationList({ automations, onDelete, userId }: AutomationList
   )
 }
 
-function RuleCard({ rule, onDelete, index, isSpecific, mediaUrl, router }: {
+function RuleCard({ rule, onDelete, index, isSpecific, mediaUrl, router, onPreview }: {
   rule: Automation
   onDelete: (id: string) => void
   index: number
   isSpecific?: boolean
   mediaUrl?: string
   router: any
+  onPreview?: (rule: Automation) => void
 }) {
   const [confirming, setConfirming] = useState(false)
   const keywords = rule.trigger_value.split(",").map(k => k.trim()).filter(Boolean)
@@ -137,6 +139,17 @@ function RuleCard({ rule, onDelete, index, isSpecific, mediaUrl, router }: {
               </div>
             ) : (
               <div className="flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-all duration-200">
+                {onPreview && (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => onPreview(rule)}
+                    className="h-7 w-7 text-muted-foreground hover:text-green-500 hover:bg-green-500/10 rounded-full transition-colors cursor-pointer"
+                    title="Live Preview Flow"
+                  >
+                    <Eye className="w-3.5 h-3.5 text-green-500" />
+                  </Button>
+                )}
                 <Button
                   variant="ghost"
                   size="icon"
