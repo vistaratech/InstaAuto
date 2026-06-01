@@ -1,6 +1,8 @@
 "use client"
 
-import { useState, useRef, useEffect } from "react"
+import { useState, useRef, useEffect, Suspense } from "react"
+import { useSearchParams, useRouter } from "next/navigation"
+import { useInstagramSession } from "@/hooks/use-instagram-session"
 import { 
   Play, 
   MessageSquare, 
@@ -14,10 +16,13 @@ import {
   Sliders,
   Maximize2,
   Compass,
-  ArrowRight
+  ArrowRight,
+  Loader2,
+  ArrowLeft
 } from "lucide-react"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { toast } from "sonner"
 
 interface Node {
   id: string
@@ -36,7 +41,24 @@ interface Connection {
 }
 
 export default function FlowBuilderPage() {
-  // Initial demo nodes
+  return (
+    <Suspense fallback={
+      <div className="h-screen flex items-center justify-center bg-background">
+        <Loader2 className="w-8 h-8 text-primary animate-spin" />
+      </div>
+    }>
+      <FlowBuilderContent />
+    </Suspense>
+  )
+}
+
+function FlowBuilderContent() {
+  const { userId, isLoading: isSessionLoading } = useInstagramSession()
+  const searchParams = useSearchParams()
+  const router = useRouter()
+  const flowId = searchParams.get("id")
+
+  // Demo fallback nodes
   const [nodes, setNodes] = useState<Node[]>([
     { 
       id: "1", 
@@ -76,7 +98,7 @@ export default function FlowBuilderPage() {
     }
   ])
 
-  // Initial connections
+  // Demo fallback connections
   const [connections, setConnections] = useState<Connection[]>([
     { id: "c1", fromId: "1", toId: "2" },
     { id: "c2", fromId: "1", toId: "3" },
@@ -87,11 +109,96 @@ export default function FlowBuilderPage() {
   const [draggedNodeId, setDraggedNodeId] = useState<string | null>(null)
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 })
   const [isSaved, setIsSaved] = useState(false)
+  const [isLoadingFlow, setIsLoadingFlow] = useState(false)
+  const [automationName, setAutomationName] = useState<string>("Demo Automation Flow")
+  const [specificMediaId, setSpecificMediaId] = useState<string | null>(null)
+  const [triggerSource, setTriggerSource] = useState<'comment' | 'dm' | 'story'>('dm')
 
   const canvasRef = useRef<HTMLDivElement>(null)
 
   // Find selected node
   const selectedNode = nodes.find(n => n.id === selectedNodeId)
+
+  // Fetch automation if flowId is set in URL query parameters
+  useEffect(() => {
+    if (!userId || !flowId) return
+
+    const loadAutomation = async () => {
+      try {
+        setIsLoadingFlow(true)
+        const res = await fetch(`/api/automations?userId=${userId}`)
+        const data = await res.json()
+        if (res.ok && Array.isArray(data)) {
+          const rule = data.find((r: any) => r.id === flowId)
+          if (rule) {
+            setAutomationName(rule.name)
+            setSpecificMediaId(rule.specific_media_id)
+            setTriggerSource(rule.trigger_source)
+
+            // Map database rule into nodes
+            const triggerNode: Node = {
+              id: "trigger-node",
+              type: "trigger",
+              x: 80,
+              y: 180,
+              title: rule.trigger_source === "comment" ? "Comment Trigger" : rule.trigger_source === "story" ? "Story Trigger" : "DM Keyword Trigger",
+              content: rule.trigger_value || "start",
+              extra: rule.trigger_type || "keyword"
+            }
+
+            const isFollowGate = rule.response_content?.check_follow
+            const responseMsg = rule.response_content?.message || rule.response_content?.card?.title || "Welcome to DMSpark!"
+            
+            const messageNode: Node = {
+              id: "message-node",
+              type: "message",
+              x: isFollowGate ? 680 : 380,
+              y: 180,
+              title: rule.name || "Auto-Reply Message",
+              content: responseMsg,
+              extra: rule.response_content?.card ? "Rich Card Reply" : "Simple Text Reply"
+            }
+
+            const newNodesList = [triggerNode, messageNode]
+            const newConnectionsList: Connection[] = []
+
+            if (isFollowGate) {
+              const followNode: Node = {
+                id: "follow-check-node",
+                type: "action",
+                x: 380,
+                y: 280,
+                title: "Follower Check",
+                content: "Followers Only Gate",
+                extra: "Gate check active"
+              }
+              newNodesList.push(followNode)
+              newConnectionsList.push(
+                { id: "c-t-f", fromId: "trigger-node", toId: "follow-check-node" },
+                { id: "c-f-m", fromId: "follow-check-node", toId: "message-node" }
+              )
+            } else {
+              newConnectionsList.push(
+                { id: "c-t-m", fromId: "trigger-node", toId: "message-node" }
+              )
+            }
+
+            setNodes(newNodesList)
+            setConnections(newConnectionsList)
+            setSelectedNodeId("trigger-node")
+            toast.success("Automation loaded successfully! 🚀")
+          }
+        }
+      } catch (err) {
+        console.error("Failed to load flow:", err)
+        toast.error("Failed to load automation flow.")
+      } finally {
+        setIsLoadingFlow(false)
+      }
+    }
+
+    loadAutomation()
+  }, [userId, flowId])
 
   // Handle Drag Start
   const handleDragStart = (e: React.MouseEvent, id: string) => {
@@ -192,9 +299,71 @@ export default function FlowBuilderPage() {
     }))
   }
 
-  const handleSave = () => {
-    setIsSaved(true)
-    setTimeout(() => setIsSaved(false), 2000)
+  // Save changes to database API or locally
+  const handleSave = async () => {
+    if (isLoadingFlow) return
+
+    // If editing a real database automation
+    if (flowId && userId) {
+      try {
+        setIsSaved(true)
+        const triggerNode = nodes.find(n => n.type === "trigger")
+        const messageNode = nodes.find(n => n.type === "message")
+        const followNode = nodes.find(n => n.type === "action" && n.title === "Follower Check")
+
+        if (!triggerNode || !messageNode) {
+          toast.error("Flow invalid", { description: "Needs at least a Trigger and a Reply Message." })
+          setIsSaved(false)
+          return
+        }
+
+        const triggerValue = triggerNode.content
+        const replyText = messageNode.content
+        const isFollowGateActive = !!followNode
+
+        const res = await fetch("/api/automations", {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            id: flowId,
+            name: automationName,
+            trigger_source: triggerSource,
+            trigger_value: triggerValue,
+            content: {
+              message: replyText,
+              check_follow: isFollowGateActive
+            },
+            specific_media_id: specificMediaId
+          })
+        })
+
+        if (res.ok) {
+          toast.success("Changes saved successfully! 🎉", { description: "Your live Instagram automation was updated." })
+          setTimeout(() => router.push("/dashboard/automations"), 1200)
+        } else {
+          toast.error("Failed to save changes", { description: "Please check your database connectivity." })
+        }
+      } catch (err) {
+        console.error("Save error:", err)
+        toast.error("Network Error", { description: "Unable to reach server API." })
+      } finally {
+        setTimeout(() => setIsSaved(false), 2000)
+      }
+    } else {
+      // Prototype visual local save feedback
+      setIsSaved(true)
+      toast.success("Prototype Flow saved locally! 👍", { description: "Visual map changes stored in browser view state." })
+      setTimeout(() => setIsSaved(false), 2000)
+    }
+  }
+
+  if (isSessionLoading || isLoadingFlow) {
+    return (
+      <div className="h-screen flex flex-col items-center justify-center bg-background gap-3">
+        <Loader2 className="w-8 h-8 text-primary animate-spin" />
+        <span className="text-xs text-muted-foreground font-semibold uppercase tracking-widest">Loading Automation Canvas...</span>
+      </div>
+    )
   }
 
   return (
@@ -202,13 +371,31 @@ export default function FlowBuilderPage() {
       {/* Top Header Utilities */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 shrink-0">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Visual Flow Builder</h1>
-          <p className="text-muted-foreground mt-1">Design and map your Instagram DM conversational flows visually.</p>
+          <div className="flex items-center gap-2">
+            {flowId && (
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => router.push("/dashboard/automations")}
+                className="h-8 w-8 hover:bg-secondary rounded-xl text-muted-foreground mr-1"
+                title="Back to Automations"
+              >
+                <ArrowLeft className="w-4 h-4" />
+              </Button>
+            )}
+            <h1 className="text-3xl font-bold tracking-tight">
+              {flowId ? `Edit: ${automationName}` : "Visual Flow Builder"}
+            </h1>
+          </div>
+          <p className="text-muted-foreground mt-1">
+            {flowId ? `Updating live rule: ${automationName} (${triggerSource} channel)` : "Design and map your Instagram DM conversational flows visually."}
+          </p>
         </div>
         
         <div className="flex items-center gap-3">
           <Button 
             onClick={handleSave}
+            disabled={isSaved}
             className="bg-primary hover:bg-primary/95 text-white font-bold rounded-xl px-4 py-2 flex items-center gap-2 cursor-pointer shadow-md shadow-primary/10 transition-all"
           >
             <Save className="w-4 h-4" /> {isSaved ? "Flow Saved!" : "Save Changes"}
@@ -398,7 +585,7 @@ export default function FlowBuilderPage() {
                 {/* Node Content text area */}
                 <div className="space-y-1.5">
                   <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest block">
-                    {selectedNode.type === "trigger" ? "Trigger Word" : selectedNode.type === "delay" ? "Delay Time (seconds)" : "Message / Tag Content"}
+                    {selectedNode.type === "trigger" ? "Trigger Word / Keywords" : selectedNode.type === "delay" ? "Delay Time (seconds)" : "Message / Tag Content"}
                   </label>
                   <textarea
                     rows={4}
@@ -439,7 +626,7 @@ export default function FlowBuilderPage() {
           </div>
 
           {/* Delete Node Container */}
-          {selectedNodeId && selectedNode?.type !== "trigger" && (
+          {selectedNodeId && selectedNode?.type !== "trigger" && selectedNode?.id !== "message-node" && (
             <div className="pt-4 border-t border-border mt-6">
               <Button
                 onClick={deleteSelectedNode}

@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Trash2, Globe, Instagram, Zap, ArrowRight, Lock, MessageCircle, Send } from "lucide-react"
+import { Trash2, Globe, Instagram, Zap, ArrowRight, Lock, MessageCircle, Send, Compass } from "lucide-react"
+import { useRouter } from "next/navigation"
 import type { Automation } from "@/lib/types"
 
 interface AutomationListProps {
@@ -14,6 +15,7 @@ interface AutomationListProps {
 
 export function AutomationList({ automations, onDelete, userId }: AutomationListProps) {
   const [mediaMap, setMediaMap] = useState<Record<string, string>>({})
+  const router = useRouter()
 
   const globalRules = automations.filter((rule) => !rule.specific_media_id)
   const postSpecificRules = automations.filter((rule) => rule.specific_media_id)
@@ -65,7 +67,7 @@ export function AutomationList({ automations, onDelete, userId }: AutomationList
               <Globe className="w-3 h-3" /> Global
             </div>
             {globalRules.map((rule, idx) => (
-              <RuleCard key={rule.id} rule={rule} onDelete={onDelete} index={idx} />
+              <RuleCard key={rule.id} rule={rule} onDelete={onDelete} index={idx} router={router} />
             ))}
           </div>
         )}
@@ -77,7 +79,7 @@ export function AutomationList({ automations, onDelete, userId }: AutomationList
               <Instagram className="w-3 h-3" /> Post Specific
             </div>
             {postSpecificRules.map((rule, idx) => (
-              <RuleCard key={rule.id} rule={rule} onDelete={onDelete} index={idx} mediaUrl={mediaMap[rule.specific_media_id || ""]} isSpecific />
+              <RuleCard key={rule.id} rule={rule} onDelete={onDelete} index={idx} mediaUrl={mediaMap[rule.specific_media_id || ""]} isSpecific router={router} />
             ))}
           </div>
         )}
@@ -86,12 +88,13 @@ export function AutomationList({ automations, onDelete, userId }: AutomationList
   )
 }
 
-function RuleCard({ rule, onDelete, index, isSpecific, mediaUrl }: {
+function RuleCard({ rule, onDelete, index, isSpecific, mediaUrl, router }: {
   rule: Automation
   onDelete: (id: string) => void
   index: number
   isSpecific?: boolean
   mediaUrl?: string
+  router: any
 }) {
   const [confirming, setConfirming] = useState(false)
   const keywords = rule.trigger_value.split(",").map(k => k.trim()).filter(Boolean)
@@ -133,14 +136,26 @@ function RuleCard({ rule, onDelete, index, isSpecific, mediaUrl }: {
                 <Button size="sm" onClick={() => onDelete(rule.id)} className="h-7 text-xs bg-red-500/20 text-red-600 hover:bg-red-500/30 border border-red-500/20">Delete</Button>
               </div>
             ) : (
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setConfirming(true)}
-                className="h-7 w-7 text-muted-foreground hover:text-red-500 hover:bg-red-500/10 opacity-0 group-hover:opacity-100 transition-all cursor-pointer"
-              >
-                <Trash2 className="w-3.5 h-3.5" />
-              </Button>
+              <div className="flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-all duration-200">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => router.push(`/dashboard/flow-builder?id=${rule.id}`)}
+                  className="h-7 w-7 text-muted-foreground hover:text-primary hover:bg-primary/10 rounded-full transition-colors cursor-pointer"
+                  title="Edit Flow in Builder"
+                >
+                  <Compass className="w-3.5 h-3.5 text-primary" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setConfirming(true)}
+                  className="h-7 w-7 text-muted-foreground hover:text-red-500 hover:bg-red-500/10 rounded-full transition-colors cursor-pointer"
+                  title="Delete"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                </Button>
+              </div>
             )}
           </div>
 
