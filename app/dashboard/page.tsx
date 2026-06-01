@@ -138,7 +138,7 @@ export default function DashboardPage() {
             </div>
 
             {/* Stats Grid */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 shrink-0">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 shrink-0">
                 <StatCard
                     title="Total Automations"
                     value={stats?.metrics.totalAutomations.toString() || "0"}
@@ -166,10 +166,10 @@ export default function DashboardPage() {
             </div>
 
             {/* Recent Activity */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-1 min-h-0">
-                <Card className="p-4.5 bg-card border-border backdrop-blur-sm lg:col-span-2 shadow-sm flex flex-col justify-between overflow-hidden">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6 md:flex-1 md:min-h-0 shrink-0 md:shrink">
+                <Card className="p-3.5 md:p-4.5 bg-card border-border backdrop-blur-sm lg:col-span-2 shadow-sm flex flex-col justify-between overflow-hidden">
                     <h3 className="font-extrabold text-foreground text-sm tracking-tight border-b border-border/50 pb-2.5 shrink-0">Recent Activity</h3>
-                    <div className="flex-1 overflow-y-auto space-y-2 mt-3 pr-1 scrollbar-thin">
+                    <div className="flex-1 overflow-y-auto space-y-1.5 md:space-y-2 mt-2 md:mt-3 pr-1 scrollbar-thin max-h-[250px] md:max-h-none">
                         {stats?.recentActivity && stats.recentActivity.length > 0 ? (
                             stats.recentActivity.map((msg) => (
                                 <Link 
@@ -259,16 +259,16 @@ export default function DashboardPage() {
 
 function StatCard({ title, value, trend, icon }: { title: string, value: string, trend: string, icon: React.ReactNode }) {
     return (
-        <Card className="p-3.5 bg-card border-border hover:border-primary/30 transition-all shadow-sm hover:shadow-md cursor-pointer group flex flex-col justify-between">
+        <Card className="p-3 md:p-3.5 bg-card border-border hover:border-primary/30 transition-all shadow-sm hover:shadow-md cursor-pointer group flex flex-col justify-between">
             <div className="flex items-center justify-between">
                 <span className="p-2 bg-secondary rounded-lg ring-1 ring-border group-hover:ring-primary/30 group-hover:bg-primary/5 transition-all shrink-0">{icon}</span>
                 <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-secondary text-muted-foreground tracking-wider uppercase">
                     {trend}
                 </span>
             </div>
-            <div className="mt-6">
-                <p className="text-3xl font-bold text-foreground tracking-tight group-hover:text-primary transition-colors">{value}</p>
-                <p className="text-xs text-muted-foreground font-semibold uppercase tracking-wider mt-1.5">{title}</p>
+            <div className="mt-3 md:mt-6">
+                <p className="text-2xl md:text-3xl font-bold text-foreground tracking-tight group-hover:text-primary transition-colors">{value}</p>
+                <p className="text-[10px] md:text-xs text-muted-foreground font-semibold uppercase tracking-wider mt-1">{title}</p>
             </div>
         </Card>
     )
