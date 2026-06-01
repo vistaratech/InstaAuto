@@ -55,6 +55,8 @@ export default function AnalyticsPage() {
     const [loading, setLoading] = useState(true)
     const [timeframe, setTimeframe] = useState<"24h" | "7d" | "30d" | "all">("7d")
     const [feedFilter, setFeedFilter] = useState<"all" | "comments" | "dms" | "replies">("all")
+    const [chartTimeframe, setChartTimeframe] = useState<"1h" | "3h" | "5h" | "1d" | "3d" | "5d">("1d")
+
 
     useEffect(() => {
         if (!userId) return
@@ -164,97 +166,97 @@ export default function AnalyticsPage() {
         const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
         const now = new Date()
         
-        if (timeframe === "24h") {
-            // Group by 4-hour intervals for the last 24 hours
-            const counts: Record<string, number> = {}
-            const intervals: string[] = []
-            
-            for (let i = 5; i >= 0; i--) {
-                const d = new Date(now.getTime() - i * 4 * 60 * 60 * 1000)
-                const hour = d.getHours()
+        interface ChartInterval {
+            label: string
+            startTime: number
+            endTime: number
+        }
+        
+        let intervals: ChartInterval[] = []
+        
+        if (chartTimeframe === "1h") {
+            // 12 intervals of 5 minutes each (last 60 mins)
+            for (let i = 11; i >= 0; i--) {
+                const end = new Date(now.getTime() - i * 5 * 60 * 1000)
+                const start = new Date(end.getTime() - 5 * 60 * 1000)
+                const label = end.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })
+                intervals.push({ label, startTime: start.getTime(), endTime: end.getTime() })
+            }
+        } else if (chartTimeframe === "3h") {
+            // 12 intervals of 15 minutes each (last 3 hours)
+            for (let i = 11; i >= 0; i--) {
+                const end = new Date(now.getTime() - i * 15 * 60 * 1000)
+                const start = new Date(end.getTime() - 15 * 60 * 1000)
+                const label = end.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })
+                intervals.push({ label, startTime: start.getTime(), endTime: end.getTime() })
+            }
+        } else if (chartTimeframe === "5h") {
+            // 10 intervals of 30 minutes each (last 5 hours)
+            for (let i = 9; i >= 0; i--) {
+                const end = new Date(now.getTime() - i * 30 * 60 * 1000)
+                const start = new Date(end.getTime() - 30 * 60 * 1000)
+                const label = end.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })
+                intervals.push({ label, startTime: start.getTime(), endTime: end.getTime() })
+            }
+        } else if (chartTimeframe === "1d") {
+            // 12 intervals of 2 hours each (last 24 hours)
+            for (let i = 11; i >= 0; i--) {
+                const end = new Date(now.getTime() - i * 2 * 60 * 60 * 1000)
+                const start = new Date(end.getTime() - 2 * 60 * 60 * 1000)
+                const hour = end.getHours()
                 const ampm = hour >= 12 ? 'PM' : 'AM'
                 const displayHour = hour % 12 || 12
                 const label = `${displayHour}${ampm}`
-                intervals.push(label)
-                counts[label] = 0
+                intervals.push({ label, startTime: start.getTime(), endTime: end.getTime() })
             }
-            
-            recentActivity.forEach(m => {
-                if (!m.is_from_instagram) {
-                    const date = new Date(m.created_at)
-                    const diffHours = (now.getTime() - date.getTime()) / (1000 * 60 * 60)
-                    if (diffHours >= 0 && diffHours < 24) {
-                        const intervalIdx = 5 - Math.floor(diffHours / 4)
-                        if (intervalIdx >= 0 && intervalIdx < 6) {
-                            const label = intervals[intervalIdx]
-                            counts[label] = (counts[label] || 0) + 1
-                        }
-                    }
-                }
-            })
-            
-            return intervals.map(label => ({
-                name: label,
-                messages: counts[label] || 0,
-                clicks: Math.round((counts[label] || 0) * 0.7)
-            }))
+        } else if (chartTimeframe === "3d") {
+            // 12 intervals of 6 hours each (last 3 days)
+            for (let i = 11; i >= 0; i--) {
+                const end = new Date(now.getTime() - i * 6 * 60 * 60 * 1000)
+                const start = new Date(end.getTime() - 6 * 60 * 60 * 1000)
+                const dayName = days[end.getDay()]
+                const hour = end.getHours()
+                const ampm = hour >= 12 ? 'PM' : 'AM'
+                const displayHour = hour % 12 || 12
+                const label = `${dayName} ${displayHour}${ampm}`
+                intervals.push({ label, startTime: start.getTime(), endTime: end.getTime() })
+            }
+        } else if (chartTimeframe === "5d") {
+            // 10 intervals of 12 hours each (last 5 days)
+            for (let i = 9; i >= 0; i--) {
+                const end = new Date(now.getTime() - i * 12 * 60 * 60 * 1000)
+                const start = new Date(end.getTime() - 12 * 60 * 60 * 1000)
+                const dayName = days[end.getDay()]
+                const hour = end.getHours()
+                const ampm = hour >= 12 ? 'PM' : 'AM'
+                const displayHour = hour % 12 || 12
+                const label = `${dayName} ${displayHour}${ampm}`
+                intervals.push({ label, startTime: start.getTime(), endTime: end.getTime() })
+            }
         }
 
-        if (timeframe === "7d") {
-            const counts: Record<string, number> = {}
-            const weekdays: string[] = []
-            
-            for (let i = 6; i >= 0; i--) {
-                const d = new Date()
-                d.setDate(now.getDate() - i)
-                const dayName = days[d.getDay()]
-                weekdays.push(dayName)
-                counts[dayName] = 0
-            }
-            
-            recentActivity.forEach(m => {
-                if (!m.is_from_instagram) {
-                    const date = new Date(m.created_at)
-                    const diffTime = Math.abs(now.getTime() - date.getTime())
-                    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24))
-                    if (diffDays < 7) {
-                        const name = days[date.getDay()]
-                        counts[name] = (counts[name] || 0) + 1
-                    }
-                }
-            })
-            
-            return weekdays.map(day => ({
-                name: day,
-                messages: counts[day] || 0,
-                clicks: Math.round((counts[day] || 0) * 0.7)
-            }))
-        }
+        const counts: Record<string, number> = {}
+        intervals.forEach(interval => {
+            counts[interval.label] = 0
+        })
 
-        // 30d or all
-        const counts = { "Wk 1": 0, "Wk 2": 0, "Wk 3": 0, "Wk 4": 0 }
-        recentActivity.forEach(m => {
+        rawActivity.forEach(m => {
             if (!m.is_from_instagram) {
-                const date = new Date(m.created_at)
-                const diffTime = Math.abs(now.getTime() - date.getTime())
-                const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24))
-                if (diffDays < 7) {
-                    counts["Wk 4"]++
-                } else if (diffDays < 14) {
-                    counts["Wk 3"]++
-                } else if (diffDays < 21) {
-                    counts["Wk 2"]++
-                } else if (diffDays < 30) {
-                    counts["Wk 1"]++
+                const time = new Date(m.created_at).getTime()
+                for (const interval of intervals) {
+                    if (time >= interval.startTime && time < interval.endTime) {
+                        counts[interval.label]++
+                        break
+                    }
                 }
             }
         })
-        return [
-            { name: "Wk 1", messages: counts["Wk 1"], clicks: Math.round(counts["Wk 1"] * 0.7) },
-            { name: "Wk 2", messages: counts["Wk 2"], clicks: Math.round(counts["Wk 2"] * 0.7) },
-            { name: "Wk 3", messages: counts["Wk 3"], clicks: Math.round(counts["Wk 3"] * 0.7) },
-            { name: "Wk 4", messages: counts["Wk 4"], clicks: Math.round(counts["Wk 4"] * 0.7) }
-        ]
+
+        return intervals.map(interval => ({
+            name: interval.label,
+            messages: counts[interval.label] || 0,
+            clicks: Math.round((counts[interval.label] || 0) * 0.7)
+        }))
     }
     const chartData = getChartData()
 
@@ -342,14 +344,32 @@ export default function AnalyticsPage() {
                 {/* Message Volume Over Time */}
                 <Card className="lg:col-span-2 p-6 bg-card border-border shadow-sm flex flex-col justify-between">
                     <div>
-                        <div className="flex items-center justify-between mb-4">
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
                             <div>
                                 <h3 className="font-bold text-foreground text-base">Automation Flow</h3>
                                 <p className="text-xs text-muted-foreground mt-0.5">Displays successfully delivered automated replies</p>
                             </div>
-                            <span className="flex items-center gap-1 text-xs text-emerald-500 font-semibold bg-emerald-500/10 px-2.5 py-1 rounded-full">
-                                <TrendingUp className="w-3.5 h-3.5" /> +15.4%
-                            </span>
+                            <div className="flex items-center gap-3 flex-wrap sm:flex-nowrap">
+                                {/* Inline Chart Timeframe Selector */}
+                                <div className="flex bg-secondary p-0.5 rounded-lg border border-border w-fit shadow-inner">
+                                    {(["1h", "3h", "5h", "1d", "3d", "5d"] as const).map((t) => (
+                                        <button
+                                            key={t}
+                                            onClick={() => setChartTimeframe(t)}
+                                            className={`px-2.5 py-1 rounded-md text-[10px] transition-all cursor-pointer ${
+                                                chartTimeframe === t
+                                                    ? "bg-background text-foreground shadow-sm font-bold"
+                                                    : "text-muted-foreground hover:text-foreground font-medium"
+                                            }`}
+                                        >
+                                            {t}
+                                        </button>
+                                    ))}
+                                </div>
+                                <span className="flex items-center gap-1 text-xs text-emerald-500 font-semibold bg-emerald-500/10 px-2.5 py-1 rounded-full shrink-0">
+                                    <TrendingUp className="w-3.5 h-3.5" /> +15.4%
+                                </span>
+                            </div>
                         </div>
                         <div className="h-72 w-full mt-4">
                             <ResponsiveContainer width="100%" height="100%">
