@@ -71,7 +71,7 @@ export default function DashboardLayout({
             <button
                 onClick={handleToggleCollapse}
                 className={cn(
-                    "hidden md:inline-flex fixed top-[20px] z-[60] w-8 h-8 rounded-full border border-border bg-card text-muted-foreground hover:text-foreground shadow-md hover:shadow-lg items-center justify-center cursor-pointer transition-all duration-300 hover:scale-110 active:scale-95",
+                    "hidden md:inline-flex fixed top-[28px] z-[60] w-8 h-8 rounded-full border border-border bg-card text-muted-foreground hover:text-foreground shadow-md hover:shadow-lg items-center justify-center cursor-pointer transition-all duration-300 hover:scale-110 active:scale-95",
                     isCollapsed ? "left-[48px]" : "left-[240px]"
                 )}
                 title={isCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}

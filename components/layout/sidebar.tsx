@@ -48,9 +48,14 @@ export function Sidebar({ className, username = "Demo User", profilePictureUrl, 
         ) : (
           <>
             <img src="/logo.png" alt="DMSpark" className="w-10 h-10 object-contain shrink-0" />
-            <span className="font-black text-2xl tracking-tight text-[#1a73e8] leading-none">
-              DMSpark
-            </span>
+            <div className="flex flex-col">
+              <span className="font-black text-2xl tracking-tight text-[#1a73e8] leading-none">
+                DMSpark
+              </span>
+              <span className="text-[10px] text-muted-foreground/50 font-bold tracking-wider uppercase mt-1">
+                DM Automation
+              </span>
+            </div>
           </>
         )}
       </div>
