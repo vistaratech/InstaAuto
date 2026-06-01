@@ -118,9 +118,9 @@ export default function DashboardLayout({
                 isCollapsed ? "md:pl-16" : "md:pl-64"
             )}>
                 {/* Mobile Header (Visible only on small screens) */}
-                <header className="md:hidden h-16 border-b border-border bg-card flex items-center justify-between px-4 sticky top-0 z-40 transition-colors duration-300">
-                    <span className="font-bold text-lg tracking-tight text-foreground">DMSpark</span>
+                <header className="md:hidden h-16 border-b border-border bg-card flex items-center justify-start gap-2 px-4 sticky top-0 z-40 transition-colors duration-300">
                     <MobileNav username={username || "User"} profilePictureUrl={profilePictureUrl} onLogout={logout} />
+                    <span className="font-black text-xl tracking-tighter bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent ml-1">DMSpark</span>
                 </header>
 
                 <main className="flex-1 relative overflow-auto md:overflow-hidden h-[calc(100dvh-4rem)] md:h-dvh flex flex-col">
