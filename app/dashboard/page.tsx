@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import { Card } from "@/components/ui/card"
 import { useInstagramSession } from "@/hooks/use-instagram-session"
-import { Activity, Users, MessageCircle, Zap, Loader2 } from "lucide-react"
+import { Activity, Users, MessageCircle, Zap, Loader2, Settings, MessageSquare } from "lucide-react"
 import Link from "next/link"
 
 interface DashboardStats {
@@ -128,32 +128,57 @@ export default function DashboardPage() {
                     </div>
                 </Card>
 
-                <Card className="p-6 bg-card border-border backdrop-blur-sm shadow-sm flex flex-col justify-between">
-                    <div>
-                        <h3 className="font-bold text-foreground mb-4 text-base">Quick Actions</h3>
-                        <div className="grid grid-cols-1 gap-4">
-                            <Link href="/dashboard/automations" className="h-20 rounded-xl border border-dashed border-border flex flex-row items-center px-4 hover:bg-secondary/40 hover:border-blue-500/50 cursor-pointer transition-all group gap-4">
-                                <div className="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600 group-hover:scale-105 transition-transform">
-                                    <Zap className="w-5 h-5" />
+                <Card className="p-6 bg-card/60 border-border backdrop-blur-sm shadow-sm flex flex-col justify-between hover:border-sidebar-border/80 transition-all duration-300">
+                    <div className="space-y-5">
+                        <h3 className="font-extrabold text-foreground text-sm tracking-tight border-b border-border/50 pb-2 flex items-center gap-2">
+                            <Zap className="w-4 h-4 text-blue-500 animate-pulse" /> Quick Access
+                        </h3>
+                        <div className="grid grid-cols-1 gap-3.5">
+                            {/* New Automation */}
+                            <Link 
+                                href="/dashboard/automations" 
+                                className="h-16 rounded-xl border border-border bg-card/40 flex flex-row items-center px-4 hover:bg-blue-500/5 hover:border-blue-500/35 cursor-pointer transition-all duration-300 group gap-3.5 shadow-sm hover:shadow-md hover:shadow-blue-500/5"
+                            >
+                                <div className="w-9 h-9 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-500 group-hover:scale-105 transition-transform duration-200">
+                                    <Zap className="w-4 h-4" />
                                 </div>
-                                <div className="text-left">
-                                    <span className="text-sm font-semibold text-foreground block">New Rule</span>
-                                    <span className="text-xs text-muted-foreground">Configure a reply trigger</span>
+                                <div className="text-left min-w-0 flex-1">
+                                    <span className="text-xs font-bold text-foreground block group-hover:text-blue-500 transition-colors duration-200 leading-none">New Automation</span>
+                                    <span className="text-[10px] text-muted-foreground mt-1 block truncate font-medium">Configure active replies</span>
                                 </div>
                             </Link>
-                            <Link href="/dashboard/inbox" className="h-20 rounded-xl border border-dashed border-border flex flex-row items-center px-4 hover:bg-secondary/40 hover:border-green-500/50 cursor-pointer transition-all group gap-4">
-                                <div className="w-10 h-10 rounded-lg bg-green-50 flex items-center justify-center text-green-600 group-hover:scale-105 transition-transform">
-                                    <Users className="w-5 h-5" />
+
+                            {/* Live Inbox */}
+                            <Link 
+                                href="/dashboard/inbox" 
+                                className="h-16 rounded-xl border border-border bg-card/40 flex flex-row items-center px-4 hover:bg-emerald-500/5 hover:border-emerald-500/35 cursor-pointer transition-all duration-300 group gap-3.5 shadow-sm hover:shadow-md hover:shadow-emerald-500/5"
+                            >
+                                <div className="w-9 h-9 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-500 group-hover:scale-105 transition-transform duration-200">
+                                    <MessageSquare className="w-4 h-4" />
                                 </div>
-                                <div className="text-left">
-                                    <span className="text-sm font-semibold text-foreground block">View Audience</span>
-                                    <span className="text-xs text-muted-foreground">Manage your DM inbox</span>
+                                <div className="text-left min-w-0 flex-1">
+                                    <span className="text-xs font-bold text-foreground block group-hover:text-emerald-500 transition-colors duration-200 leading-none">Live Inbox</span>
+                                    <span className="text-[10px] text-muted-foreground mt-1 block truncate font-medium">Manage interactive chats</span>
+                                </div>
+                            </Link>
+
+                            {/* System Preferences */}
+                            <Link 
+                                href="/dashboard/settings" 
+                                className="h-16 rounded-xl border border-border bg-card/40 flex flex-row items-center px-4 hover:bg-violet-500/5 hover:border-violet-500/35 cursor-pointer transition-all duration-300 group gap-3.5 shadow-sm hover:shadow-md hover:shadow-violet-500/5"
+                            >
+                                <div className="w-9 h-9 rounded-lg bg-violet-500/10 border border-violet-500/20 flex items-center justify-center text-violet-500 group-hover:scale-105 transition-transform duration-200">
+                                    <Settings className="w-4 h-4" />
+                                </div>
+                                <div className="text-left min-w-0 flex-1">
+                                    <span className="text-xs font-bold text-foreground block group-hover:text-violet-500 transition-colors duration-200 leading-none">AI Settings</span>
+                                    <span className="text-[10px] text-muted-foreground mt-1 block truncate font-medium">Configure preferences</span>
                                 </div>
                             </Link>
                         </div>
                     </div>
                     <div className="mt-8 pt-4 border-t border-border text-center">
-                        <span className="text-[11px] text-muted-foreground font-semibold uppercase tracking-widest">Powered by V-AutoChat</span>
+                        <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest block opacity-75">DMSpark Enterprise Edition</span>
                     </div>
                 </Card>
             </div>
