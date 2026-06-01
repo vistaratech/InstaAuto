@@ -45,10 +45,10 @@ export function Sidebar({ className, username = "Demo User", profilePictureUrl, 
     <aside className={cn("flex flex-col bg-sidebar border-r border-sidebar-border text-sidebar-foreground h-full transition-all duration-300", className)} {...props}>
       <div className={cn("flex shrink-0 select-none", isCollapsed ? "p-4 justify-center items-center" : "p-6 items-center gap-3")}>
         {isCollapsed ? (
-          <img src="/logo.png" alt="DMSpark" className="w-10 h-10 object-contain shrink-0" />
+          <img src="/logo.png" alt="DMSpark" className="w-10 h-10 object-contain shrink-0 bg-white rounded-xl p-1 shadow-sm" />
         ) : (
           <>
-            <img src="/logo.png" alt="DMSpark" className="w-12 h-12 object-contain shrink-0" />
+            <img src="/logo.png" alt="DMSpark" className="w-12 h-12 object-contain shrink-0 bg-white rounded-xl p-1 shadow-sm" />
             <div className="flex flex-col">
               <span className="font-black text-2xl tracking-tight text-[#1a73e8] leading-none">
                 DMSpark
