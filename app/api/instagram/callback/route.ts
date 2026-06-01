@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
   }
 
   if (code) {
-    const redirectUrl = new URL("/", request.url)
+    const redirectUrl = new URL("/dashboard", request.url)
     redirectUrl.searchParams.set("code", code)
     return NextResponse.redirect(redirectUrl)
   }
