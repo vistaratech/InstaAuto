@@ -1,12 +1,20 @@
 "use client"
 
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { MessageCircle, Shield, Clock, ArrowRight, Instagram, Flame, Inbox, Heart, MessageSquare } from "lucide-react"
 import Link from "next/link"
 
 export function LandingPage() {
   const [viewMode, setViewMode] = useState<'mobile' | 'laptop'>('mobile')
+  const [isInAppBrowser, setIsInAppBrowser] = useState(false)
+  const [showInAppWarning, setShowInAppWarning] = useState(false)
+
+  useEffect(() => {
+    const ua = navigator.userAgent || navigator.vendor || (window as any).opera;
+    const isInstagramWebView = ua.indexOf("Instagram") > -1 || ua.indexOf("FBAN/Instagram") > -1 || ua.indexOf("FBAV") > -1;
+    setIsInAppBrowser(isInstagramWebView);
+  }, [])
 
   const instagramAuthUrl = `https://www.instagram.com/oauth/authorize?force_reauth=true&client_id=${process.env.NEXT_PUBLIC_INSTAGRAM_APP_ID}&redirect_uri=${process.env.NEXT_PUBLIC_INSTAGRAM_REDIRECT_URI}&response_type=code&scope=instagram_business_basic%2Cinstagram_business_manage_messages%2Cinstagram_business_manage_comments%2Cinstagram_business_content_publish%2Cinstagram_business_manage_insights#weblink`
 
@@ -100,15 +108,27 @@ export function LandingPage() {
           <img src="/logo.png" alt="DMSpark" className="w-10 h-10 object-contain" />
           <span className="text-xl font-black tracking-tight text-[#1a73e8]">DMSpark</span>
         </div>
-        <Button
-          asChild
-          variant="outline"
-          className="rounded-full px-5 h-9 text-xs font-bold uppercase tracking-widest hover:bg-[#1a73e8]/5 hover:text-[#1a73e8] hover:border-[#1a73e8]/30 transition-all bg-transparent border-border flex items-center gap-1.5 cursor-pointer"
-        >
-          <a href={instagramAuthUrl}>
-            <Instagram className="w-3.5 h-3.5" /> Login
-          </a>
-        </Button>
+        <div className="flex flex-col items-end">
+          <Button
+            asChild={!isInAppBrowser}
+            onClick={isInAppBrowser ? () => setShowInAppWarning(true) : undefined}
+            variant="outline"
+            className="rounded-full px-5 h-9 text-xs font-bold uppercase tracking-widest hover:bg-[#1a73e8]/5 hover:text-[#1a73e8] hover:border-[#1a73e8]/30 transition-all bg-transparent border-border flex items-center gap-1.5 cursor-pointer"
+          >
+            {isInAppBrowser ? (
+              <span>
+                <Instagram className="w-3.5 h-3.5" /> Login
+              </span>
+            ) : (
+              <a href={instagramAuthUrl}>
+                <Instagram className="w-3.5 h-3.5" /> Login
+              </a>
+            )}
+          </Button>
+          {showInAppWarning && (
+            <span className="text-red-500 text-[10px] font-bold mt-1 absolute top-14 animate-in fade-in bg-white/90 p-1 rounded">⚠️ Open in System Browser</span>
+          )}
+        </div>
       </nav>
 
       {/* Split Hero Layout */}
@@ -145,14 +165,26 @@ export function LandingPage() {
             className="flex flex-col sm:flex-row gap-3 pt-2 animate-fade-in-up w-full justify-center md:justify-start"
             style={{ animationDelay: "400ms" }}
           >
-            <Button
-              asChild
-              className="bg-[#1a73e8] text-white h-13 sm:h-14 px-6 sm:px-8 rounded-xl sm:rounded-2xl font-bold text-sm sm:text-base hover:scale-[1.03] transition-all duration-300 shadow-xl shadow-[#1a73e8]/20 hover:bg-[#1557b0] flex items-center justify-center gap-2 group w-full sm:w-auto cursor-pointer"
-            >
-              <a href={instagramAuthUrl}>
-                Connect Instagram <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
-              </a>
-            </Button>
+            <div className="flex flex-col w-full sm:w-auto items-center sm:items-start">
+              <Button
+                asChild={!isInAppBrowser}
+                onClick={isInAppBrowser ? () => setShowInAppWarning(true) : undefined}
+                className="bg-[#1a73e8] text-white h-13 sm:h-14 px-6 sm:px-8 rounded-xl sm:rounded-2xl font-bold text-sm sm:text-base hover:scale-[1.03] transition-all duration-300 shadow-xl shadow-[#1a73e8]/20 hover:bg-[#1557b0] flex items-center justify-center gap-2 group w-full cursor-pointer"
+              >
+                {isInAppBrowser ? (
+                  <span>
+                    Connect Instagram <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
+                  </span>
+                ) : (
+                  <a href={instagramAuthUrl}>
+                    Connect Instagram <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
+                  </a>
+                )}
+              </Button>
+              {showInAppWarning && (
+                <p className="text-red-500 text-xs font-bold mt-2 animate-in fade-in">⚠️ Please tap the 3 dots (top right) and "Open in System Browser" (Chrome/Safari) to connect securely.</p>
+              )}
+            </div>
           </div>
         </div>
 
