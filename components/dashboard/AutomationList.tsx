@@ -138,7 +138,7 @@ function RuleCard({ rule, onDelete, index, isSpecific, mediaUrl, router, onPrevi
                 <Button size="sm" onClick={() => onDelete(rule.id)} className="h-7 text-xs bg-red-500/20 text-red-600 hover:bg-red-500/30 border border-red-500/20">Delete</Button>
               </div>
             ) : (
-              <div className="flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-all duration-200">
+              <div className="flex items-center gap-1.5 md:opacity-0 md:group-hover:opacity-100 transition-all duration-200">
                 {onPreview && (
                   <Button
                     variant="ghost"
