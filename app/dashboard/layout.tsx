@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { Sidebar } from "@/components/layout/sidebar"
 import { MobileNav } from "@/components/layout/mobile-nav"
 import { useInstagramSession } from "@/hooks/use-instagram-session"
-import { Loader2, ChevronLeft, ChevronRight } from "lucide-react"
+import { Loader2, ChevronLeft, ChevronRight, Compass, Copy, Check, ExternalLink, MoreVertical } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { cn } from "@/lib/utils"
 
@@ -17,6 +17,21 @@ export default function DashboardLayout({
     const router = useRouter()
     const [isCollapsed, setIsCollapsed] = useState(false)
     const [profilePictureUrl, setProfilePictureUrl] = useState<string | undefined>(undefined)
+    const [isInAppBrowser, setIsInAppBrowser] = useState(false)
+    const [copied, setCopied] = useState(false)
+
+    // Detect Instagram App in-app browser webview
+    useEffect(() => {
+        const ua = navigator.userAgent || navigator.vendor || (window as any).opera;
+        const isInstagramWebView = ua.indexOf("Instagram") > -1 || ua.indexOf("FBAN/Instagram") > -1 || ua.indexOf("FBAV") > -1;
+        setIsInAppBrowser(isInstagramWebView);
+    }, [])
+
+    const handleCopyLink = () => {
+        navigator.clipboard.writeText(window.location.href)
+        setCopied(true)
+        setTimeout(() => setCopied(false), 2000)
+    }
 
     // Fetch Instagram profile picture dynamically
     useEffect(() => {
@@ -117,6 +132,70 @@ export default function DashboardLayout({
                     {children}
                 </main>
             </div>
+            {/* Instagram Webview Browser Breakout Overlay */}
+            {isInAppBrowser && (
+                <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-950/98 backdrop-blur-xl p-4 sm:p-6 text-white select-none font-sans">
+                    <div className="max-w-md w-full bg-slate-900/60 border border-slate-800 rounded-3xl p-6 sm:p-8 text-center space-y-6 shadow-2xl relative overflow-hidden">
+                        {/* Glowing Background Art */}
+                        <div className="absolute -top-12 -left-12 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl" />
+                        <div className="absolute -bottom-12 -right-12 w-32 h-32 bg-purple-500/10 rounded-full blur-2xl" />
+                        
+                        <div className="relative flex flex-col items-center">
+                            {/* Animated Glowing Icon Ring */}
+                            <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-blue-500 to-purple-600 flex items-center justify-center shadow-lg shadow-blue-500/20 animate-bounce">
+                                <Compass className="w-8 h-8 text-white animate-pulse" />
+                            </div>
+                        </div>
+
+                        <div className="space-y-2">
+                            <h2 className="text-xl sm:text-2xl font-black tracking-tight bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                                Almost Connected! 🚀
+                            </h2>
+                            <p className="text-xs sm:text-sm text-slate-400 leading-relaxed font-medium">
+                                You are currently inside the Instagram App browser. To access your Dashboard securely, please open this link in your standard web browser (Safari or Chrome).
+                            </p>
+                        </div>
+
+                        {/* Interactive Steps */}
+                        <div className="bg-slate-950/50 border border-slate-800/80 rounded-2xl p-4 text-left space-y-3.5">
+                            <div className="flex gap-3 items-start text-xs sm:text-sm text-slate-300">
+                                <span className="w-5 h-5 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-[10px] font-black shrink-0">1</span>
+                                <p className="leading-relaxed font-semibold">
+                                    Click the **three dots menu (<MoreVertical className="inline-block w-4 h-4 text-slate-400 align-middle" />)** or **Share icon** at the top right corner of your screen.
+                                </p>
+                            </div>
+                            <div className="flex gap-3 items-start text-xs sm:text-sm text-slate-300">
+                                <span className="w-5 h-5 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-[10px] font-black shrink-0">2</span>
+                                <p className="leading-relaxed font-semibold">
+                                    Select **"Open in System Browser"** or **"Open in Safari"** from the options.
+                                </p>
+                            </div>
+                        </div>
+
+                        {/* Quick Copy Link Helper */}
+                        <div className="pt-2">
+                            <button
+                                onClick={handleCopyLink}
+                                className="w-full h-11 rounded-xl bg-slate-800 hover:bg-slate-700/80 border border-slate-700/60 font-bold text-xs uppercase tracking-wider transition-all active:scale-98 flex items-center justify-center gap-2 cursor-pointer text-white"
+                            >
+                                {copied ? (
+                                    <>
+                                        <Check className="w-4 h-4 text-green-400" /> Link Copied!
+                                    </>
+                                ) : (
+                                    <>
+                                        <Copy className="w-4 h-4 text-slate-300" /> Copy Dashboard Link
+                                    </>
+                                )}
+                            </button>
+                        </div>
+
+                        <div className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">
+                            DMSpark Secure Redirect
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     )
 }
