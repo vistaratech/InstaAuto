@@ -507,14 +507,6 @@ function FlowBuilderContent() {
             </span>
             <div className="flex items-center gap-2.5 flex-wrap">
               <Button
-                onClick={() => addNewNode("message")}
-                size="sm"
-                variant="outline"
-                className="h-9 rounded-xl text-xs font-bold hover:bg-blue-500 hover:text-white hover:border-blue-500 border-blue-500/25 text-blue-500 transition-all duration-300 cursor-pointer flex items-center gap-1.5 bg-blue-500/5 shadow-sm shadow-blue-500/5 hover:shadow-blue-500/15"
-              >
-                <Plus className="w-3.5 h-3.5" /> Message
-              </Button>
-              <Button
                 onClick={() => addNewNode("delay")}
                 size="sm"
                 variant="outline"
