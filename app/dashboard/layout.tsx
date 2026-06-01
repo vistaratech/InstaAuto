@@ -123,13 +123,15 @@ export default function DashboardLayout({
                     <MobileNav username={username || "User"} profilePictureUrl={profilePictureUrl} onLogout={logout} />
                 </header>
 
-                <main className="flex-1 relative overflow-auto">
+                <main className="flex-1 relative overflow-hidden h-[calc(100dvh-4rem)] md:h-dvh flex flex-col">
                     {error && (
-                        <div className="bg-destructive/10 border border-destructive/30 text-destructive px-4 py-3 text-sm m-4 rounded-lg">
+                        <div className="bg-destructive/10 border border-destructive/30 text-destructive px-4 py-3 text-sm m-4 rounded-lg shrink-0">
                             ⚠️ Login Error: {error}
                         </div>
                     )}
-                    {children}
+                    <div className="flex-1 overflow-y-auto w-full h-full scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent">
+                        {children}
+                    </div>
                 </main>
             </div>
             {/* Instagram Webview Browser Breakout Overlay */}
