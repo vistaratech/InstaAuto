@@ -183,7 +183,7 @@ export function LandingPage() {
           {viewMode === 'mobile' ? (
             /* Smartphone Frame Mockup */
             <div 
-              className="relative bg-white border-[6px] border-slate-900 rounded-[34px] shadow-2xl animate-slide-in-right w-[230px] h-[340px] flex flex-col justify-between overflow-hidden select-none shrink-0"
+              className="relative bg-white border-[6px] border-slate-900 rounded-[34px] shadow-2xl animate-slide-in-right w-[200px] h-[360px] flex flex-col justify-between overflow-hidden select-none shrink-0"
               style={{ animationDelay: "200ms" }}
             >
               {/* Phone Notch/Island */}
