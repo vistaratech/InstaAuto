@@ -55,6 +55,9 @@ export function Sidebar({ className, username = "Demo User", profilePictureUrl, 
         )}
       </div>
 
+      {/* Subtle Horizontal Divider */}
+      <div className="h-px bg-sidebar-border mx-6" />
+
       <div className="flex-1 px-4 space-y-2 py-4 overflow-y-auto scrollbar-hide">
         {!isCollapsed ? (
           <div className="px-2 mb-2 text-[10px] font-bold uppercase tracking-wider text-muted-foreground/60">Main</div>
