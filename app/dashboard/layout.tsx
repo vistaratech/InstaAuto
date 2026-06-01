@@ -129,7 +129,7 @@ export default function DashboardLayout({
                             ⚠️ Login Error: {error}
                         </div>
                     )}
-                    <div className="flex-1 overflow-y-auto w-full h-full scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent">
+                    <div className="flex-1 overflow-hidden w-full h-full flex flex-col">
                         {children}
                     </div>
                 </main>
