@@ -42,12 +42,20 @@ export function Sidebar({ className, username = "Demo User", profilePictureUrl, 
 
   return (
     <aside className={cn("flex flex-col bg-sidebar border-r border-sidebar-border text-sidebar-foreground h-full transition-all duration-300", className)} {...props}>
-      <div className={cn("p-6 flex items-center", isCollapsed ? "justify-center p-4" : "gap-4")}>
-        <img src="/logo.png" alt="DMSpark" className="w-14 h-14 object-contain shrink-0" />
+      <div className={cn("p-6 flex items-center", isCollapsed ? "justify-center p-4" : "gap-3.5")}>
+        <div className="w-11 h-11 rounded-xl bg-gradient-to-tr from-blue-500 via-indigo-500 to-purple-600 p-0.5 shadow-md shadow-blue-500/10 hover:scale-105 transition-transform duration-300 flex items-center justify-center shrink-0">
+          <div className="w-full h-full rounded-[9px] bg-sidebar flex items-center justify-center overflow-hidden">
+            <img src="/logo.png" alt="DMSpark" className="w-7 h-7 object-contain shrink-0 filter drop-shadow-[0_0_6px_rgba(59,130,246,0.3)] dark:brightness-110" />
+          </div>
+        </div>
         {!isCollapsed && (
-          <div>
-            <h2 className="font-extrabold text-xl tracking-tight text-slate-900 leading-none">DMSpark</h2>
-            <span className="text-[10px] uppercase font-bold text-blue-600 tracking-widest mt-1 inline-block">Pro</span>
+          <div className="space-y-1">
+            <h2 className="font-extrabold text-xl tracking-tight bg-gradient-to-r from-slate-900 via-slate-800 to-slate-950 dark:from-white dark:via-slate-200 dark:to-slate-400 bg-clip-text text-transparent leading-none">
+              DMSpark
+            </h2>
+            <span className="text-[9px] uppercase font-black text-blue-600 dark:text-blue-400 tracking-widest px-2 py-0.5 rounded-full bg-blue-500/10 dark:bg-blue-400/10 border border-blue-500/20 dark:border-blue-400/20 inline-block leading-none">
+              Pro
+            </span>
           </div>
         )}
       </div>
@@ -75,9 +83,18 @@ export function Sidebar({ className, username = "Demo User", profilePictureUrl, 
           isCollapsed={isCollapsed}
         />
         <NavItem
+          href="/dashboard/inbox"
+          icon={<MessageSquare className="w-4 h-4" />}
+          label="Inbox"
+          active={isActive("/dashboard/inbox")}
+          onClick={onNavigate}
+          isCollapsed={isCollapsed}
+        />
+        <NavItem
           href="/dashboard/publisher"
           icon={<Clapperboard className="w-4 h-4" />}
           label="Publisher"
+          badge="Soon"
           active={isActive("/dashboard/publisher")}
           onClick={onNavigate}
           isCollapsed={isCollapsed}
@@ -86,15 +103,8 @@ export function Sidebar({ className, username = "Demo User", profilePictureUrl, 
           href="/dashboard/ice-breakers"
           icon={<Snowflake className="w-4 h-4" />}
           label="Ice Breakers"
+          badge="Soon"
           active={isActive("/dashboard/ice-breakers")}
-          onClick={onNavigate}
-          isCollapsed={isCollapsed}
-        />
-        <NavItem
-          href="/dashboard/inbox"
-          icon={<MessageSquare className="w-4 h-4" />}
-          label="Inbox"
-          active={isActive("/dashboard/inbox")}
           onClick={onNavigate}
           isCollapsed={isCollapsed}
         />
@@ -208,6 +218,7 @@ function NavItem({
   href,
   onClick,
   isCollapsed = false,
+  badge,
 }: {
   icon: React.ReactNode
   label: string
@@ -215,6 +226,7 @@ function NavItem({
   href: string
   onClick?: () => void
   isCollapsed?: boolean
+  badge?: string
 }) {
   return (
     <Link
@@ -233,7 +245,16 @@ function NavItem({
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-100%] animate-shimmer" />
       )}
       <span className={active ? "text-primary-foreground" : "text-sidebar-foreground/75 group-hover:text-foreground transition-colors duration-200"}>{icon}</span>
-      {!isCollapsed && <span>{label}</span>}
+      {!isCollapsed && (
+        <div className="flex-1 flex items-center justify-between">
+          <span>{label}</span>
+          {badge && (
+            <span className="text-[9px] px-1.5 py-0.5 rounded-md bg-sidebar-border/80 border border-sidebar-border/20 text-muted-foreground font-black uppercase tracking-wider scale-90 origin-right transition-colors duration-200">
+              {badge}
+            </span>
+          )}
+        </div>
+      )}
     </Link>
   )
 }

@@ -101,7 +101,11 @@ export default function DashboardPage() {
                     <div className="space-y-3">
                         {stats?.recentActivity && stats.recentActivity.length > 0 ? (
                             stats.recentActivity.map((msg) => (
-                                <div key={msg.id} className="flex items-center gap-4 p-3 rounded-lg hover:bg-secondary/40 transition-colors border border-transparent hover:border-border">
+                                <Link 
+                                    key={msg.id} 
+                                    href="/dashboard/inbox"
+                                    className="flex items-center gap-4 p-3 rounded-lg hover:bg-secondary/40 transition-colors border border-transparent hover:border-border cursor-pointer"
+                                >
                                     <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 shrink-0">
                                         <MessageCircle className="w-5 h-5" />
                                     </div>
@@ -114,7 +118,7 @@ export default function DashboardPage() {
                                     <div className="ml-auto text-[10px] text-muted-foreground font-medium whitespace-nowrap bg-secondary px-2 py-1 rounded">
                                         {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                     </div>
-                                </div>
+                                </Link>
                             ))
                         ) : (
                             <div className="py-12 text-center text-muted-foreground text-sm border border-dashed border-border rounded-xl">
