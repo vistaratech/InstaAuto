@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import { Card } from "@/components/ui/card"
 import { useInstagramSession } from "@/hooks/use-instagram-session"
-import { Activity, Users, MessageCircle, Zap, Loader2, Settings, MessageSquare, Plus, Clapperboard, X } from "lucide-react"
+import { Activity, Users, MessageCircle, Zap, Loader2, Settings, MessageSquare, Clapperboard } from "lucide-react"
 import Link from "next/link"
 
 interface DashboardStats {
@@ -59,81 +59,11 @@ export default function DashboardPage() {
 
     return (
         <div className="p-4 sm:p-6 md:p-8 space-y-6 sm:space-y-8 animate-in fade-in duration-500">
-            {/* Welcome Section with Floating Action Button */}
-            <div className="flex items-center justify-between relative">
+            {/* Welcome Section */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold text-foreground">Welcome back, {username}</h1>
-                    <p className="text-muted-foreground mt-1">Here's what's happening with your automations today.</p>
-                </div>
-
-                {/* Floating Plus (+) Interactive Menu */}
-                <div className="relative">
-                    <button
-                        onClick={() => setMenuOpen(!menuOpen)}
-                        className={`w-11 h-11 rounded-full bg-gradient-to-tr from-blue-500 via-indigo-500 to-purple-600 text-white flex items-center justify-center shadow-lg shadow-blue-500/20 hover:scale-105 active:scale-95 transition-all cursor-pointer ring-2 ring-white/10 z-50 ${menuOpen ? 'rotate-45' : ''}`}
-                        title="Quick Options"
-                    >
-                        {menuOpen ? <X className="w-5 h-5 transition-transform" /> : <Plus className="w-5 h-5 transition-transform" />}
-                    </button>
-
-                    {/* Pop-up Menu */}
-                    {menuOpen && (
-                        <>
-                            {/* Backdrop overlay to close when clicking outside */}
-                            <div className="fixed inset-0 z-40" onClick={() => setMenuOpen(false)} />
-                            
-                            <div className="absolute right-0 mt-3 w-56 rounded-2xl border border-border bg-card/95 backdrop-blur-md p-2 shadow-xl z-50 animate-in fade-in slide-in-from-top-3 duration-200">
-                                <div className="px-3 py-2 border-b border-border/50 mb-1">
-                                    <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest block">Quick Options</span>
-                                </div>
-                                
-                                {/* Option 1: Add Automation */}
-                                <Link 
-                                    href="/dashboard/automations" 
-                                    onClick={() => setMenuOpen(false)}
-                                    className="flex items-center gap-3 p-2 rounded-xl hover:bg-blue-500/10 text-left transition-colors group cursor-pointer"
-                                >
-                                    <div className="w-8 h-8 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-500 group-hover:scale-105 transition-transform">
-                                        <Zap className="w-4 h-4" />
-                                    </div>
-                                    <div className="min-w-0">
-                                        <span className="text-xs font-bold text-foreground block group-hover:text-blue-500 transition-colors leading-none">Add Automation</span>
-                                        <span className="text-[9px] text-muted-foreground mt-1 block">New keyword trigger</span>
-                                    </div>
-                                </Link>
-
-                                {/* Option 2: View Reels */}
-                                <Link 
-                                    href="/dashboard/publisher" 
-                                    onClick={() => setMenuOpen(false)}
-                                    className="flex items-center gap-3 p-2 rounded-xl hover:bg-pink-500/10 text-left transition-colors group cursor-pointer"
-                                >
-                                    <div className="w-8 h-8 rounded-lg bg-pink-500/10 border border-pink-500/20 flex items-center justify-center text-pink-500 group-hover:scale-105 transition-transform">
-                                        <Clapperboard className="w-4 h-4" />
-                                    </div>
-                                    <div className="min-w-0">
-                                        <span className="text-xs font-bold text-foreground block group-hover:text-pink-500 transition-colors leading-none">View Reels</span>
-                                        <span className="text-[9px] text-muted-foreground mt-1 block">Schedule content</span>
-                                    </div>
-                                </Link>
-
-                                {/* Option 3: AI Settings */}
-                                <Link 
-                                    href="/dashboard/settings" 
-                                    onClick={() => setMenuOpen(false)}
-                                    className="flex items-center gap-3 p-2 rounded-xl hover:bg-violet-500/10 text-left transition-colors group cursor-pointer"
-                                >
-                                    <div className="w-8 h-8 rounded-lg bg-violet-500/10 border border-violet-500/20 flex items-center justify-center text-violet-500 group-hover:scale-105 transition-transform">
-                                        <Settings className="w-4 h-4" />
-                                    </div>
-                                    <div className="min-w-0">
-                                        <span className="text-xs font-bold text-foreground block group-hover:text-violet-500 transition-colors leading-none">AI Settings</span>
-                                        <span className="text-[9px] text-muted-foreground mt-1 block">Manage LLaMA 3 rules</span>
-                                    </div>
-                                </Link>
-                            </div>
-                        </>
-                    )}
+                    <h1 className="text-3xl font-bold text-foreground tracking-tight">Welcome back, {username}</h1>
+                    <p className="text-muted-foreground mt-1 font-medium">Here's what's happening with your automations today.</p>
                 </div>
             </div>
 
@@ -167,11 +97,12 @@ export default function DashboardPage() {
 
             {/* Recent Activity */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <Card className="p-6 bg-card border-border backdrop-blur-sm lg:col-span-2 shadow-sm">
-                    <h3 className="font-bold text-foreground mb-4 text-base">Recent Activity</h3>
-                    <div className="space-y-3">
-                        {stats?.recentActivity && stats.recentActivity.length > 0 ? (
-                            stats.recentActivity.map((msg) => (
+                <Card className="p-6 bg-card border-border backdrop-blur-sm lg:col-span-2 shadow-sm flex flex-col justify-between">
+                    <div>
+                        <h3 className="font-bold text-foreground mb-4 text-base">Recent Activity</h3>
+                        <div className="space-y-2.5 max-h-[280px] overflow-y-auto pr-1">
+                            {stats?.recentActivity && stats.recentActivity.length > 0 ? (
+                                stats.recentActivity.slice(0, 5).map((msg) => (
                                 <Link 
                                     key={msg.id} 
                                     href="/dashboard/inbox"
@@ -196,6 +127,7 @@ export default function DashboardPage() {
                                 No recent activity found.
                             </div>
                         )}
+                        </div>
                     </div>
                 </Card>
 
