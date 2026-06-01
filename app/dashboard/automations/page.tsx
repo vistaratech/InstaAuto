@@ -93,12 +93,12 @@ export default function AutomationsPage() {
     ]
 
     return (
-        <div className="min-h-screen bg-background p-4 md:p-8 text-foreground transition-colors duration-300">
-            <div className="max-w-3xl mx-auto space-y-6">
+        <div className="min-h-screen bg-background p-4 md:p-8 text-foreground transition-colors duration-300 pb-20 md:pb-8">
+            <div className="max-w-3xl mx-auto space-y-4 md:space-y-6">
                 {/* Header */}
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div>
-                        <h1 className="text-2xl font-bold text-foreground tracking-tight flex items-center gap-2">
+                        <h1 className="text-xl sm:text-2xl font-bold text-foreground tracking-tight flex items-center gap-2">
                             <Zap className="w-5 h-5 text-yellow-500" />
                             Automations
                         </h1>
@@ -109,7 +109,7 @@ export default function AutomationsPage() {
                     <div className="flex items-center gap-2">
                         <button
                             onClick={() => setShowCreateForm(!showCreateForm)}
-                            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all active:scale-95 cursor-pointer ${
+                            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all active:scale-95 cursor-pointer w-full sm:w-auto justify-center ${
                                 showCreateForm 
                                     ? 'bg-secondary text-foreground border border-border' 
                                     : 'bg-primary text-primary-foreground hover:bg-primary/90 shadow-md shadow-primary/15'
@@ -127,7 +127,7 @@ export default function AutomationsPage() {
                         <button
                             key={tab.key}
                             onClick={() => setActiveTab(tab.key)}
-                            className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-medium transition-all cursor-pointer ${
+                            className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 md:py-2.5 rounded-lg text-xs sm:text-sm font-medium transition-all cursor-pointer ${
                                 activeTab === tab.key
                                     ? 'bg-background text-foreground shadow-sm border border-border/40'
                                     : 'text-muted-foreground hover:text-foreground hover:bg-card/50'
@@ -148,7 +148,7 @@ export default function AutomationsPage() {
 
                 {/* Create Form (Collapsible) */}
                 {showCreateForm && (
-                    <div className="rounded-2xl border border-border bg-card/40 p-6 animate-in fade-in slide-in-from-top-2 duration-300 shadow-sm">
+                    <div className="rounded-2xl border border-border bg-card/40 p-4 md:p-6 animate-in fade-in slide-in-from-top-2 duration-300 shadow-sm">
                         <CreateRuleForm
                             userId={userId}
                             triggerSource={activeTab}
@@ -162,7 +162,7 @@ export default function AutomationsPage() {
 
                 {/* Ice Breakers (DM only) */}
                 {activeTab === 'dm' && (
-                    <div className="rounded-2xl border border-border bg-card/40 p-6 shadow-sm">
+                    <div className="rounded-2xl border border-border bg-card/40 p-4 md:p-6 shadow-sm">
                         <IceBreakersManager />
                     </div>
                 )}
