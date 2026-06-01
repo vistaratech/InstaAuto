@@ -3,13 +3,12 @@
 import React, { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { MessageCircle, Shield, Clock, ArrowRight, Instagram, Flame, Inbox, Heart, MessageSquare } from "lucide-react"
+import Link from "next/link"
 
 export function LandingPage() {
   const [viewMode, setViewMode] = useState<'mobile' | 'laptop'>('mobile')
 
-  const handleLogin = () => {
-    window.location.href = `https://www.instagram.com/oauth/authorize?force_reauth=true&client_id=${process.env.NEXT_PUBLIC_INSTAGRAM_APP_ID}&redirect_uri=${process.env.NEXT_PUBLIC_INSTAGRAM_REDIRECT_URI}&response_type=code&scope=instagram_business_basic%2Cinstagram_business_manage_messages%2Cinstagram_business_manage_comments%2Cinstagram_business_content_publish%2Cinstagram_business_manage_insights`
-  }
+  const instagramAuthUrl = `https://www.instagram.com/oauth/authorize?force_reauth=true&client_id=${process.env.NEXT_PUBLIC_INSTAGRAM_APP_ID}&redirect_uri=${process.env.NEXT_PUBLIC_INSTAGRAM_REDIRECT_URI}&response_type=code&scope=instagram_business_basic%2Cinstagram_business_manage_messages%2Cinstagram_business_manage_comments%2Cinstagram_business_content_publish%2Cinstagram_business_manage_insights`
 
   return (
     <div className="min-h-screen md:h-screen bg-background text-foreground md:overflow-hidden flex flex-col relative select-none">
@@ -102,11 +101,13 @@ export function LandingPage() {
           <span className="text-xl font-black tracking-tight text-[#1a73e8]">DMSpark</span>
         </div>
         <Button
-          onClick={handleLogin}
+          asChild
           variant="outline"
-          className="rounded-full px-5 h-9 text-xs font-bold uppercase tracking-widest hover:bg-[#1a73e8]/5 hover:text-[#1a73e8] hover:border-[#1a73e8]/30 transition-all bg-transparent border-border flex items-center gap-1.5"
+          className="rounded-full px-5 h-9 text-xs font-bold uppercase tracking-widest hover:bg-[#1a73e8]/5 hover:text-[#1a73e8] hover:border-[#1a73e8]/30 transition-all bg-transparent border-border flex items-center gap-1.5 cursor-pointer"
         >
-          <Instagram className="w-3.5 h-3.5" /> Login
+          <a href={instagramAuthUrl}>
+            <Instagram className="w-3.5 h-3.5" /> Login
+          </a>
         </Button>
       </nav>
 
@@ -145,10 +146,12 @@ export function LandingPage() {
             style={{ animationDelay: "400ms" }}
           >
             <Button
-              onClick={handleLogin}
-              className="bg-[#1a73e8] text-white h-13 sm:h-14 px-6 sm:px-8 rounded-xl sm:rounded-2xl font-bold text-sm sm:text-base hover:scale-[1.03] transition-all duration-300 shadow-xl shadow-[#1a73e8]/20 hover:bg-[#1557b0] flex items-center justify-center gap-2 group w-full sm:w-auto"
+              asChild
+              className="bg-[#1a73e8] text-white h-13 sm:h-14 px-6 sm:px-8 rounded-xl sm:rounded-2xl font-bold text-sm sm:text-base hover:scale-[1.03] transition-all duration-300 shadow-xl shadow-[#1a73e8]/20 hover:bg-[#1557b0] flex items-center justify-center gap-2 group w-full sm:w-auto cursor-pointer"
             >
-              Connect Instagram <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
+              <a href={instagramAuthUrl}>
+                Connect Instagram <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
+              </a>
             </Button>
           </div>
         </div>
@@ -363,6 +366,22 @@ export function LandingPage() {
         </div>
 
       </main>
+
+      {/* Sleek, Premium Compliance Footer */}
+      <footer className="w-full py-3 border-t border-slate-100 dark:border-white/10 bg-white/40 dark:bg-black/20 backdrop-blur-md flex flex-col sm:flex-row items-center justify-between px-6 text-[10px] text-muted-foreground z-20 gap-3 shrink-0">
+        <p>© {new Date().getFullYear()} DMSpark. All rights reserved. Not affiliated with Meta Platforms Inc. or Instagram.</p>
+        <div className="flex items-center gap-4">
+          <Link href="/privacy" className="hover:text-foreground font-semibold transition-colors">
+            Privacy Policy
+          </Link>
+          <Link href="/terms" className="hover:text-foreground font-semibold transition-colors">
+            Terms of Service
+          </Link>
+          <Link href="/delete-data" className="hover:text-foreground font-semibold transition-colors">
+            Data Deletion Instructions
+          </Link>
+        </div>
+      </footer>
     </div>
   )
 }
