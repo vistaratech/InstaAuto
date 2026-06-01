@@ -308,18 +308,62 @@ function FlowBuilderContent() {
       try {
         setIsSaved(true)
         const triggerNode = nodes.find(n => n.type === "trigger")
-        const messageNode = nodes.find(n => n.type === "message")
-        const followNode = nodes.find(n => n.type === "action" && n.title === "Follower Check")
+        if (!triggerNode) {
+          toast.error("Flow invalid", { description: "Your flow must have a Trigger node." })
+          setIsSaved(false)
+          return
+        }
 
-        if (!triggerNode || !messageNode) {
-          toast.error("Flow invalid", { description: "Needs at least a Trigger and a Reply Message." })
+        // Trace the connected nodes to find which message node is actually connected
+        let connectedMessageNode: Node | null = null
+        let isFollowGateActive = false
+
+        // Check trigger connections
+        const nextConnections = connections.filter(c => c.fromId === triggerNode.id)
+        
+        // Check if we connect to Follower Check action
+        const followConn = nextConnections.find(c => {
+          const target = nodes.find(n => n.id === c.toId)
+          return target?.type === "action" && target.title === "Follower Check"
+        })
+
+        if (followConn) {
+          isFollowGateActive = true
+          // Trace outgoing connections from Follower Check
+          const nextConn = connections.find(c => c.fromId === followConn.toId)
+          if (nextConn) {
+            const target = nodes.find(n => n.id === nextConn.toId)
+            if (target?.type === "message") {
+              connectedMessageNode = target
+            }
+          }
+        } else {
+          // Check direct connection to message node
+          const directConn = nextConnections.find(c => {
+            const target = nodes.find(n => n.id === c.toId)
+            return target?.type === "message"
+          })
+          if (directConn) {
+            const target = nodes.find(n => n.id === directConn.toId)
+            if (target?.type === "message") {
+              connectedMessageNode = target
+            }
+          }
+        }
+
+        // Fallback: If no connected message node is traced, fallback to the first message node
+        if (!connectedMessageNode) {
+          connectedMessageNode = nodes.find(n => n.type === "message") || null
+        }
+
+        if (!connectedMessageNode) {
+          toast.error("Flow invalid", { description: "Needs at least one Reply Message connected to your trigger." })
           setIsSaved(false)
           return
         }
 
         const triggerValue = triggerNode.content
-        const replyText = messageNode.content
-        const isFollowGateActive = !!followNode
+        const replyText = connectedMessageNode.content
 
         const res = await fetch("/api/automations", {
           method: "PUT",
@@ -453,7 +497,7 @@ function FlowBuilderContent() {
           {/* SVG Connections Overlay */}
           <svg className="absolute inset-0 w-full h-full pointer-events-none z-10">
             <defs>
-              <linearGradient id="wireGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <linearGradient id="wireGradient" x1="0%" y1="0%" x2="100%" y2="0%" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" stopColor="oklch(0.58 0.16 260)" stopOpacity={0.8} />
                 <stop offset="100%" stopColor="oklch(0.68 0.18 280)" stopOpacity={0.8} />
               </linearGradient>
