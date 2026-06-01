@@ -14,7 +14,8 @@ import {
   Snowflake, 
   Clapperboard,
   Sun,
-  Moon
+  Moon,
+  Compass
 } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
@@ -82,6 +83,14 @@ export function Sidebar({ className, username = "Demo User", profilePictureUrl, 
           icon={<Zap className="w-4 h-4" />}
           label="Automations"
           active={isActive("/dashboard/automations")}
+          onClick={onNavigate}
+          isCollapsed={isCollapsed}
+        />
+        <NavItem
+          href="/dashboard/flow-builder"
+          icon={<Compass className="w-4 h-4" />}
+          label="Flow Builder"
+          active={isActive("/dashboard/flow-builder")}
           onClick={onNavigate}
           isCollapsed={isCollapsed}
         />
