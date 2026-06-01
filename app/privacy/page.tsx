@@ -1,53 +1,141 @@
+import Link from "next/link"
+import { ArrowLeft, Shield, Eye, Database, Trash2, Globe, Mail, Lock } from "lucide-react"
+
 export default function PrivacyPolicy() {
   return (
-    <div className="min-h-screen bg-black text-white p-8 md:p-16">
-      <div className="max-w-3xl mx-auto space-y-8">
-        <h1 className="text-4xl font-bold tracking-tight">Privacy Policy</h1>
-        <p className="text-neutral-400 text-sm">Last updated: May 2026</p>
+    <div className="min-h-screen bg-[#030712] text-slate-100 p-6 md:p-16 relative overflow-hidden select-none">
+      {/* Decorative Blur Backgrounds */}
+      <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] rounded-full bg-blue-500/10 blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] rounded-full bg-violet-500/10 blur-[120px] pointer-events-none" />
 
-        <div className="space-y-6 text-neutral-300 leading-relaxed">
-          <section className="space-y-3">
-            <h2 className="text-xl font-semibold text-white">1. Information We Collect</h2>
-            <p>When you connect your Instagram account to InstaAutobot, we collect:</p>
-            <ul className="list-disc list-inside space-y-1 text-neutral-400">
-              <li>Your Instagram username and user ID</li>
-              <li>Access tokens provided by Instagram for API access</li>
-              <li>Messages and comments received through Instagram webhooks</li>
-              <li>Automation rules and settings you create</li>
-            </ul>
-          </section>
-
-          <section className="space-y-3">
-            <h2 className="text-xl font-semibold text-white">2. How We Use Your Information</h2>
-            <p>We use your information to:</p>
-            <ul className="list-disc list-inside space-y-1 text-neutral-400">
-              <li>Process and respond to Instagram messages and comments automatically</li>
-              <li>Display your inbox and conversation history</li>
-              <li>Execute automation rules you have configured</li>
-              <li>Improve and maintain the service</li>
-            </ul>
-          </section>
-
-          <section className="space-y-3">
-            <h2 className="text-xl font-semibold text-white">3. Data Storage</h2>
-            <p>Your data is stored securely in our database. We do not sell, trade, or share your personal information with third parties.</p>
-          </section>
-
-          <section className="space-y-3">
-            <h2 className="text-xl font-semibold text-white">4. Data Deletion</h2>
-            <p>You can request deletion of your data at any time by disconnecting your Instagram account from the app. Upon disconnection, all associated data will be removed from our systems.</p>
-          </section>
-
-          <section className="space-y-3">
-            <h2 className="text-xl font-semibold text-white">5. Third-Party Services</h2>
-            <p>This app uses the Instagram API (Meta) to function. Your use of Instagram is governed by Meta&apos;s own privacy policy and terms of service.</p>
-          </section>
-
-          <section className="space-y-3">
-            <h2 className="text-xl font-semibold text-white">6. Contact</h2>
-            <p>For any privacy-related questions, please contact us at: <span className="text-white">virtualrevolution02@gmail.com</span></p>
-          </section>
+      <div className="max-w-4xl mx-auto space-y-10 relative z-10 animate-in fade-in duration-700">
+        
+        {/* Back Navigation */}
+        <div>
+          <Link 
+            href="/" 
+            className="inline-flex items-center gap-2 text-xs font-semibold text-slate-400 hover:text-white transition-all hover:translate-x-[-4px] duration-200"
+          >
+            <ArrowLeft className="w-4 h-4" /> Back to Home
+          </Link>
         </div>
+
+        {/* Header */}
+        <div className="space-y-3 border-b border-slate-800/80 pb-6">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-[10px] uppercase font-bold tracking-wider">
+            <Lock className="w-3 h-3" /> Meta Compliant
+          </div>
+          <h1 className="text-4xl md:text-5xl font-black tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
+            Privacy Policy
+          </h1>
+          <p className="text-slate-400 text-xs font-medium">Last updated: June 2026 • Version 2.0</p>
+        </div>
+
+        {/* Introduction */}
+        <p className="text-sm text-slate-300 leading-relaxed max-w-2xl font-medium">
+          DMSpark values your trust. This Privacy Policy details how we collect, store, utilize, and protect your information when you connect your Instagram accounts to our automation platform.
+        </p>
+
+        {/* Main Content Sections */}
+        <div className="space-y-6">
+          
+          {/* Card 1 */}
+          <div className="p-6 rounded-2xl border border-slate-800/60 bg-slate-900/40 backdrop-blur-md space-y-4">
+            <div className="flex items-center gap-3 border-b border-slate-800/60 pb-3">
+              <div className="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center border border-blue-500/20">
+                <Eye className="w-4 h-4 text-blue-400" />
+              </div>
+              <h2 className="text-lg font-bold text-white tracking-tight">1. Information We Collect</h2>
+            </div>
+            <p className="text-xs text-slate-400 leading-relaxed">
+              When you authenticate with Instagram, we obtain necessary credentials through Meta's secure OAuth consent window:
+            </p>
+            <ul className="list-disc list-inside space-y-2 text-xs text-slate-400 pl-2">
+              <li><span className="text-slate-200 font-semibold">Profile Identity:</span> Your unique Instagram ID, username, profile picture, and business account link.</li>
+              <li><span className="text-slate-200 font-semibold">Access Tokens:</span> Secure credentials generated by Meta API to execute automation workflows on your behalf.</li>
+              <li><span className="text-slate-200 font-semibold">Activity Data:</span> Incoming messages, comment triggers, and story mentions received via official Meta webhooks.</li>
+            </ul>
+          </div>
+
+          {/* Card 2 */}
+          <div className="p-6 rounded-2xl border border-slate-800/60 bg-slate-900/40 backdrop-blur-md space-y-4">
+            <div className="flex items-center gap-3 border-b border-slate-800/60 pb-3">
+              <div className="w-8 h-8 rounded-lg bg-violet-500/10 flex items-center justify-center border border-violet-500/20">
+                <Database className="w-4 h-4 text-violet-400" />
+              </div>
+              <h2 className="text-lg font-bold text-white tracking-tight">2. How We Use Your Information</h2>
+            </div>
+            <p className="text-xs text-slate-400 leading-relaxed">
+              Your data is strictly used to deliver high-performance messaging automation:
+            </p>
+            <ul className="list-disc list-inside space-y-2 text-xs text-slate-400 pl-2">
+              <li>Processing and delivering instant automated responses to your DMs and comments.</li>
+              <li>Compiling performance metrics (e.g. number of automations triggered) for your dashboard analytics.</li>
+              <li>Maintaining active connection sessions with Instagram APIs to prevent service interruption.</li>
+            </ul>
+            <p className="text-xs text-amber-500/90 font-medium bg-amber-500/5 p-3 rounded-lg border border-amber-500/10">
+              ⚠️ <span className="font-bold">Zero Data Monetization:</span> We do not sell, rent, share, or trade your personal data, access credentials, or customer messaging logs with any third parties.
+            </p>
+          </div>
+
+          {/* Card 3 */}
+          <div className="p-6 rounded-2xl border border-slate-800/60 bg-slate-900/40 backdrop-blur-md space-y-4">
+            <div className="flex items-center gap-3 border-b border-slate-800/60 pb-3">
+              <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20">
+                <Trash2 className="w-4 h-4 text-emerald-400" />
+              </div>
+              <h2 className="text-lg font-bold text-white tracking-tight">3. User Data Control & Deletion</h2>
+            </div>
+            <p className="text-xs text-slate-400 leading-relaxed">
+              We fully respect your ownership of your data. You hold absolute control over your connected accounts:
+            </p>
+            <ul className="list-disc list-inside space-y-2 text-xs text-slate-400 pl-2">
+              <li><span className="text-slate-200 font-semibold">Immediate Revocation:</span> You can disconnect your Instagram page directly from your DMSpark dashboard settings at any time.</li>
+              <li><span className="text-slate-200 font-semibold">Full Database Purge:</span> When you disconnect an account or request account deletion, all active credentials, webhook log caches, and custom triggers associated with your account are immediately and permanently purged from our databases.</li>
+            </ul>
+            <p className="text-xs text-slate-400">
+              For step-by-step instructions on purging your account, please visit our dedicated{" "}
+              <Link href="/delete-data" className="text-blue-400 hover:underline font-semibold">
+                Data Deletion Instructions Page
+              </Link>.
+            </p>
+          </div>
+
+          {/* Card 4 */}
+          <div className="p-6 rounded-2xl border border-slate-800/60 bg-slate-900/40 backdrop-blur-md space-y-4">
+            <div className="flex items-center gap-3 border-b border-slate-800/60 pb-3">
+              <div className="w-8 h-8 rounded-lg bg-indigo-500/10 flex items-center justify-center border border-indigo-500/20">
+                <Globe className="w-4 h-4 text-indigo-400" />
+              </div>
+              <h2 className="text-lg font-bold text-white tracking-tight">4. Meta API Compliance & Data Transfer</h2>
+            </div>
+            <p className="text-xs text-slate-400 leading-relaxed">
+              DMSpark interacts directly with the secure, official Instagram Graph API. All data transfers between our application servers and Meta's platform are encrypted in transit using industry-standard SSL/TLS protocols.
+            </p>
+            <p className="text-xs text-slate-400">
+              By connecting your Instagram account, you agree to Meta's own terms and data guidelines, which can be found in the{" "}
+              <a href="https://www.facebook.com/policy.php" target="_blank" rel="noreferrer" className="text-blue-400 hover:underline font-semibold">
+                Meta Privacy Policy
+              </a>.
+            </p>
+          </div>
+
+          {/* Contact Card */}
+          <div className="p-6 rounded-2xl border border-slate-850 bg-gradient-to-br from-slate-900/80 to-slate-950/80 backdrop-blur-md flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="space-y-1">
+              <h3 className="text-sm font-bold text-white">Have privacy-related questions?</h3>
+              <p className="text-xs text-slate-400">Our security compliance team is here to assist you.</p>
+            </div>
+            <a 
+              href="mailto:virtualrevolution02@gmail.com" 
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white text-black font-bold text-xs hover:bg-slate-200 hover:scale-105 transition-all duration-200"
+            >
+              <Mail className="w-4 h-4" /> Contact Support
+            </a>
+          </div>
+
+        </div>
+
       </div>
     </div>
   )

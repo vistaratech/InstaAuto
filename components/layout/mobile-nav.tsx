@@ -1,6 +1,6 @@
 "use client"
 
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet"
 import { Button } from "@/components/ui/button"
 import { Menu } from "lucide-react"
 import { Sidebar } from "@/components/layout/sidebar"
@@ -23,6 +23,10 @@ export function MobileNav({ username, profilePictureUrl, onLogout }: MobileNavPr
                 </Button>
             </SheetTrigger>
             <SheetContent side="left" className="p-0 border-r border-sidebar-border bg-sidebar w-72">
+                <SheetHeader className="sr-only">
+                    <SheetTitle>Navigation Menu</SheetTitle>
+                    <SheetDescription>Access dashboard navigation links and settings</SheetDescription>
+                </SheetHeader>
                 <Sidebar
                     className="h-full border-none bg-transparent"
                     username={username}
