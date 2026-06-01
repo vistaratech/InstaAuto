@@ -197,14 +197,14 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess }: CreateRuleF
               s === step
                 ? "bg-foreground text-background scale-110 shadow-lg shadow-foreground/10"
                 : s < step
-                  ? "bg-emerald-500/20 text-emerald-500 dark:text-emerald-400 border border-emerald-500/30 cursor-pointer hover:scale-105"
+                  ? "bg-blue-500/20 text-blue-600 border border-blue-500/30 cursor-pointer hover:scale-105"
                   : "bg-secondary text-muted-foreground border border-border"
             }`}
           >
             {s < step ? <Check className="w-3.5 h-3.5" /> : s}
           </button>
           {s < 3 && (
-            <div className={`w-8 h-px transition-colors duration-500 ${s < step ? "bg-emerald-500/50" : "bg-border"}`} />
+            <div className={`w-8 h-px transition-colors duration-500 ${s < step ? "bg-blue-500/50" : "bg-border"}`} />
           )}
         </div>
       ))}
@@ -344,22 +344,22 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess }: CreateRuleF
           type="button"
           onClick={() => setReplyToAll(!replyToAll)}
           className={`w-full p-4 rounded-xl border transition-all flex items-center gap-3 ${
-            replyToAll ? 'border-emerald-500/50 bg-emerald-500/10' : 'border-border hover:border-muted-foreground/30 hover:bg-secondary'
+            replyToAll ? 'border-blue-500/50 bg-blue-50' : 'border-border hover:border-muted-foreground/30 hover:bg-secondary'
           }`}
         >
           <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-            replyToAll ? 'bg-emerald-500/20 text-emerald-500 dark:text-emerald-400' : 'bg-secondary text-muted-foreground'
+            replyToAll ? 'bg-blue-100 text-blue-600' : 'bg-secondary text-muted-foreground'
           }`}>
             <Sparkles className="w-5 h-5" />
           </div>
           <div className="text-left flex-1">
-            <p className={`text-sm font-bold ${replyToAll ? 'text-emerald-500 dark:text-emerald-400' : 'text-foreground'}`}>Reply to All Comments</p>
+            <p className={`text-sm font-bold ${replyToAll ? 'text-blue-600' : 'text-foreground'}`}>Reply to All Comments</p>
             <p className="text-[11px] text-muted-foreground">Auto-reply to every comment on a specific post</p>
           </div>
           <div className={`w-5 h-5 rounded-full border-2 transition-all ${
-            replyToAll ? 'border-emerald-500 bg-emerald-500' : 'border-border'
+            replyToAll ? 'border-blue-600 bg-blue-600' : 'border-border'
           }`}>
-            {replyToAll && <Check className="w-3 h-3 text-black dark:text-white m-auto mt-0.5" />}
+            {replyToAll && <Check className="w-3 h-3 text-white m-auto mt-0.5" />}
           </div>
         </button>
       )}
@@ -403,7 +403,7 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess }: CreateRuleF
                   )}
                   <div className="flex-1 min-w-0">
                     <p className="text-sm text-foreground truncate">{selectedReel.caption || 'No caption'}</p>
-                    <p className="text-[10px] text-emerald-500">✓ Selected</p>
+                    <p className="text-[10px] text-blue-600 font-semibold">✓ Selected</p>
                   </div>
                 </>
               ) : (
@@ -551,22 +551,22 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess }: CreateRuleF
         type="button"
         onClick={() => setCheckFollow(!checkFollow)}
         className={`w-full p-4 rounded-xl border transition-all flex items-center gap-3 ${
-          checkFollow ? 'border-amber-500/50 bg-amber-500/10' : 'border-border hover:border-muted-foreground/30 hover:bg-secondary'
+          checkFollow ? 'border-green-500/50 bg-green-50' : 'border-border hover:border-muted-foreground/30 hover:bg-secondary'
         }`}
       >
         <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-          checkFollow ? 'bg-amber-500/20 text-amber-500 dark:text-amber-400' : 'bg-secondary text-muted-foreground'
+          checkFollow ? 'bg-green-100 text-green-600' : 'bg-secondary text-muted-foreground'
         }`}>
           <Lock className="w-5 h-5" />
         </div>
         <div className="text-left flex-1">
-          <p className={`text-sm font-bold ${checkFollow ? 'text-amber-500 dark:text-amber-400' : 'text-foreground'}`}>Follow Gate</p>
+          <p className={`text-sm font-bold ${checkFollow ? 'text-green-600' : 'text-foreground'}`}>Follow Gate</p>
           <p className="text-[11px] text-muted-foreground">Only reply to your followers</p>
         </div>
         <div className={`w-5 h-5 rounded-full border-2 transition-all ${
-          checkFollow ? 'border-amber-500 bg-amber-500' : 'border-border'
+          checkFollow ? 'border-green-600 bg-green-600' : 'border-border'
         }`}>
-          {checkFollow && <Check className="w-3 h-3 text-black dark:text-white m-auto mt-0.5" />}
+          {checkFollow && <Check className="w-3 h-3 text-white m-auto mt-0.5" />}
         </div>
       </button>
 
@@ -632,7 +632,7 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess }: CreateRuleF
         ) : (
           <Button
             onClick={handleSubmit}
-            className="flex-1 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-400 hover:to-emerald-500 text-white font-bold h-11 rounded-xl shadow-lg shadow-emerald-500/20 active:scale-95 transition-all"
+            className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold h-11 rounded-xl shadow-lg shadow-blue-500/20 active:scale-95 transition-all"
           >
             <Sparkles className="w-4 h-4 mr-2" /> Create Automation
           </Button>

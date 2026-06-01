@@ -23,8 +23,8 @@ export const metadata: Metadata = {
         media: "(prefers-color-scheme: dark)",
       },
       {
-        url: "/icon.svg",
-        type: "image/svg+xml",
+        url: "/logo.png",
+        type: "image/png",
       },
     ],
     apple: "/apple-icon.png",
@@ -41,8 +41,8 @@ export default function RootLayout({
       <body className={`${_geist.className} font-sans antialiased`}>
         <ThemeProvider
           attribute="class"
-          defaultTheme="dark"
-          enableSystem
+          defaultTheme="light"
+          enableSystem={false}
           disableTransitionOnChange
         >
           {children}

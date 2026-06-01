@@ -42,13 +42,11 @@ export function Sidebar({ className, username = "Demo User", onLogout, onNavigat
   return (
     <aside className={cn("flex flex-col bg-sidebar border-r border-sidebar-border text-sidebar-foreground h-full transition-all duration-300", className)} {...props}>
       <div className={cn("p-6 flex items-center", isCollapsed ? "justify-center p-4" : "gap-3")}>
-        <div className="w-8 h-8 bg-primary text-primary-foreground rounded-lg flex items-center justify-center shadow-md shadow-primary/10 shrink-0">
-          <Instagram className="w-5 h-5" />
-        </div>
+        <img src="/logo.png" alt="DMSpark" className="w-10 h-10 object-contain shrink-0" />
         {!isCollapsed && (
           <div>
-            <h2 className="font-bold text-base tracking-tight text-foreground leading-none">Insta Autobot</h2>
-            <span className="text-[10px] uppercase font-bold text-primary tracking-widest mt-1 inline-block">Pro</span>
+            <h2 className="font-extrabold text-lg tracking-tight text-slate-900 leading-none">DMSpark</h2>
+            <span className="text-[10px] uppercase font-bold text-blue-600 tracking-widest mt-1 inline-block">Pro</span>
           </div>
         )}
       </div>

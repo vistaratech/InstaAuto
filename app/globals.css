@@ -4,87 +4,79 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Premium Minimal Light Theme (Slate & Deep Purple Accents) */
-  --background: oklch(0.99 0.003 260); /* Clean paper white */
-  --foreground: oklch(0.15 0.01 260);  /* Deep charcoal-slate */
+  /* Premium Minimal Light Theme (Google Style) */
+  --background: oklch(1 0 0);          /* Pure white */
+  --foreground: oklch(0.2 0.01 260);   /* Dark slate for text */
   
   --card: oklch(1 0 0);                /* Pure white */
-  --card-foreground: oklch(0.15 0.01 260);
+  --card-foreground: oklch(0.2 0.01 260);
   
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.15 0.01 260);
+  --popover-foreground: oklch(0.2 0.01 260);
 
-  /* Primary is a vibrant royal indigo/violet */
-  --primary: oklch(0.52 0.19 275);
-  --primary-foreground: oklch(0.99 0.003 260);
+  /* Primary is Google Blue (#1a73e8) */
+  --primary: 214 82% 51%; /* Using hsl values for easy tailwind parsing if needed, but oklch is native in v4. Let's use oklch or hex. */
+  --primary: oklch(0.58 0.16 260); /* Blue */
+  --primary-foreground: oklch(1 0 0); /* White text on blue */
 
-  /* Secondary is a light cool gray */
-  --secondary: oklch(0.95 0.006 260);
-  --secondary-foreground: oklch(0.15 0.01 260);
+  /* Secondary is a very light gray/blue */
+  --secondary: oklch(0.97 0.01 260);
+  --secondary-foreground: oklch(0.2 0.01 260);
 
-  --muted: oklch(0.96 0.005 260);
-  --muted-foreground: oklch(0.45 0.01 260);
+  --muted: oklch(0.96 0.01 260);
+  --muted-foreground: oklch(0.5 0.01 260);
   
-  --accent: oklch(0.93 0.015 275);    /* Soft pastel lavender */
-  --accent-foreground: oklch(0.4 0.15 275);
+  /* Accent can be Google Yellow or light gray hover */
+  --accent: oklch(0.96 0.01 260);
+  --accent-foreground: oklch(0.2 0.01 260);
 
-  --destructive: oklch(0.60 0.18 20);  /* Coral Red */
-  --destructive-foreground: oklch(0.99 0.003 260);
+  /* Destructive is Google Red (#ea4335) */
+  --destructive: oklch(0.61 0.17 25);
+  --destructive-foreground: oklch(1 0 0);
 
-  --border: oklch(0.92 0.005 260);
-  --input: oklch(0.94 0.005 260);
-  --ring: oklch(0.52 0.19 275 / 0.3);
+  --border: oklch(0.92 0.01 260);
+  --input: oklch(0.92 0.01 260);
+  --ring: oklch(0.58 0.16 260 / 0.3);
 
-  --radius: 0.75rem; /* Smoother, more modern rounded corners */
+  --radius: 0.5rem; /* Crisper, slightly smaller radius for clean look */
 
-  --sidebar: oklch(0.97 0.004 260);    /* Subtle grey sidebar background */
-  --sidebar-foreground: oklch(0.35 0.01 260);
-  --sidebar-primary: oklch(0.52 0.19 275);
-  --sidebar-border: oklch(0.93 0.004 260);
-  --sidebar-accent: oklch(0.94 0.008 275);
-  --sidebar-accent-foreground: oklch(0.4 0.15 275);
-  --sidebar-ring: oklch(0.52 0.19 275 / 0.2);
+  --sidebar: oklch(0.99 0 0);    /* Pure white sidebar */
+  --sidebar-foreground: oklch(0.3 0.01 260);
+  --sidebar-primary: oklch(0.58 0.16 260);
+  --sidebar-border: oklch(0.92 0.01 260);
+  --sidebar-accent: oklch(0.96 0.01 260);
+  --sidebar-accent-foreground: oklch(0.2 0.01 260);
+  --sidebar-ring: oklch(0.58 0.16 260 / 0.2);
 }
 
 .dark {
-  /* Premium Dark Obsidian Theme (Deep Cosmic Slate & Neon Violet) */
-  --background: oklch(0.11 0.011 260); /* Sleek obsidian/slate background */
-  --foreground: oklch(0.98 0.003 260); /* Off-white */
-  
-  --card: oklch(0.14 0.015 260);       /* Glossy dark card */
-  --card-foreground: oklch(0.98 0.003 260);
-  
-  --popover: oklch(0.14 0.015 260);
-  --popover-foreground: oklch(0.98 0.003 260);
-
-  /* Primary is a glowing neon violet/purple */
-  --primary: oklch(0.68 0.18 280);
-  --primary-foreground: oklch(0.11 0.011 260);
-
-  /* Secondary is a dark gray-blue */
-  --secondary: oklch(0.19 0.012 260);
-  --secondary-foreground: oklch(0.98 0.003 260);
-
-  --muted: oklch(0.17 0.012 260);
-  --muted-foreground: oklch(0.65 0.01 260);
-  
-  --accent: oklch(0.18 0.03 280);      /* Elegant deep violet glow */
-  --accent-foreground: oklch(0.85 0.05 280);
-
-  --destructive: oklch(0.55 0.16 20);
-  --destructive-foreground: oklch(0.98 0.003 260);
-
-  --border: oklch(0.19 0.012 260);
-  --input: oklch(0.18 0.012 260);
-  --ring: oklch(0.68 0.18 280 / 0.4);
-
-  --sidebar: oklch(0.09 0.01 260);     /* Slightly darker sidebar for contrast */
-  --sidebar-foreground: oklch(0.7 0.01 260);
-  --sidebar-primary: oklch(0.68 0.18 280);
-  --sidebar-border: oklch(0.15 0.01 260);
-  --sidebar-accent: oklch(0.16 0.015 260);
-  --sidebar-accent-foreground: oklch(0.98 0.003 260);
-  --sidebar-ring: oklch(0.68 0.18 280 / 0.3);
+  /* We maintain a clean dark mode just in case, but default is light */
+  --background: oklch(0.15 0.01 260);
+  --foreground: oklch(0.98 0 0);
+  --card: oklch(0.18 0.01 260);
+  --card-foreground: oklch(0.98 0 0);
+  --popover: oklch(0.18 0.01 260);
+  --popover-foreground: oklch(0.98 0 0);
+  --primary: oklch(0.65 0.16 260); /* Lighter blue for dark mode */
+  --primary-foreground: oklch(0.98 0 0);
+  --secondary: oklch(0.22 0.01 260);
+  --secondary-foreground: oklch(0.98 0 0);
+  --muted: oklch(0.22 0.01 260);
+  --muted-foreground: oklch(0.7 0.01 260);
+  --accent: oklch(0.22 0.01 260);
+  --accent-foreground: oklch(0.98 0 0);
+  --destructive: oklch(0.61 0.17 25);
+  --destructive-foreground: oklch(0.98 0 0);
+  --border: oklch(0.22 0.01 260);
+  --input: oklch(0.22 0.01 260);
+  --ring: oklch(0.65 0.16 260 / 0.3);
+  --sidebar: oklch(0.15 0.01 260);
+  --sidebar-foreground: oklch(0.8 0.01 260);
+  --sidebar-primary: oklch(0.65 0.16 260);
+  --sidebar-border: oklch(0.22 0.01 260);
+  --sidebar-accent: oklch(0.22 0.01 260);
+  --sidebar-accent-foreground: oklch(0.98 0 0);
+  --sidebar-ring: oklch(0.65 0.16 260 / 0.3);
 }
 
 
@@ -122,6 +114,11 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+  /* Custom DMSpark Brand Colors */
+  --color-dmspark-blue: #1a73e8;
+  --color-dmspark-red: #ea4335;
+  --color-dmspark-yellow: #fbbc04;
+  --color-dmspark-green: #34a853;
 }
 
 @layer base {
@@ -129,32 +126,31 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground antialiased selection:bg-white/20;
+    @apply bg-background text-foreground antialiased selection:bg-dmspark-blue/20;
   }
 }
 
 /* Minimal Utilities */
 .glass-panel {
-  @apply bg-card/50 backdrop-blur-md border border-border;
+  @apply bg-card/80 backdrop-blur-md border border-border;
 }
 
-/* Removed Instagram gradients, replaced with minimal text styles if needed */
 .text-minimal-gradient {
-  @apply text-foreground;
+  @apply text-foreground font-bold;
 }
 
 .hover-glow {
   @apply transition-colors duration-200;
 }
 .hover-glow:hover {
-  @apply bg-white/5;
+  @apply bg-black/5 dark:bg-white/5;
 }
 
 .vercel-row-hover {
   @apply transition-colors cursor-pointer;
 }
 .vercel-row-hover:hover {
-  background-color: rgba(255, 255, 255, 0.05);
+  @apply bg-black/5 dark:bg-white/5;
 }
 
 /* Minimal Scrollbar */
@@ -165,10 +161,10 @@
   @apply bg-transparent;
 }
 ::-webkit-scrollbar-thumb {
-  @apply bg-white/10 rounded-full transition-colors;
+  @apply bg-black/10 dark:bg-white/10 rounded-full transition-colors;
 }
 ::-webkit-scrollbar-thumb:hover {
-  @apply bg-white/20;
+  @apply bg-black/20 dark:bg-white/20;
 }
 
 /* Scrollbar hide utility */
@@ -188,4 +184,5 @@
 .animate-shimmer {
   animation: shimmer 2s infinite;
 }
+
 

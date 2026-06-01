@@ -72,25 +72,25 @@ export default function DashboardPage() {
                     title="Total Automations"
                     value={stats?.metrics.totalAutomations.toString() || "0"}
                     trend="Active"
-                    icon={<Zap className="w-5 h-5 text-purple-500 dark:text-purple-400" />}
+                    icon={<Zap className="w-5 h-5 text-blue-500" />}
                 />
                 <StatCard
                     title="Messages Sent"
                     value={stats?.metrics.messagesSent.toString() || "0"}
                     trend="Lifetime"
-                    icon={<MessageCircle className="w-5 h-5 text-blue-500 dark:text-blue-400" />}
+                    icon={<MessageCircle className="w-5 h-5 text-green-500" />}
                 />
                 <StatCard
                     title="Active Triggers"
                     value={stats?.metrics.activeTriggers.toString() || "0"}
                     trend="Running"
-                    icon={<Activity className="w-5 h-5 text-emerald-500 dark:text-emerald-400" />}
+                    icon={<Activity className="w-5 h-5 text-yellow-500" />}
                 />
                 <StatCard
                     title="Audience Reached"
                     value={stats?.metrics.audienceReached.toString() || "0"}
                     trend="Unique Users"
-                    icon={<Users className="w-5 h-5 text-pink-500 dark:text-pink-400" />}
+                    icon={<Users className="w-5 h-5 text-red-500" />}
                 />
             </div>
 
@@ -102,7 +102,7 @@ export default function DashboardPage() {
                         {stats?.recentActivity && stats.recentActivity.length > 0 ? (
                             stats.recentActivity.map((msg) => (
                                 <div key={msg.id} className="flex items-center gap-4 p-3 rounded-lg hover:bg-secondary/40 transition-colors border border-transparent hover:border-border">
-                                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                                    <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 shrink-0">
                                         <MessageCircle className="w-5 h-5" />
                                     </div>
                                     <div className="min-w-0 flex-1">
@@ -128,8 +128,8 @@ export default function DashboardPage() {
                     <div>
                         <h3 className="font-bold text-foreground mb-4 text-base">Quick Actions</h3>
                         <div className="grid grid-cols-1 gap-4">
-                            <Link href="/dashboard/automations" className="h-20 rounded-xl border border-dashed border-border flex flex-row items-center px-4 hover:bg-secondary/40 hover:border-primary/50 cursor-pointer transition-all group gap-4">
-                                <div className="w-10 h-10 rounded-lg bg-purple-500/10 flex items-center justify-center text-purple-500 group-hover:scale-105 transition-transform">
+                            <Link href="/dashboard/automations" className="h-20 rounded-xl border border-dashed border-border flex flex-row items-center px-4 hover:bg-secondary/40 hover:border-blue-500/50 cursor-pointer transition-all group gap-4">
+                                <div className="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600 group-hover:scale-105 transition-transform">
                                     <Zap className="w-5 h-5" />
                                 </div>
                                 <div className="text-left">
@@ -137,8 +137,8 @@ export default function DashboardPage() {
                                     <span className="text-xs text-muted-foreground">Configure a reply trigger</span>
                                 </div>
                             </Link>
-                            <Link href="/dashboard/inbox" className="h-20 rounded-xl border border-dashed border-border flex flex-row items-center px-4 hover:bg-secondary/40 hover:border-primary/50 cursor-pointer transition-all group gap-4">
-                                <div className="w-10 h-10 rounded-lg bg-pink-500/10 flex items-center justify-center text-pink-500 group-hover:scale-105 transition-transform">
+                            <Link href="/dashboard/inbox" className="h-20 rounded-xl border border-dashed border-border flex flex-row items-center px-4 hover:bg-secondary/40 hover:border-green-500/50 cursor-pointer transition-all group gap-4">
+                                <div className="w-10 h-10 rounded-lg bg-green-50 flex items-center justify-center text-green-600 group-hover:scale-105 transition-transform">
                                     <Users className="w-5 h-5" />
                                 </div>
                                 <div className="text-left">
