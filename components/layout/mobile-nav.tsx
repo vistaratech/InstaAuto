@@ -21,7 +21,7 @@ export function MobileNav({ username, onLogout }: MobileNavProps) {
                     <Menu className="h-6 w-6" />
                 </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="p-0 border-r border-white/10 bg-black w-72">
+            <SheetContent side="left" className="p-0 border-r border-sidebar-border bg-sidebar w-72">
                 <Sidebar
                     className="h-full border-none bg-transparent"
                     username={username}

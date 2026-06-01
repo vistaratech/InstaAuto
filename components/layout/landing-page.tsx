@@ -12,7 +12,7 @@ export function LandingPage() {
   }
 
   return (
-    <div className="h-screen bg-background text-foreground overflow-hidden flex flex-col relative select-none">
+    <div className="min-h-screen md:h-screen bg-background text-foreground md:overflow-hidden flex flex-col relative select-none">
       {/* Dynamic Keyframe Animations */}
       <style jsx global>{`
         @keyframes fadeInUp {
@@ -66,6 +66,27 @@ export function LandingPage() {
         .dot-1 { animation: dotPulse 1.2s infinite 0s; }
         .dot-2 { animation: dotPulse 1.2s infinite 0.2s; }
         .dot-3 { animation: dotPulse 1.2s infinite 0.4s; }
+
+        .laptop-mockup-scaler {
+          transform: scale(0.55);
+          transform-origin: center;
+          transition: transform 0.2s ease;
+        }
+        @media (min-width: 380px) {
+          .laptop-mockup-scaler {
+            transform: scale(0.68);
+          }
+        }
+        @media (min-width: 640px) {
+          .laptop-mockup-scaler {
+            transform: scale(0.8);
+          }
+        }
+        @media (min-width: 768px) {
+          .laptop-mockup-scaler {
+            transform: scale(1);
+          }
+        }
       `}</style>
 
       {/* Background glow effects */}
@@ -90,10 +111,10 @@ export function LandingPage() {
       </nav>
 
       {/* Split Hero Layout */}
-      <main className="relative z-10 flex-1 grid md:grid-cols-12 gap-6 items-center px-6 md:px-12 max-w-7xl mx-auto w-full pb-8 overflow-hidden">
+      <main className="relative z-10 flex-1 grid md:grid-cols-12 gap-8 items-center px-4 sm:px-6 md:px-12 max-w-7xl mx-auto w-full pt-6 pb-12 md:py-0 md:overflow-hidden">
         
         {/* Left Side: Copy and Actions */}
-        <div className="md:col-span-6 space-y-6 text-left flex flex-col justify-center">
+        <div className="md:col-span-6 space-y-5 text-center md:text-left flex flex-col items-center md:items-start justify-center">
           {/* Badge constrained to text width using w-fit */}
           <div 
             className="w-fit inline-flex items-center gap-2 bg-slate-100 border border-slate-200/60 rounded-full px-4 py-1.5 text-[11px] text-slate-600 font-bold uppercase tracking-wider animate-fade-in-up"
@@ -104,7 +125,7 @@ export function LandingPage() {
           </div>
 
           <h1 
-            className="text-4xl lg:text-6xl font-black tracking-tight leading-[1.1] text-slate-900 animate-fade-in-up"
+            className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.1] text-slate-900 animate-fade-in-up"
             style={{ animationDelay: "200ms" }}
           >
             Auto Reply.
@@ -113,19 +134,19 @@ export function LandingPage() {
           </h1>
 
           <p 
-            className="text-base md:text-lg text-slate-500 max-w-lg leading-relaxed animate-fade-in-up"
+            className="text-sm sm:text-base md:text-lg text-slate-500 max-w-lg leading-relaxed animate-fade-in-up"
             style={{ animationDelay: "300ms" }}
           >
             Connect DMSpark to your Instagram. Auto-reply to comments & DMs using simple keyword triggers. Grow your followers 24/7 without lifting a finger.
           </p>
 
           <div 
-            className="flex flex-col sm:flex-row gap-3 pt-2 animate-fade-in-up"
+            className="flex flex-col sm:flex-row gap-3 pt-2 animate-fade-in-up w-full justify-center md:justify-start"
             style={{ animationDelay: "400ms" }}
           >
             <Button
               onClick={handleLogin}
-              className="bg-[#1a73e8] text-white h-14 px-8 rounded-2xl font-bold text-base hover:scale-[1.03] transition-all duration-300 shadow-xl shadow-[#1a73e8]/20 hover:bg-[#1557b0] flex items-center gap-2 group"
+              className="bg-[#1a73e8] text-white h-13 sm:h-14 px-6 sm:px-8 rounded-xl sm:rounded-2xl font-bold text-sm sm:text-base hover:scale-[1.03] transition-all duration-300 shadow-xl shadow-[#1a73e8]/20 hover:bg-[#1557b0] flex items-center justify-center gap-2 group w-full sm:w-auto"
             >
               Connect Instagram <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
             </Button>
@@ -227,91 +248,95 @@ export function LandingPage() {
             </div>
           ) : (
             /* Laptop Frame Mockup (Mini DMSpark Web Dashboard) */
-            <div 
-              className="flex flex-col items-center animate-slide-in-right shrink-0 select-none w-full"
-              style={{ animationDelay: "200ms" }}
-            >
-              {/* Laptop Screen */}
-              <div className="relative w-[420px] h-[270px] bg-white border-[8px] border-slate-800 rounded-t-2xl shadow-2xl flex flex-col overflow-hidden">
-                {/* Browser Top Bar */}
-                <div className="h-6 bg-slate-100 border-b border-slate-200/60 px-3 flex items-center gap-2 shrink-0">
-                  <div className="flex gap-1 shrink-0">
-                    <div className="w-1.5 h-1.5 rounded-full bg-[#ea4335]" />
-                    <div className="w-1.5 h-1.5 rounded-full bg-[#fbbc04]" />
-                    <div className="w-1.5 h-1.5 rounded-full bg-[#34a853]" />
+            <div className="w-full flex items-center justify-center h-[180px] min-[380px]:h-[220px] sm:h-[250px] md:h-[280px] shrink-0">
+              <div className="laptop-mockup-scaler shrink-0">
+                <div 
+                  className="flex flex-col items-center animate-slide-in-right shrink-0 select-none w-full"
+                  style={{ animationDelay: "200ms" }}
+                >
+                  {/* Laptop Screen */}
+                  <div className="relative w-[420px] h-[270px] bg-white border-[8px] border-slate-800 rounded-t-2xl shadow-2xl flex flex-col overflow-hidden">
+                    {/* Browser Top Bar */}
+                    <div className="h-6 bg-slate-100 border-b border-slate-200/60 px-3 flex items-center gap-2 shrink-0">
+                      <div className="flex gap-1 shrink-0">
+                        <div className="w-1.5 h-1.5 rounded-full bg-[#ea4335]" />
+                        <div className="w-1.5 h-1.5 rounded-full bg-[#fbbc04]" />
+                        <div className="w-1.5 h-1.5 rounded-full bg-[#34a853]" />
+                      </div>
+                      <div className="bg-white rounded border border-slate-200/60 px-2 py-0.5 text-[8px] text-slate-400 w-36 mx-auto text-center font-bold">
+                        dmspark.in/dashboard
+                      </div>
+                    </div>
+
+                    {/* Dashboard layout inside Screen */}
+                    <div className="flex-1 flex text-[9px] bg-slate-50">
+                      {/* Left Mini Sidebar */}
+                      <div className="w-[70px] border-r border-slate-200 bg-white p-2 space-y-1.5 shrink-0 flex flex-col">
+                        <div className="flex items-center gap-1.5 mb-2.5">
+                          <img src="/logo.png" alt="Logo" className="w-4 h-4 object-contain" />
+                          <span className="font-black text-[8px] text-[#1a73e8] leading-none">DMSpark</span>
+                        </div>
+                        <div className="h-4 w-full bg-blue-50 text-[#1a73e8] font-bold px-1.5 rounded flex items-center gap-1 text-[7px] shrink-0">📊 Dash</div>
+                        <div className="h-4 w-full text-slate-400 px-1.5 rounded flex items-center gap-1 text-[7px] shrink-0">⚡ Rules</div>
+                        <div className="h-4 w-full text-slate-400 px-1.5 rounded flex items-center gap-1 text-[7px] shrink-0">📥 Inbox</div>
+                      </div>
+
+                      {/* Main Panel Content */}
+                      <div className="flex-1 p-2.5 flex flex-col justify-between overflow-hidden">
+                        <div>
+                          <p className="font-black text-slate-800 text-[10px] leading-tight">Welcome back, user!</p>
+                          <p className="text-[7px] text-slate-400">Here's your automation stats today.</p>
+                        </div>
+
+                        {/* Stats blocks (Colored accents) */}
+                        <div className="grid grid-cols-3 gap-1.5">
+                          <div className="bg-white p-1 rounded border border-slate-200/50 shadow-sm flex flex-col justify-center">
+                            <div className="text-[5px] text-slate-400 font-bold uppercase tracking-wider">Automations</div>
+                            <div className="text-[10px] font-black text-blue-600 leading-tight">12</div>
+                          </div>
+                          <div className="bg-white p-1 rounded border border-slate-200/50 shadow-sm flex flex-col justify-center">
+                            <div className="text-[5px] text-slate-400 font-bold uppercase tracking-wider">Replies</div>
+                            <div className="text-[10px] font-black text-[#34a853] leading-tight">1.4K</div>
+                          </div>
+                          <div className="bg-white p-1 rounded border border-slate-200/50 shadow-sm flex flex-col justify-center">
+                            <div className="text-[5px] text-slate-400 font-bold uppercase tracking-wider">Triggers</div>
+                            <div className="text-[10px] font-black text-[#fbbc04] leading-tight">8</div>
+                          </div>
+                        </div>
+
+                        {/* Live Activity Feed (Looping Animation) */}
+                        <div className="bg-white p-1.5 rounded border border-slate-200 shadow-sm flex flex-col justify-between h-[50px] relative overflow-hidden">
+                          <div className="flex items-center justify-between border-b border-slate-100 pb-0.5 mb-1 shrink-0 select-none">
+                            <span className="font-black text-[6px] text-slate-500 uppercase tracking-wider flex items-center gap-0.5">
+                              <span className="w-1 h-1 rounded-full bg-[#ea4335] animate-ping" /> Live Activity Feed
+                            </span>
+                            <span className="text-[5px] text-slate-400">Real-time</span>
+                          </div>
+                          
+                          <div className="flex-1 relative">
+                            {/* Log Item 1 */}
+                            <div className="anim-log-1 absolute left-0 right-0 top-0 flex items-center justify-between text-[6.5px] leading-none">
+                              <span className="text-slate-600 font-bold">💬 @user_101: "price?"</span>
+                              <span className="text-[#34a853] font-black flex items-center gap-0.5">➡️ Sent DM <Inbox className="w-2.5 h-2.5" /></span>
+                            </div>
+                            
+                            {/* Log Item 2 */}
+                            <div className="anim-log-2 absolute left-0 right-0 top-0 flex items-center justify-between text-[6.5px] leading-none">
+                              <span className="text-slate-600 font-bold">💬 @maria_2: "link"</span>
+                              <span className="text-[#34a853] font-black flex items-center gap-0.5">➡️ Sent DM <Inbox className="w-2.5 h-2.5" /></span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <div className="bg-white rounded border border-slate-200/60 px-2 py-0.5 text-[8px] text-slate-400 w-36 mx-auto text-center font-bold">
-                    dmspark.in/dashboard
+
+                  {/* Laptop Keyboard Base */}
+                  <div className="w-[470px] h-[10px] bg-slate-300 rounded-b-md shadow-lg relative border-b-[3px] border-slate-400">
+                    {/* Macbook opening notch */}
+                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-12 h-2 bg-slate-400 rounded-b" />
                   </div>
                 </div>
-
-                {/* Dashboard layout inside Screen */}
-                <div className="flex-1 flex text-[9px] bg-slate-50">
-                  {/* Left Mini Sidebar */}
-                  <div className="w-[70px] border-r border-slate-200 bg-white p-2 space-y-1.5 shrink-0 flex flex-col">
-                    <div className="flex items-center gap-1.5 mb-2.5">
-                      <img src="/logo.png" alt="Logo" className="w-4 h-4 object-contain" />
-                      <span className="font-black text-[8px] text-[#1a73e8] leading-none">DMSpark</span>
-                    </div>
-                    <div className="h-4 w-full bg-blue-50 text-[#1a73e8] font-bold px-1.5 rounded flex items-center gap-1 text-[7px] shrink-0">📊 Dash</div>
-                    <div className="h-4 w-full text-slate-400 px-1.5 rounded flex items-center gap-1 text-[7px] shrink-0">⚡ Rules</div>
-                    <div className="h-4 w-full text-slate-400 px-1.5 rounded flex items-center gap-1 text-[7px] shrink-0">📥 Inbox</div>
-                  </div>
-
-                  {/* Main Panel Content */}
-                  <div className="flex-1 p-2.5 flex flex-col justify-between overflow-hidden">
-                    <div>
-                      <p className="font-black text-slate-800 text-[10px] leading-tight">Welcome back, user!</p>
-                      <p className="text-[7px] text-slate-400">Here's your automation stats today.</p>
-                    </div>
-
-                    {/* Stats blocks (Colored accents) */}
-                    <div className="grid grid-cols-3 gap-1.5">
-                      <div className="bg-white p-1 rounded border border-slate-200/50 shadow-sm flex flex-col justify-center">
-                        <div className="text-[5px] text-slate-400 font-bold uppercase tracking-wider">Automations</div>
-                        <div className="text-[10px] font-black text-blue-600 leading-tight">12</div>
-                      </div>
-                      <div className="bg-white p-1 rounded border border-slate-200/50 shadow-sm flex flex-col justify-center">
-                        <div className="text-[5px] text-slate-400 font-bold uppercase tracking-wider">Replies</div>
-                        <div className="text-[10px] font-black text-[#34a853] leading-tight">1.4K</div>
-                      </div>
-                      <div className="bg-white p-1 rounded border border-slate-200/50 shadow-sm flex flex-col justify-center">
-                        <div className="text-[5px] text-slate-400 font-bold uppercase tracking-wider">Triggers</div>
-                        <div className="text-[10px] font-black text-[#fbbc04] leading-tight">8</div>
-                      </div>
-                    </div>
-
-                    {/* Live Activity Feed (Looping Animation) */}
-                    <div className="bg-white p-1.5 rounded border border-slate-200 shadow-sm flex flex-col justify-between h-[50px] relative overflow-hidden">
-                      <div className="flex items-center justify-between border-b border-slate-100 pb-0.5 mb-1 shrink-0 select-none">
-                        <span className="font-black text-[6px] text-slate-500 uppercase tracking-wider flex items-center gap-0.5">
-                          <span className="w-1 h-1 rounded-full bg-[#ea4335] animate-ping" /> Live Activity Feed
-                        </span>
-                        <span className="text-[5px] text-slate-400">Real-time</span>
-                      </div>
-                      
-                      <div className="flex-1 relative">
-                        {/* Log Item 1 */}
-                        <div className="anim-log-1 absolute left-0 right-0 top-0 flex items-center justify-between text-[6.5px] leading-none">
-                          <span className="text-slate-600 font-bold">💬 @user_101: "price?"</span>
-                          <span className="text-[#34a853] font-black flex items-center gap-0.5">➡️ Sent DM <Inbox className="w-2.5 h-2.5" /></span>
-                        </div>
-                        
-                        {/* Log Item 2 */}
-                        <div className="anim-log-2 absolute left-0 right-0 top-0 flex items-center justify-between text-[6.5px] leading-none">
-                          <span className="text-slate-600 font-bold">💬 @maria_2: "link"</span>
-                          <span className="text-[#34a853] font-black flex items-center gap-0.5">➡️ Sent DM <Inbox className="w-2.5 h-2.5" /></span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Laptop Keyboard Base */}
-              <div className="w-[470px] h-[10px] bg-slate-300 rounded-b-md shadow-lg relative border-b-[3px] border-slate-400">
-                {/* Macbook opening notch */}
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-12 h-2 bg-slate-400 rounded-b" />
               </div>
             </div>
           )}
@@ -344,11 +369,11 @@ export function LandingPage() {
 
 function MiniCard({ icon, title, bg }: { icon: React.ReactNode; title: string; bg: string }) {
   return (
-    <div className="flex items-center gap-2 p-3 rounded-2xl border border-slate-200/50 bg-white/70 shadow-sm backdrop-blur-sm justify-center">
+    <div className="flex flex-col sm:flex-row items-center gap-1.5 sm:gap-2 p-2 sm:p-3 rounded-xl sm:rounded-2xl border border-slate-200/50 bg-white/70 shadow-sm backdrop-blur-sm justify-center text-center sm:text-left w-full">
       <div className={`w-7 h-7 rounded-lg ${bg} flex items-center justify-center shrink-0`}>
         {icon}
       </div>
-      <span className="text-[10px] font-black text-slate-800 tracking-tight">{title}</span>
+      <span className="text-[9px] sm:text-[10px] font-black text-slate-800 tracking-tight leading-none">{title}</span>
     </div>
   )
 }

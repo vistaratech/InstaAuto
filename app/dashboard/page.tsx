@@ -57,7 +57,7 @@ export default function DashboardPage() {
     }
 
     return (
-        <div className="p-8 space-y-8 animate-in fade-in duration-500">
+        <div className="p-4 sm:p-6 md:p-8 space-y-6 sm:space-y-8 animate-in fade-in duration-500">
             {/* Welcome Section */}
             <div className="flex items-center justify-between">
                 <div>
