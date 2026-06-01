@@ -44,8 +44,8 @@ export function Sidebar({ className, username = "Demo User", profilePictureUrl, 
     <aside className={cn("flex flex-col bg-sidebar border-r border-sidebar-border text-sidebar-foreground h-full transition-all duration-300", className)} {...props}>
       <div className={cn("p-6 flex items-center", isCollapsed ? "justify-center p-4" : "gap-3.5")}>
         <div className="w-11 h-11 rounded-xl bg-gradient-to-tr from-blue-500 via-indigo-500 to-purple-600 p-0.5 shadow-md shadow-blue-500/10 hover:scale-105 transition-transform duration-300 flex items-center justify-center shrink-0">
-          <div className="w-full h-full rounded-[9px] bg-sidebar flex items-center justify-center overflow-hidden">
-            <img src="/logo.png" alt="DMSpark" className="w-7 h-7 object-contain shrink-0 filter drop-shadow-[0_0_6px_rgba(59,130,246,0.3)] dark:brightness-110" />
+          <div className="w-full h-full rounded-[9px] bg-white flex items-center justify-center overflow-hidden p-1">
+            <img src="/logo.png" alt="DMSpark" className="w-full h-full object-contain shrink-0" />
           </div>
         </div>
         {!isCollapsed && (
