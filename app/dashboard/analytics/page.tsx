@@ -584,9 +584,9 @@ export default function AnalyticsPage() {
                     </div>
                     <div className="mt-6 pt-4 border-t border-border flex flex-col sm:flex-row justify-between items-center gap-2 text-xs text-muted-foreground">
                         <span>Real-time logs from Instagram API</span>
-                        <a href="/dashboard/automations" className="text-primary font-semibold flex items-center gap-1 hover:underline">
+                        <Link href="/dashboard/automations" className="text-primary font-semibold flex items-center gap-1 hover:underline">
                             Manage Automations <ArrowUpRight className="w-3.5 h-3.5" />
-                        </a>
+                        </Link>
                     </div>
                 </Card>
             </div>
