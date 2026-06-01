@@ -53,7 +53,7 @@ export default function AnalyticsPage() {
     const { userId, isLoading: isSessionLoading } = useInstagramSession()
     const [stats, setStats] = useState<AnalyticsStats | null>(null)
     const [loading, setLoading] = useState(true)
-    const [timeframe, setTimeframe] = useState<"7d" | "30d" | "all">("7d")
+    const [timeframe, setTimeframe] = useState<"24h" | "7d" | "30d" | "all">("7d")
     const [feedFilter, setFeedFilter] = useState<"all" | "comments" | "dms" | "replies">("all")
 
     useEffect(() => {
@@ -84,13 +84,32 @@ export default function AnalyticsPage() {
         )
     }
 
-    // Dynamic counts
-    const messagesSentVal = stats?.metrics.messagesSent ?? 0
+    const rawActivity = stats?.recentActivity || []
+
+    // Filter dynamic data based on selected timeframe
+    const getFilteredActivityByTime = () => {
+        const now = new Date()
+        return rawActivity.filter(item => {
+            const date = new Date(item.created_at)
+            const diffTime = Math.abs(now.getTime() - date.getTime())
+            const diffHours = diffTime / (1000 * 60 * 60)
+            
+            if (timeframe === "24h") return diffHours <= 24
+            if (timeframe === "7d") return diffHours <= 24 * 7
+            if (timeframe === "30d") return diffHours <= 24 * 30
+            return true // all
+        })
+    }
+    const recentActivity = getFilteredActivityByTime()
+
+    // Dynamic counts based on filtered timeframe activity
+    const messagesSentVal = recentActivity.filter(m => !m.is_from_instagram).length
     const automationsVal = stats?.metrics.totalAutomations ?? 0
     const activeVal = stats?.metrics.activeTriggers ?? 0
-    const audienceVal = stats?.metrics.audienceReached ?? 0
-
-    const recentActivity = stats?.recentActivity || []
+    
+    // Unique audience count in that timeframe
+    const uniqueAudience = new Set(recentActivity.map(m => m.recipient?.recipient_username || m.sender_username))
+    const audienceVal = uniqueAudience.size
 
     // 1. Traffic Channels (Comments vs DMs)
     const triggerMessages = recentActivity.filter(m => m.is_from_instagram)
@@ -109,7 +128,7 @@ export default function AnalyticsPage() {
         { name: "Direct DMs", value: dmsPercentage, color: "oklch(0.68 0.18 280)" }
     ]
 
-    // 2. Top Trigger Keywords leaderboard
+    // 2. Top Trigger Keywords leaderboard in timeframe
     const keywordCounts: Record<string, number> = {}
     triggerMessages.forEach(m => {
         let kw = m.content || ""
@@ -143,15 +162,51 @@ export default function AnalyticsPage() {
     // 3. Dynamic Daily Chart Data
     const getChartData = () => {
         const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+        const now = new Date()
         
+        if (timeframe === "24h") {
+            // Group by 4-hour intervals for the last 24 hours
+            const counts: Record<string, number> = {}
+            const intervals: string[] = []
+            
+            for (let i = 5; i >= 0; i--) {
+                const d = new Date(now.getTime() - i * 4 * 60 * 60 * 1000)
+                const hour = d.getHours()
+                const ampm = hour >= 12 ? 'PM' : 'AM'
+                const displayHour = hour % 12 || 12
+                const label = `${displayHour}${ampm}`
+                intervals.push(label)
+                counts[label] = 0
+            }
+            
+            recentActivity.forEach(m => {
+                if (!m.is_from_instagram) {
+                    const date = new Date(m.created_at)
+                    const diffHours = (now.getTime() - date.getTime()) / (1000 * 60 * 60)
+                    if (diffHours >= 0 && diffHours < 24) {
+                        const intervalIdx = 5 - Math.floor(diffHours / 4)
+                        if (intervalIdx >= 0 && intervalIdx < 6) {
+                            const label = intervals[intervalIdx]
+                            counts[label] = (counts[label] || 0) + 1
+                        }
+                    }
+                }
+            })
+            
+            return intervals.map(label => ({
+                name: label,
+                messages: counts[label] || 0,
+                clicks: Math.round((counts[label] || 0) * 0.7)
+            }))
+        }
+
         if (timeframe === "7d") {
             const counts: Record<string, number> = {}
-            const today = new Date()
             const weekdays: string[] = []
             
             for (let i = 6; i >= 0; i--) {
                 const d = new Date()
-                d.setDate(today.getDate() - i)
+                d.setDate(now.getDate() - i)
                 const dayName = days[d.getDay()]
                 weekdays.push(dayName)
                 counts[dayName] = 0
@@ -160,9 +215,9 @@ export default function AnalyticsPage() {
             recentActivity.forEach(m => {
                 if (!m.is_from_instagram) {
                     const date = new Date(m.created_at)
-                    const diffTime = Math.abs(today.getTime() - date.getTime())
-                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
-                    if (diffDays <= 7) {
+                    const diffTime = Math.abs(now.getTime() - date.getTime())
+                    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24))
+                    if (diffDays < 7) {
                         const name = days[date.getDay()]
                         counts[name] = (counts[name] || 0) + 1
                     }
@@ -174,32 +229,32 @@ export default function AnalyticsPage() {
                 messages: counts[day] || 0,
                 clicks: Math.round((counts[day] || 0) * 0.7)
             }))
-        } else {
-            const counts = { "Wk 1": 0, "Wk 2": 0, "Wk 3": 0, "Wk 4": 0 }
-            const today = new Date()
-            recentActivity.forEach(m => {
-                if (!m.is_from_instagram) {
-                    const date = new Date(m.created_at)
-                    const diffTime = Math.abs(today.getTime() - date.getTime())
-                    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24))
-                    if (diffDays < 7) {
-                        counts["Wk 4"]++
-                    } else if (diffDays < 14) {
-                        counts["Wk 3"]++
-                    } else if (diffDays < 21) {
-                        counts["Wk 2"]++
-                    } else if (diffDays < 30) {
-                        counts["Wk 1"]++
-                    }
-                }
-            })
-            return [
-                { name: "Wk 1", messages: counts["Wk 1"], clicks: Math.round(counts["Wk 1"] * 0.7) },
-                { name: "Wk 2", messages: counts["Wk 2"], clicks: Math.round(counts["Wk 2"] * 0.7) },
-                { name: "Wk 3", messages: counts["Wk 3"], clicks: Math.round(counts["Wk 3"] * 0.7) },
-                { name: "Wk 4", messages: counts["Wk 4"], clicks: Math.round(counts["Wk 4"] * 0.7) }
-            ]
         }
+
+        // 30d or all
+        const counts = { "Wk 1": 0, "Wk 2": 0, "Wk 3": 0, "Wk 4": 0 }
+        recentActivity.forEach(m => {
+            if (!m.is_from_instagram) {
+                const date = new Date(m.created_at)
+                const diffTime = Math.abs(now.getTime() - date.getTime())
+                const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24))
+                if (diffDays < 7) {
+                    counts["Wk 4"]++
+                } else if (diffDays < 14) {
+                    counts["Wk 3"]++
+                } else if (diffDays < 21) {
+                    counts["Wk 2"]++
+                } else if (diffDays < 30) {
+                    counts["Wk 1"]++
+                }
+            }
+        })
+        return [
+            { name: "Wk 1", messages: counts["Wk 1"], clicks: Math.round(counts["Wk 1"] * 0.7) },
+            { name: "Wk 2", messages: counts["Wk 2"], clicks: Math.round(counts["Wk 2"] * 0.7) },
+            { name: "Wk 3", messages: counts["Wk 3"], clicks: Math.round(counts["Wk 3"] * 0.7) },
+            { name: "Wk 4", messages: counts["Wk 4"], clicks: Math.round(counts["Wk 4"] * 0.7) }
+        ]
     }
     const chartData = getChartData()
 
@@ -228,6 +283,12 @@ export default function AnalyticsPage() {
                 {/* Timeframe selector */}
                 <div className="flex bg-secondary p-1 rounded-xl border border-border w-fit shadow-inner">
                     <button 
+                        onClick={() => setTimeframe("24h")}
+                        className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${timeframe === "24h" ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
+                    >
+                        24 Hours
+                    </button>
+                    <button 
                         onClick={() => setTimeframe("7d")}
                         className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${timeframe === "7d" ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
                     >
@@ -238,6 +299,12 @@ export default function AnalyticsPage() {
                         className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${timeframe === "30d" ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
                     >
                         30 Days
+                    </button>
+                    <button 
+                        onClick={() => setTimeframe("all")}
+                        className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${timeframe === "all" ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
+                    >
+                        All Time
                     </button>
                 </div>
             </div>
@@ -264,7 +331,7 @@ export default function AnalyticsPage() {
                 />
                 <MiniMetricCard 
                     title="Conversion Rate" 
-                    value={messagesSentVal > 0 ? "92.5%" : "0%"} 
+                    value={triggerMessages.length > 0 ? Math.round((messagesSentVal / triggerMessages.length) * 100) + "%" : "0%"} 
                     trend="Highly optimized replies"
                     icon={<TrendingUp className="w-5 h-5 text-green-500" />}
                 />
