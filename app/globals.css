@@ -81,7 +81,7 @@
 
 
 @theme inline {
-  --font-sans: "Inter", "sans-serif";
+  --font-sans: "Geist", "Geist Fallback";
   --font-serif: "Crimson Pro", serif;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
