@@ -58,7 +58,7 @@ export default function DashboardPage() {
     }
 
     return (
-        <div className="p-4 md:p-6 space-y-4 md:space-y-5 animate-in fade-in duration-500 flex flex-col justify-between font-sans h-full max-h-[calc(100vh-5rem)] md:max-h-screen overflow-hidden">
+        <div className="p-4 md:p-6 space-y-4 md:space-y-5 animate-in fade-in duration-500 flex flex-col justify-between font-sans min-h-full md:h-full md:max-h-screen md:overflow-hidden">
             {/* Welcome Section with Floating Action Button */}
             <div className="flex items-center justify-between relative shrink-0">
                 <div>
