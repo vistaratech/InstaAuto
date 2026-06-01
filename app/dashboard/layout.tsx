@@ -83,7 +83,7 @@ export default function DashboardLayout({
             )}>
                 {/* Mobile Header (Visible only on small screens) */}
                 <header className="md:hidden h-16 border-b border-border bg-card flex items-center justify-between px-4 sticky top-0 z-40 transition-colors duration-300">
-                    <span className="font-bold text-lg tracking-tight text-foreground">Insta Autobot</span>
+                    <span className="font-bold text-lg tracking-tight text-foreground">DMSpark</span>
                     <MobileNav username={username || "User"} onLogout={logout} />
                 </header>
 
