@@ -50,9 +50,14 @@ export function Sidebar({ className, username = "Demo User", profilePictureUrl, 
           <>
             <img src="/logo.png" alt="DMSpark" className="w-12 h-12 object-contain shrink-0 bg-white rounded-xl p-1 shadow-sm hover:scale-105 transition-transform duration-300" />
             <div className="flex flex-col">
-              <span className="font-black text-2xl tracking-tight text-[#1a73e8] leading-none">
-                DMSpark
-              </span>
+              <div className="flex items-center gap-1.5">
+                <span className="font-black text-2xl tracking-tight text-[#1a73e8] leading-none">
+                  DMSpark
+                </span>
+                <span className="text-[9px] font-extrabold px-1.5 py-0.5 rounded-full bg-[#1a73e8]/10 text-[#1a73e8] border border-[#1a73e8]/20 select-none animate-pulse shrink-0">
+                  v1.5.1
+                </span>
+              </div>
               <span className="text-[10px] text-muted-foreground/50 font-bold tracking-wider uppercase mt-1">
                 DM Automation
               </span>
@@ -125,6 +130,14 @@ export function Sidebar({ className, username = "Demo User", profilePictureUrl, 
           icon={<BarChart3 className="w-4 h-4" />}
           label="Analytics"
           active={isActive("/dashboard/analytics")}
+          onClick={onNavigate}
+          isCollapsed={isCollapsed}
+        />
+        <NavItem
+          href="/dashboard/help"
+          icon={<Compass className="w-4 h-4 text-primary animate-pulse" />}
+          label="How to Use"
+          active={isActive("/dashboard/help")}
           onClick={onNavigate}
           isCollapsed={isCollapsed}
         />
