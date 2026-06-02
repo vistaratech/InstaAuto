@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { Sidebar } from "@/components/layout/sidebar"
 import { MobileNav } from "@/components/layout/mobile-nav"
 import { useInstagramSession } from "@/hooks/use-instagram-session"
-import { Loader2, ChevronLeft, ChevronRight, Compass, Copy, Check, ExternalLink, MoreVertical } from "lucide-react"
+import { Loader2, ChevronLeft, ChevronRight, Compass, Copy, Check, ExternalLink, MoreVertical, AlertTriangle } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { cn } from "@/lib/utils"
 
@@ -125,8 +125,9 @@ export default function DashboardLayout({
 
                 <main className="flex-1 relative overflow-auto md:overflow-hidden h-[calc(100dvh-4rem)] md:h-dvh flex flex-col">
                     {error && (
-                        <div className="bg-destructive/10 border border-destructive/30 text-destructive px-4 py-3 text-sm m-4 rounded-lg shrink-0">
-                            ⚠️ Login Error: {error}
+                        <div className="bg-destructive/10 border border-destructive/30 text-destructive px-4 py-3 text-sm m-4 rounded-lg shrink-0 flex items-center gap-2">
+                            <AlertTriangle className="w-4 h-4 shrink-0 text-destructive" />
+                            <span>Login Error: {error}</span>
                         </div>
                     )}
                     <div className="flex-1 overflow-y-auto md:overflow-hidden w-full h-full flex flex-col">

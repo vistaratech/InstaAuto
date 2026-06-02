@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { ArrowLeft, Shield, Eye, Database, Trash2, Globe, Mail, Lock } from "lucide-react"
+import { ArrowLeft, Shield, Eye, Database, Trash2, Globe, Mail, Lock, AlertTriangle } from "lucide-react"
 
 export default function PrivacyPolicy() {
   return (
@@ -73,9 +73,10 @@ export default function PrivacyPolicy() {
               <li>Compiling performance metrics (e.g. number of automations triggered) for your dashboard analytics.</li>
               <li>Maintaining active connection sessions with Instagram APIs to prevent service interruption.</li>
             </ul>
-            <p className="text-xs text-amber-500/90 font-medium bg-amber-500/5 p-3 rounded-lg border border-amber-500/10">
-              ⚠️ <span className="font-bold">Zero Data Monetization:</span> We do not sell, rent, share, or trade your personal data, access credentials, or customer messaging logs with any third parties.
-            </p>
+            <div className="text-xs text-amber-500/90 font-medium bg-amber-500/5 p-3 rounded-lg border border-amber-500/10 flex items-start gap-2">
+              <AlertTriangle className="w-4 h-4 shrink-0 text-amber-500 mt-0.5" />
+              <span><span className="font-bold text-amber-500">Zero Data Monetization:</span> We do not sell, rent, share, or trade your personal data, access credentials, or customer messaging logs with any third parties.</span>
+            </div>
           </div>
 
           {/* Card 3 */}

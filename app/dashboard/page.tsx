@@ -231,7 +231,7 @@ export default function DashboardPage() {
             >
                 <div>
                     <div className="flex items-center gap-2 mb-1">
-                        <span className="text-lg md:text-xl">👋</span>
+                        <Sparkles className="w-4 h-4 md:w-5 md:h-5 text-primary animate-pulse" />
                         <span className="text-xs font-bold text-primary/80 uppercase tracking-widest">{getGreeting()}</span>
                     </div>
                     <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-foreground leading-none">

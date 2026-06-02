@@ -533,7 +533,10 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess }: CreateRuleF
   const renderStep3 = () => (
     <div className="space-y-5 animate-in fade-in slide-in-from-right-4 duration-300">
       <div>
-        <h3 className="text-lg font-bold text-foreground mb-1">🚀 Ready to launch!</h3>
+        <h3 className="text-lg font-bold text-foreground mb-1 flex items-center gap-2">
+          <Sparkles className="w-5 h-5 text-primary animate-pulse" />
+          Ready to launch!
+        </h3>
         <p className="text-xs text-muted-foreground">Name it, set options, and you're good to go.</p>
       </div>
 
