@@ -164,18 +164,51 @@
   @apply bg-black/5 dark:bg-white/5;
 }
 
-/* Minimal Scrollbar */
+/* ---------------------------------------------------- */
+/* PREMIUM GLOBAL SCROLLBAR DESIGN SYSTEM               */
+/* ---------------------------------------------------- */
+
+/* Lock root HTML and body viewport on desktop to completely eliminate double scrollbars */
+@media (min-width: 768px) {
+  html, body, #__next, [data-nextjs-scroll-focus-boundary] {
+    overflow: hidden !important;
+    height: 100vh !important;
+    max-height: 100vh !important;
+  }
+}
+
+/* Force ALL scrollbars in the app to be super thin, rounded, and extremely light */
 ::-webkit-scrollbar {
-  width: 4px;
+  width: 5px !important;
+  height: 5px !important;
 }
 ::-webkit-scrollbar-track {
-  @apply bg-transparent;
+  background: transparent !important;
 }
 ::-webkit-scrollbar-thumb {
-  @apply bg-black/10 dark:bg-white/10 rounded-full transition-colors;
+  background: rgba(0, 0, 0, 0.08) !important; /* Faint light gray (8% opacity) */
+  border-radius: 9999px !important;
+  border: 1px solid transparent !important;
 }
 ::-webkit-scrollbar-thumb:hover {
-  @apply bg-black/20 dark:bg-white/20;
+  background: rgba(0, 0, 0, 0.16) !important;
+}
+
+/* Dark mode scrollbars */
+.dark ::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.08) !important;
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.16) !important;
+}
+
+/* Firefox Support */
+* {
+  scrollbar-width: thin !important;
+  scrollbar-color: rgba(0, 0, 0, 0.08) transparent !important;
+}
+.dark * {
+  scrollbar-color: rgba(255, 255, 255, 0.08) transparent !important;
 }
 
 /* Scrollbar hide utility */
@@ -187,41 +220,38 @@
   display: none;
 }
 
-/* Premium scrollbar visible only on hover */
+/* Hover-only Scrollbar Overlays */
 .hover-scrollbar {
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE 10+ */
-  overflow-y: overlay !important; /* Force scrollbar to float on top and occupy 0px layout space */
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+  overflow-y: overlay !important;
 }
 .hover-scrollbar::-webkit-scrollbar {
-  width: 4px;
-  height: 4px;
-}
-.hover-scrollbar::-webkit-scrollbar-track {
-  background: transparent;
+  width: 5px !important;
+  height: 5px !important;
 }
 .hover-scrollbar::-webkit-scrollbar-thumb {
-  background: transparent; /* Invisible by default */
-  border-radius: 9999px;
+  background: transparent !important; /* Hidden by default */
+  border-radius: 9999px !important;
 }
 .hover-scrollbar:hover {
-  scrollbar-width: thin; /* Firefox */
-  scrollbar-color: rgba(0, 0, 0, 0.08) transparent; /* Firefox standard hover */
+  scrollbar-width: thin !important;
+  scrollbar-color: rgba(0, 0, 0, 0.08) transparent !important;
 }
 .dark .hover-scrollbar:hover {
-  scrollbar-color: rgba(255, 255, 255, 0.08) transparent;
+  scrollbar-color: rgba(255, 255, 255, 0.08) transparent !important;
 }
 .hover-scrollbar:hover::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.08); /* Faint light gray (8% opacity) on hover */
+  background: rgba(0, 0, 0, 0.08) !important; /* Faint light gray (8% opacity) on hover */
 }
 .hover-scrollbar:hover::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.18); /* Faint dark gray (18% opacity) on active hover */
+  background: rgba(0, 0, 0, 0.18) !important;
 }
 .dark .hover-scrollbar:hover::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.08); /* Faint white (8% opacity) in dark mode */
+  background: rgba(255, 255, 255, 0.08) !important; /* Faint white in dark mode */
 }
 .dark .hover-scrollbar:hover::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.18) !important;
 }
 
 /* Shimmer animation for active nav items */
