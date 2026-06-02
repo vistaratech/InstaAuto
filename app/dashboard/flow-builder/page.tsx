@@ -459,11 +459,6 @@ function FlowBuilderContent() {
   return (
     <div className="p-4 md:p-8 space-y-6 text-foreground min-h-[90vh] flex flex-col justify-between font-sans relative z-10 animate-in fade-in duration-500">
       
-      {/* Ambient Background Glows */}
-      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-        <div className="absolute -top-[200px] -left-[200px] w-[600px] h-[600px] bg-[#1a73e8]/[0.03] rounded-full blur-[120px] animate-pulse" style={{ animationDuration: '8s' }} />
-        <div className="absolute -bottom-[200px] -right-[200px] w-[500px] h-[500px] bg-[#1a73e8]/[0.02] rounded-full blur-[120px] animate-pulse" style={{ animationDuration: '10s', animationDelay: '2s' }} />
-      </div>
 
       {/* Top Header Utilities */}
       <div className={`flex flex-col sm:flex-row sm:items-center justify-between gap-4 shrink-0 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>

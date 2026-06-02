@@ -247,12 +247,6 @@ export default function DashboardPage() {
     return (
         <div className="p-4 md:p-6 space-y-4 md:space-y-5 font-sans min-h-full flex flex-col pb-8">
             
-            {/* Ambient Background Glows */}
-            <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-                <div className="absolute -top-[200px] -left-[200px] w-[600px] h-[600px] bg-[#1a73e8]/[0.04] rounded-full blur-[120px] animate-pulse" style={{ animationDuration: '8s' }} />
-                <div className="absolute -bottom-[200px] -right-[200px] w-[500px] h-[500px] bg-[#1a73e8]/[0.03] rounded-full blur-[120px] animate-pulse" style={{ animationDuration: '10s', animationDelay: '2s' }} />
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-[#1a73e8]/[0.02] rounded-full blur-[100px] animate-pulse" style={{ animationDuration: '12s', animationDelay: '4s' }} />
-            </div>
 
             {/* Welcome Section */}
             <div 

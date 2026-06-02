@@ -284,9 +284,7 @@ export default function AnalyticsPage() {
 
     return (
         <div className="relative p-4 md:p-8 space-y-8 animate-in fade-in duration-500 text-foreground overflow-hidden">
-            {/* Ambient background glows */}
-            <div className="pointer-events-none absolute -top-32 -left-32 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '4s' }} />
-            <div className="pointer-events-none absolute -top-20 right-0 w-80 h-80 bg-violet-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '6s' }} />
+
             {/* Header section */}
             <div className={`flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`} style={{ transitionDelay: '0ms' }}>
                 <div>
