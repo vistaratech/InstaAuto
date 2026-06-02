@@ -202,7 +202,7 @@ export default function DashboardPage() {
     ]
 
     return (
-        <div className="p-4 md:p-6 space-y-4 md:space-y-5 font-sans min-h-full md:h-full md:max-h-screen md:overflow-hidden flex flex-col">
+        <div className="p-4 md:p-6 space-y-4 md:space-y-5 font-sans min-h-full flex flex-col pb-8">
             
             {/* Ambient Background Glows */}
             <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
