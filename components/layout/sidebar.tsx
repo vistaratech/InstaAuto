@@ -45,10 +45,10 @@ export function Sidebar({ className, username = "Demo User", profilePictureUrl, 
     <aside className={cn("flex flex-col bg-sidebar border-r border-sidebar-border text-sidebar-foreground h-full transition-all duration-300", className)} {...props}>
       <div className={cn("flex shrink-0 select-none", isCollapsed ? "p-4 justify-center items-center" : "p-6 items-center gap-3")}>
         {isCollapsed ? (
-          <img src="/logo.png" alt="DMSpark" className="w-10 h-10 object-contain shrink-0 bg-white rounded-xl p-1 shadow-sm" />
+          <img src="/logo.png" alt="DMSpark" className="w-10 h-10 object-contain shrink-0 bg-white rounded-xl p-1 shadow-sm hover:scale-105 transition-transform duration-300" />
         ) : (
           <>
-            <img src="/logo.png" alt="DMSpark" className="w-12 h-12 object-contain shrink-0 bg-white rounded-xl p-1 shadow-sm" />
+            <img src="/logo.png" alt="DMSpark" className="w-12 h-12 object-contain shrink-0 bg-white rounded-xl p-1 shadow-sm hover:scale-105 transition-transform duration-300" />
             <div className="flex flex-col">
               <span className="font-black text-2xl tracking-tight text-[#1a73e8] leading-none">
                 DMSpark
@@ -150,16 +150,16 @@ export function Sidebar({ className, username = "Demo User", profilePictureUrl, 
           <button
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
             className={cn(
-              "flex items-center rounded-lg text-sidebar-foreground/80 hover:text-foreground hover:bg-sidebar-accent/60 transition-all font-medium text-[13px] group cursor-pointer",
+              "flex items-center rounded-lg text-sidebar-foreground/80 hover:text-foreground hover:bg-sidebar-accent/60 transition-all duration-300 font-medium text-[13px] group cursor-pointer",
               isCollapsed ? "justify-center p-2.5 w-full" : "w-full justify-between px-4 py-2.5"
             )}
             title={isCollapsed ? "Toggle Theme" : undefined}
           >
             <div className="flex items-center gap-3">
               {mounted && theme === "dark" ? (
-                <Sun className="w-4 h-4 text-amber-500" />
+                <Sun className="w-4 h-4 text-amber-500 transition-transform duration-500 rotate-0 group-hover:rotate-45" />
               ) : (
-                <Moon className="w-4 h-4 text-indigo-500" />
+                <Moon className="w-4 h-4 text-indigo-500 transition-transform duration-500 rotate-0 group-hover:-rotate-12" />
               )}
               {!isCollapsed && <span>Theme Mode</span>}
             </div>
@@ -180,7 +180,7 @@ export function Sidebar({ className, username = "Demo User", profilePictureUrl, 
           "flex items-center rounded-xl bg-sidebar-accent/30 border border-sidebar-border backdrop-blur-sm group",
           isCollapsed ? "justify-center p-2" : "gap-3 px-3 py-3"
         )}>
-          <div className="w-9 h-9 rounded-full bg-secondary border border-sidebar-border flex items-center justify-center shadow-inner shrink-0 overflow-hidden">
+          <div className="w-9 h-9 rounded-full bg-secondary border border-sidebar-border flex items-center justify-center shadow-inner shrink-0 overflow-hidden ring-2 ring-offset-1 ring-offset-sidebar ring-primary/30 group-hover:ring-primary/60 transition-all duration-300">
             {profilePictureUrl ? (
               <img src={profilePictureUrl} alt={username} className="w-full h-full object-cover" />
             ) : (
@@ -245,11 +245,11 @@ function NavItem({
       href={href}
       onClick={onClick}
       className={cn(
-        "flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all font-semibold text-[13px] group relative overflow-hidden",
+        "flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all duration-200 font-semibold text-[13px] group relative overflow-hidden hover:translate-x-1",
         active 
-          ? "bg-primary text-primary-foreground shadow-md shadow-primary/20" 
-          : "text-sidebar-foreground/80 hover:text-foreground hover:bg-sidebar-accent/50",
-        isCollapsed ? "justify-center px-2" : ""
+          ? "bg-primary text-primary-foreground shadow-md shadow-primary/20 border-l-[3px] border-white/70" 
+          : "text-sidebar-foreground/80 hover:text-foreground hover:bg-sidebar-accent/50 hover:shadow-md hover:shadow-primary/10",
+        isCollapsed ? "justify-center px-2 hover:translate-x-0" : ""
       )}
       title={isCollapsed ? label : undefined}
     >
