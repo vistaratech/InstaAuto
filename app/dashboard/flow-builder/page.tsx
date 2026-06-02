@@ -647,8 +647,10 @@ function FlowBuilderContent() {
             })}
           </div>
 
-          <div className="p-4 z-30 pointer-events-none text-[10px] text-muted-foreground font-semibold uppercase tracking-widest block opacity-75">
-            DMSpark Flow Workspace 1.0
+          {/* Active Automation Detail Tag (Bottom-Left) */}
+          <div className="absolute bottom-4 left-4 z-30 bg-card/85 backdrop-blur-md px-3.5 py-1.5 rounded-xl border border-border/80 text-[10px] font-black uppercase tracking-wider text-muted-foreground/80 shadow-sm flex items-center gap-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+            <span>Flow: {automationName} • {triggerSource.toUpperCase()} Channel</span>
           </div>
         </div>
 
