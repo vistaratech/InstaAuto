@@ -191,6 +191,7 @@
 .hover-scrollbar {
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE 10+ */
+  overflow-y: overlay !important; /* Force scrollbar to float on top and occupy 0px layout space */
 }
 .hover-scrollbar::-webkit-scrollbar {
   width: 4px;
