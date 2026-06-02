@@ -81,7 +81,7 @@ export default function DashboardLayout({
     }
 
     return (
-        <div className="flex min-h-screen bg-background text-foreground transition-colors duration-300 relative">
+        <div className="flex min-h-screen md:h-screen md:overflow-hidden bg-background text-foreground transition-colors duration-300 relative">
             {/* Collapse Toggle Button (Desktop Only) */}
             <button
                 onClick={handleToggleCollapse}
@@ -114,7 +114,7 @@ export default function DashboardLayout({
 
             {/* Main Content Area */}
             <div className={cn(
-                "flex-1 flex flex-col transition-all duration-300",
+                "flex-1 flex flex-col h-full md:h-screen md:overflow-hidden transition-all duration-300",
                 isCollapsed ? "md:pl-16" : "md:pl-64"
             )}>
                 {/* Mobile Header (Visible only on small screens) */}
@@ -123,14 +123,14 @@ export default function DashboardLayout({
                     <span className="font-black text-xl tracking-tighter bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent ml-1">DMSpark</span>
                 </header>
 
-                <main className="flex-1 relative overflow-auto md:overflow-hidden h-[calc(100dvh-4rem)] md:h-dvh flex flex-col">
+                <main className="flex-1 relative overflow-hidden h-[calc(100dvh-4rem)] md:h-full flex flex-col">
                     {error && (
                         <div className="bg-destructive/10 border border-destructive/30 text-destructive px-4 py-3 text-sm m-4 rounded-lg shrink-0 flex items-center gap-2">
                             <AlertTriangle className="w-4 h-4 shrink-0 text-destructive" />
                             <span>Login Error: {error}</span>
                         </div>
                     )}
-                    <div className="flex-1 overflow-y-auto md:overflow-hidden w-full h-full flex flex-col relative">
+                    <div className="flex-1 overflow-y-auto w-full h-full flex flex-col relative">
                         {/* Premium Global Fixed Ambient Background Glows */}
                         <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
                             <div className="pointer-events-none absolute -top-32 -left-32 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '6s' }} />
