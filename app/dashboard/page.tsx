@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef } from "react"
 import { Card } from "@/components/ui/card"
 import { useInstagramSession } from "@/hooks/use-instagram-session"
-import { Activity, Users, MessageCircle, Zap, Loader2, Settings, MessageSquare, ArrowUpRight, Sparkles, TrendingUp, Send } from "lucide-react"
+import { Activity, Users, MessageCircle, Zap, Loader2, Settings, MessageSquare, ArrowUpRight, Sparkles, TrendingUp, Send, Plus } from "lucide-react"
 import Link from "next/link"
 
 interface DashboardStats {
@@ -102,6 +102,20 @@ export default function DashboardPage() {
     const [stats, setStats] = useState<DashboardStats | null>(null)
     const [loading, setLoading] = useState(true)
     const [isVisible, setIsVisible] = useState(false)
+    const [isQuickAccessOpen, setIsQuickAccessOpen] = useState(false)
+    const popupRef = useRef<HTMLDivElement>(null)
+
+    useEffect(() => {
+        function handleClickOutside(event: MouseEvent) {
+            if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
+                setIsQuickAccessOpen(false)
+            }
+        }
+        document.addEventListener("mousedown", handleClickOutside)
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside)
+        }
+    }, [])
 
     useEffect(() => {
         if (!userId) return
@@ -331,10 +345,10 @@ export default function DashboardPage() {
                     </div>
                 </Card>
 
-                {/* Quick Access */}
-                <Card className="p-4.5 bg-card/60 backdrop-blur-md border-border shadow-sm flex flex-col justify-between hover:shadow-md transition-all duration-300 overflow-hidden relative">
+                {/* Quick Access Card with Popup */}
+                <Card className="p-4.5 bg-card/60 backdrop-blur-md border-border shadow-sm flex flex-col justify-between hover:shadow-md transition-all duration-300 overflow-visible relative min-h-[250px]">
                     {/* Subtle gradient bg */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-blue-500/[0.02] via-transparent to-violet-500/[0.02] pointer-events-none" />
+                    <div className="absolute inset-0 bg-gradient-to-br from-blue-500/[0.02] via-transparent to-violet-500/[0.02] pointer-events-none rounded-xl" />
                     
                     <div className="space-y-4 flex flex-col h-full justify-between relative z-10">
                         <h3 className="font-extrabold text-foreground text-sm tracking-tight border-b border-border/50 pb-2.5 flex items-center gap-2 shrink-0">
@@ -343,52 +357,78 @@ export default function DashboardPage() {
                             </span>
                             Quick Access
                         </h3>
-                        <div className="grid grid-cols-1 gap-2.5 flex-1 justify-center flex-col flex mt-2">
-                            {/* New Automation */}
-                            <Link 
-                                href="/dashboard/automations" 
-                                className="h-16 rounded-xl border border-border bg-card/40 flex flex-row items-center px-4 hover:bg-blue-500/5 hover:border-blue-500/35 cursor-pointer transition-all duration-300 group gap-3 shadow-sm hover:shadow-md hover:shadow-blue-500/5 hover:-translate-y-0.5"
+                        
+                        {/* Interactive Plus Button and Menu Container */}
+                        <div className="flex-1 flex flex-col items-center justify-center relative my-3" ref={popupRef}>
+                            <button
+                                onClick={() => setIsQuickAccessOpen(!isQuickAccessOpen)}
+                                className={`w-14 h-14 rounded-full bg-gradient-to-br from-[#1a73e8] to-blue-600 text-white flex items-center justify-center shadow-lg hover:shadow-xl hover:shadow-blue-500/20 active:scale-95 transition-all duration-300 group relative ${isQuickAccessOpen ? 'rotate-45' : ''}`}
                             >
-                                <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-500/15 to-blue-600/10 border border-blue-500/20 flex items-center justify-center text-blue-500 group-hover:scale-110 transition-transform duration-300">
-                                    <Zap className="w-4 h-4" />
-                                </div>
-                                <div className="text-left min-w-0 flex-1">
-                                    <span className="text-xs font-bold text-foreground block group-hover:text-blue-500 transition-colors duration-200 leading-none">New Automation</span>
-                                    <span className="text-[9px] text-muted-foreground mt-1 block truncate font-medium">Configure active replies</span>
-                                </div>
-                                <ArrowUpRight className="w-4 h-4 text-muted-foreground/40 group-hover:text-blue-500 transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                            </Link>
+                                <span className="absolute inset-0 rounded-full bg-gradient-to-br from-[#1a73e8] to-blue-600 blur-sm opacity-50 group-hover:opacity-75 transition-opacity duration-300" />
+                                <span className="absolute -inset-1 rounded-full border border-blue-400/30 animate-pulse pointer-events-none" />
+                                <Plus className="w-6 h-6 relative z-10 transition-transform duration-300 group-hover:scale-110" />
+                            </button>
+                            
+                            <p className="text-[11px] font-bold text-muted-foreground mt-3 tracking-wide uppercase">
+                                {isQuickAccessOpen ? "Click to Close" : "Click for Quick Actions"}
+                            </p>
 
-                            {/* Live Inbox */}
-                            <Link 
-                                href="/dashboard/inbox" 
-                                className="h-16 rounded-xl border border-border bg-card/40 flex flex-row items-center px-4 hover:bg-[#1a73e8]/5 hover:border-[#1a73e8]/35 cursor-pointer transition-all duration-300 group gap-3 shadow-sm hover:shadow-md hover:shadow-[#1a73e8]/5 hover:-translate-y-0.5"
-                            >
-                                <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#1a73e8]/15 to-[#1a73e8]/10 border border-[#1a73e8]/20 flex items-center justify-center text-[#1a73e8] group-hover:scale-110 transition-transform duration-300">
-                                    <MessageSquare className="w-4 h-4" />
-                                </div>
-                                <div className="text-left min-w-0 flex-1">
-                                    <span className="text-xs font-bold text-foreground block group-hover:text-[#1a73e8] transition-colors duration-200 leading-none">Live Inbox</span>
-                                    <span className="text-[9px] text-muted-foreground mt-1 block truncate font-medium">Manage interactive chats</span>
-                                </div>
-                                <ArrowUpRight className="w-4 h-4 text-muted-foreground/40 group-hover:text-[#1a73e8] transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                            </Link>
+                            {/* Dropdown Popup Menu */}
+                            {isQuickAccessOpen && (
+                                <div className="absolute bottom-full mb-3 w-[260px] bg-card border border-border/80 rounded-2xl shadow-2xl p-2.5 space-y-1.5 z-50 animate-in fade-in slide-in-from-bottom-2 duration-200">
+                                    <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-card border-r border-b border-border/80 rotate-45" />
+                                    
+                                    {/* New Automation */}
+                                    <Link 
+                                        href="/dashboard/automations" 
+                                        onClick={() => setIsQuickAccessOpen(false)}
+                                        className="flex items-center gap-3 p-2 rounded-xl hover:bg-blue-500/5 hover:border-blue-500/35 border border-transparent transition-all group"
+                                    >
+                                        <div className="w-8 h-8 rounded-lg bg-blue-500/15 flex items-center justify-center text-blue-500 group-hover:scale-105 transition-transform">
+                                            <Zap className="w-4 h-4" />
+                                        </div>
+                                        <div className="text-left min-w-0 flex-1">
+                                            <span className="text-[11px] font-extrabold text-foreground block group-hover:text-blue-500 transition-colors">New Automation</span>
+                                            <span className="text-[9px] text-muted-foreground block truncate">Configure active replies</span>
+                                        </div>
+                                        <ArrowUpRight className="w-3.5 h-3.5 text-muted-foreground/40 group-hover:text-blue-500 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+                                    </Link>
 
-                            {/* System Preferences */}
-                            <Link 
-                                href="/dashboard/settings" 
-                                className="h-16 rounded-xl border border-border bg-card/40 flex flex-row items-center px-4 hover:bg-[#1a73e8]/5 hover:border-[#1a73e8]/35 cursor-pointer transition-all duration-300 group gap-3 shadow-sm hover:shadow-md hover:shadow-[#1a73e8]/5 hover:-translate-y-0.5"
-                            >
-                                <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#1a73e8]/15 to-[#1a73e8]/10 border border-[#1a73e8]/20 flex items-center justify-center text-[#1a73e8] group-hover:scale-110 transition-transform duration-300">
-                                    <Settings className="w-4 h-4" />
+                                    {/* Live Inbox */}
+                                    <Link 
+                                        href="/dashboard/inbox" 
+                                        onClick={() => setIsQuickAccessOpen(false)}
+                                        className="flex items-center gap-3 p-2 rounded-xl hover:bg-[#1a73e8]/5 hover:border-[#1a73e8]/35 border border-transparent transition-all group"
+                                    >
+                                        <div className="w-8 h-8 rounded-lg bg-[#1a73e8]/15 flex items-center justify-center text-[#1a73e8] group-hover:scale-105 transition-transform">
+                                            <MessageSquare className="w-4 h-4" />
+                                        </div>
+                                        <div className="text-left min-w-0 flex-1">
+                                            <span className="text-[11px] font-extrabold text-foreground block group-hover:text-[#1a73e8] transition-colors">Live Inbox</span>
+                                            <span className="text-[9px] text-muted-foreground block truncate">Manage interactive chats</span>
+                                        </div>
+                                        <ArrowUpRight className="w-3.5 h-3.5 text-muted-foreground/40 group-hover:text-[#1a73e8] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+                                    </Link>
+
+                                    {/* AI Settings */}
+                                    <Link 
+                                        href="/dashboard/settings" 
+                                        onClick={() => setIsQuickAccessOpen(false)}
+                                        className="flex items-center gap-3 p-2 rounded-xl hover:bg-[#1a73e8]/5 hover:border-[#1a73e8]/35 border border-transparent transition-all group"
+                                    >
+                                        <div className="w-8 h-8 rounded-lg bg-[#1a73e8]/15 flex items-center justify-center text-[#1a73e8] group-hover:scale-105 transition-transform">
+                                            <Settings className="w-4 h-4" />
+                                        </div>
+                                        <div className="text-left min-w-0 flex-1">
+                                            <span className="text-[11px] font-extrabold text-foreground block group-hover:text-[#1a73e8] transition-colors">AI Settings</span>
+                                            <span className="text-[9px] text-muted-foreground block truncate">Configure preferences</span>
+                                        </div>
+                                        <ArrowUpRight className="w-3.5 h-3.5 text-muted-foreground/40 group-hover:text-[#1a73e8] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+                                    </Link>
                                 </div>
-                                <div className="text-left min-w-0 flex-1">
-                                    <span className="text-xs font-bold text-foreground block group-hover:text-[#1a73e8] transition-colors duration-200 leading-none">AI Settings</span>
-                                    <span className="text-[9px] text-muted-foreground mt-1 block truncate font-medium">Configure preferences</span>
-                                </div>
-                                <ArrowUpRight className="w-4 h-4 text-muted-foreground/40 group-hover:text-[#1a73e8] transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                            </Link>
+                            )}
                         </div>
+
                         <div className="pt-2.5 border-t border-border text-center shrink-0">
                             <span className="text-[9px] text-muted-foreground font-black uppercase tracking-widest block opacity-75 flex items-center justify-center gap-1.5">
                                 <Sparkles className="w-3 h-3 text-amber-500/60" />
