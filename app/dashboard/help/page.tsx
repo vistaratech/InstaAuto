@@ -569,7 +569,7 @@ export default function HowToUsePage() {
                           <p className="text-amber-400">[Engine] Match index: keyword matches "coupon". Matching Rule #104</p>
                           <p className="text-white flex items-center gap-1">
                             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                            [Graph API] POST /me/messages -> HTTP 200 OK (Msg sent successfully)
+                            [Graph API] POST /me/messages {"->"} HTTP 200 OK (Msg sent successfully)
                           </p>
                         </div>
                       </div>
