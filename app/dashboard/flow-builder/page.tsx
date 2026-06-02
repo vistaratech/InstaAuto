@@ -75,7 +75,7 @@ function FlowBuilderContent() {
       x: 420, 
       y: 80, 
       title: "Welcome DM", 
-      content: "Hey machan! Welcome to DMSpark! Smart automations are now active on your profile. 🚀", 
+      content: "Hey machan! Welcome to DMSpark! Smart automations are now active on your profile.", 
       extra: "Auto-reply text" 
     },
     { 
@@ -115,6 +115,14 @@ function FlowBuilderContent() {
   const [triggerSource, setTriggerSource] = useState<'comment' | 'dm' | 'story'>('dm')
 
   const canvasRef = useRef<HTMLDivElement>(null)
+  const [isVisible, setIsVisible] = useState(false)
+
+  useEffect(() => {
+    if (!isSessionLoading && !isLoadingFlow) {
+      const timer = setTimeout(() => setIsVisible(true), 100)
+      return () => clearTimeout(timer)
+    }
+  }, [isSessionLoading, isLoadingFlow])
 
   // Find selected node
   const selectedNode = nodes.find(n => n.id === selectedNodeId)
@@ -227,7 +235,7 @@ function FlowBuilderContent() {
             setNodes(newNodesList)
             setConnections(newConnectionsList)
             setSelectedNodeId("trigger-node")
-            toast.success("Automation loaded successfully! 🚀")
+            toast.success("Automation loaded successfully!")
           }
         }
       } catch (err) {
@@ -420,7 +428,7 @@ function FlowBuilderContent() {
         })
 
         if (res.ok) {
-          toast.success("Changes saved successfully! 🎉", { description: "Your live Instagram automation was updated." })
+          toast.success("Changes saved successfully!", { description: "Your live Instagram automation was updated." })
           setTimeout(() => router.push("/dashboard/automations"), 1200)
         } else {
           toast.error("Failed to save changes", { description: "Please check your database connectivity." })
@@ -434,7 +442,7 @@ function FlowBuilderContent() {
     } else {
       // Prototype visual local save feedback
       setIsSaved(true)
-      toast.success("Prototype Flow saved locally! 👍", { description: "Visual map changes stored in browser view state." })
+      toast.success("Prototype Flow saved locally!", { description: "Visual map changes stored in browser view state." })
       setTimeout(() => setIsSaved(false), 2000)
     }
   }
@@ -449,9 +457,16 @@ function FlowBuilderContent() {
   }
 
   return (
-    <div className="p-4 md:p-8 space-y-6 animate-in fade-in duration-500 text-foreground min-h-[90vh] flex flex-col justify-between font-sans">
+    <div className="p-4 md:p-8 space-y-6 text-foreground min-h-[90vh] flex flex-col justify-between font-sans relative z-10 animate-in fade-in duration-500">
+      
+      {/* Ambient Background Glows */}
+      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        <div className="absolute -top-[200px] -left-[200px] w-[600px] h-[600px] bg-[#1a73e8]/[0.03] rounded-full blur-[120px] animate-pulse" style={{ animationDuration: '8s' }} />
+        <div className="absolute -bottom-[200px] -right-[200px] w-[500px] h-[500px] bg-[#1a73e8]/[0.02] rounded-full blur-[120px] animate-pulse" style={{ animationDuration: '10s', animationDelay: '2s' }} />
+      </div>
+
       {/* Top Header Utilities */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 shrink-0">
+      <div className={`flex flex-col sm:flex-row sm:items-center justify-between gap-4 shrink-0 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
         <div>
           <div className="flex items-center gap-2">
             {flowId && (
@@ -486,7 +501,7 @@ function FlowBuilderContent() {
       </div>
 
       {/* Builder Layout Workspace */}
-      <div className="flex-1 grid grid-cols-1 lg:grid-cols-4 gap-6 items-stretch relative min-h-[580px]">
+      <div className={`flex-1 grid grid-cols-1 lg:grid-cols-4 gap-6 items-stretch relative min-h-[580px] transition-all duration-700 delay-150 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
         
         {/* Left Side Visual Drag & Drop Canvas */}
         <div 
@@ -649,12 +664,17 @@ function FlowBuilderContent() {
                 {/* Node Title input */}
                 <div className="space-y-1.5">
                   <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest block">Node Label</label>
-                  <input
-                    type="text"
-                    value={selectedNode.title}
-                    onChange={(e) => updateSelectedNode("title", e.target.value)}
-                    className="w-full h-10 px-3 rounded-xl border border-border bg-background text-xs font-semibold outline-none focus:border-primary/60 transition-colors"
-                  />
+                  <div className="relative">
+                    <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-muted-foreground">
+                      <Sliders className="w-3.5 h-3.5" />
+                    </span>
+                    <input
+                      type="text"
+                      value={selectedNode.title}
+                      onChange={(e) => updateSelectedNode("title", e.target.value)}
+                      className="w-full h-10 pl-9 pr-3 rounded-xl border border-border bg-background text-xs font-semibold outline-none focus:border-primary/60 transition-colors"
+                    />
+                  </div>
                 </div>
 
                 {/* Node Content text area */}
@@ -673,12 +693,17 @@ function FlowBuilderContent() {
                 {/* Optional description label */}
                 <div className="space-y-1.5">
                   <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest block">Subtext Label</label>
-                  <input
-                    type="text"
-                    value={selectedNode.extra || ""}
-                    onChange={(e) => updateSelectedNode("extra", e.target.value)}
-                    className="w-full h-10 px-3 rounded-xl border border-border bg-background text-xs font-semibold outline-none focus:border-primary/60 transition-colors"
-                  />
+                  <div className="relative">
+                    <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-muted-foreground">
+                      <Info className="w-3.5 h-3.5" />
+                    </span>
+                    <input
+                      type="text"
+                      value={selectedNode.extra || ""}
+                      onChange={(e) => updateSelectedNode("extra", e.target.value)}
+                      className="w-full h-10 pl-9 pr-3 rounded-xl border border-border bg-background text-xs font-semibold outline-none focus:border-primary/60 transition-colors"
+                    />
+                  </div>
                 </div>
 
                 {/* Node details alert info */}
