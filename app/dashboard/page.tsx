@@ -144,17 +144,20 @@ export default function DashboardPage() {
         )
     }
 
+    const brandColor = "#1a73e8"
+
     const statCards = [
         {
             title: "Total Automations",
             value: stats?.metrics.totalAutomations || 0,
             trend: "Active",
             icon: <Zap className="w-5 h-5" />,
-            color: "#3b82f6",
-            gradient: "from-blue-500/10 to-blue-600/5",
-            borderHover: "hover:border-blue-500/40",
-            iconBg: "bg-blue-500/10",
-            iconBorder: "border-blue-500/20",
+            href: "/dashboard/automations",
+            color: brandColor,
+            gradient: "from-[#1a73e8]/10 to-[#1a73e8]/5",
+            borderHover: "hover:border-[#1a73e8]/40",
+            iconBg: "bg-[#1a73e8]/10",
+            iconBorder: "border-[#1a73e8]/20",
             sparkData: [1, 3, 2, 5, 4, 6, stats?.metrics.totalAutomations || 2],
         },
         {
@@ -162,11 +165,12 @@ export default function DashboardPage() {
             value: stats?.metrics.messagesSent || 0,
             trend: "Lifetime",
             icon: <Send className="w-5 h-5" />,
-            color: "#22c55e",
-            gradient: "from-emerald-500/10 to-emerald-600/5",
-            borderHover: "hover:border-emerald-500/40",
-            iconBg: "bg-emerald-500/10",
-            iconBorder: "border-emerald-500/20",
+            href: "/dashboard/inbox",
+            color: brandColor,
+            gradient: "from-[#1a73e8]/10 to-[#1a73e8]/5",
+            borderHover: "hover:border-[#1a73e8]/40",
+            iconBg: "bg-[#1a73e8]/10",
+            iconBorder: "border-[#1a73e8]/20",
             sparkData: [2, 4, 3, 7, 5, 8, stats?.metrics.messagesSent || 3],
         },
         {
@@ -174,11 +178,12 @@ export default function DashboardPage() {
             value: stats?.metrics.activeTriggers || 0,
             trend: "Running",
             icon: <Activity className="w-5 h-5" />,
-            color: "#f59e0b",
-            gradient: "from-amber-500/10 to-amber-600/5",
-            borderHover: "hover:border-amber-500/40",
-            iconBg: "bg-amber-500/10",
-            iconBorder: "border-amber-500/20",
+            href: "/dashboard/automations",
+            color: brandColor,
+            gradient: "from-[#1a73e8]/10 to-[#1a73e8]/5",
+            borderHover: "hover:border-[#1a73e8]/40",
+            iconBg: "bg-[#1a73e8]/10",
+            iconBorder: "border-[#1a73e8]/20",
             sparkData: [1, 2, 1, 3, 2, 4, stats?.metrics.activeTriggers || 1],
         },
         {
@@ -186,11 +191,12 @@ export default function DashboardPage() {
             value: stats?.metrics.audienceReached || 0,
             trend: "Unique Users",
             icon: <Users className="w-5 h-5" />,
-            color: "#ef4444",
-            gradient: "from-rose-500/10 to-rose-600/5",
-            borderHover: "hover:border-rose-500/40",
-            iconBg: "bg-rose-500/10",
-            iconBorder: "border-rose-500/20",
+            href: "/dashboard/analytics",
+            color: brandColor,
+            gradient: "from-[#1a73e8]/10 to-[#1a73e8]/5",
+            borderHover: "hover:border-[#1a73e8]/40",
+            iconBg: "bg-[#1a73e8]/10",
+            iconBorder: "border-[#1a73e8]/20",
             sparkData: [1, 3, 2, 4, 3, 5, stats?.metrics.audienceReached || 2],
         },
     ]
@@ -200,9 +206,9 @@ export default function DashboardPage() {
             
             {/* Ambient Background Glows */}
             <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-                <div className="absolute -top-[200px] -left-[200px] w-[600px] h-[600px] bg-blue-500/[0.04] rounded-full blur-[120px] animate-pulse" style={{ animationDuration: '8s' }} />
-                <div className="absolute -bottom-[200px] -right-[200px] w-[500px] h-[500px] bg-violet-500/[0.04] rounded-full blur-[120px] animate-pulse" style={{ animationDuration: '10s', animationDelay: '2s' }} />
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-emerald-500/[0.03] rounded-full blur-[100px] animate-pulse" style={{ animationDuration: '12s', animationDelay: '4s' }} />
+                <div className="absolute -top-[200px] -left-[200px] w-[600px] h-[600px] bg-[#1a73e8]/[0.04] rounded-full blur-[120px] animate-pulse" style={{ animationDuration: '8s' }} />
+                <div className="absolute -bottom-[200px] -right-[200px] w-[500px] h-[500px] bg-[#1a73e8]/[0.03] rounded-full blur-[120px] animate-pulse" style={{ animationDuration: '10s', animationDelay: '2s' }} />
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-[#1a73e8]/[0.02] rounded-full blur-[100px] animate-pulse" style={{ animationDuration: '12s', animationDelay: '4s' }} />
             </div>
 
             {/* Welcome Section */}
@@ -233,38 +239,42 @@ export default function DashboardPage() {
             {/* Stats Grid with Animated Cards */}
             <div className={`grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 shrink-0 z-10 transition-all duration-700 delay-150 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
                 {statCards.map((stat, index) => (
-                    <Card 
+                    <Link 
                         key={stat.title}
-                        className={`relative overflow-hidden p-3 md:p-4 bg-gradient-to-br ${stat.gradient} border-border ${stat.borderHover} transition-all duration-500 shadow-sm hover:shadow-lg cursor-pointer group`}
-                        style={{ transitionDelay: `${index * 75}ms` }}
+                        href={stat.href}
                     >
-                        {/* Hover Glow Effect */}
-                        <div 
-                            className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
-                            style={{ background: `radial-gradient(circle at 50% 50%, ${stat.color}10, transparent 70%)` }}
-                        />
-                        
-                        <div className="flex items-center justify-between relative z-10">
-                            <span className={`p-2 ${stat.iconBg} rounded-xl border ${stat.iconBorder} group-hover:scale-110 transition-transform duration-300`}
-                                style={{ color: stat.color }}>
-                                {stat.icon}
-                            </span>
-                            <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-secondary/80 text-muted-foreground tracking-wider uppercase border border-border/30 flex items-center gap-1">
-                                <span className="w-1 h-1 rounded-full animate-pulse" style={{ backgroundColor: stat.color }} />
-                                {stat.trend}
-                            </span>
-                        </div>
-                        
-                        <div className="mt-3 md:mt-4 relative z-10">
-                            <p className="text-2xl md:text-3xl font-black text-foreground tracking-tight group-hover:scale-105 transition-transform duration-300 origin-left">
-                                <AnimatedCounter value={stat.value} />
-                            </p>
-                            <p className="text-[10px] md:text-xs text-muted-foreground font-semibold uppercase tracking-wider mt-1">{stat.title}</p>
-                        </div>
+                        <Card 
+                            className={`relative overflow-hidden p-3 md:p-4 bg-gradient-to-br ${stat.gradient} border-border ${stat.borderHover} transition-all duration-500 shadow-sm hover:shadow-lg cursor-pointer group h-full`}
+                            style={{ transitionDelay: `${index * 75}ms` }}
+                        >
+                            {/* Hover Glow Effect */}
+                            <div 
+                                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                                style={{ background: `radial-gradient(circle at 50% 50%, ${stat.color}10, transparent 70%)` }}
+                            />
+                            
+                            <div className="flex items-center justify-between relative z-10">
+                                <span className={`p-2 ${stat.iconBg} rounded-xl border ${stat.iconBorder} group-hover:scale-110 transition-transform duration-300`}
+                                    style={{ color: stat.color }}>
+                                    {stat.icon}
+                                </span>
+                                <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-secondary/80 text-muted-foreground tracking-wider uppercase border border-border/30 flex items-center gap-1">
+                                    <span className="w-1 h-1 rounded-full bg-[#1a73e8] animate-pulse" />
+                                    {stat.trend}
+                                </span>
+                            </div>
+                            
+                            <div className="mt-3 md:mt-4 relative z-10">
+                                <p className="text-2xl md:text-3xl font-black text-foreground tracking-tight group-hover:scale-105 transition-transform duration-300 origin-left">
+                                    <AnimatedCounter value={stat.value} />
+                                </p>
+                                <p className="text-[10px] md:text-xs text-muted-foreground font-semibold uppercase tracking-wider mt-1">{stat.title}</p>
+                            </div>
 
-                        {/* Mini Sparkline */}
-                        <MiniSparkline color={stat.color} data={stat.sparkData} />
-                    </Card>
+                            {/* Mini Sparkline */}
+                            <MiniSparkline color={stat.color} data={stat.sparkData} />
+                        </Card>
+                    </Link>
                 ))}
             </div>
 
@@ -328,8 +338,8 @@ export default function DashboardPage() {
                     
                     <div className="space-y-4 flex flex-col h-full justify-between relative z-10">
                         <h3 className="font-extrabold text-foreground text-sm tracking-tight border-b border-border/50 pb-2.5 flex items-center gap-2 shrink-0">
-                            <span className="w-6 h-6 rounded-lg bg-amber-500/10 flex items-center justify-center">
-                                <Zap className="w-3.5 h-3.5 text-amber-500" />
+                            <span className="w-6 h-6 rounded-lg bg-[#1a73e8]/10 flex items-center justify-center">
+                                <Zap className="w-3.5 h-3.5 text-[#1a73e8]" />
                             </span>
                             Quick Access
                         </h3>
@@ -352,31 +362,31 @@ export default function DashboardPage() {
                             {/* Live Inbox */}
                             <Link 
                                 href="/dashboard/inbox" 
-                                className="h-16 rounded-xl border border-border bg-card/40 flex flex-row items-center px-4 hover:bg-emerald-500/5 hover:border-emerald-500/35 cursor-pointer transition-all duration-300 group gap-3 shadow-sm hover:shadow-md hover:shadow-emerald-500/5 hover:-translate-y-0.5"
+                                className="h-16 rounded-xl border border-border bg-card/40 flex flex-row items-center px-4 hover:bg-[#1a73e8]/5 hover:border-[#1a73e8]/35 cursor-pointer transition-all duration-300 group gap-3 shadow-sm hover:shadow-md hover:shadow-[#1a73e8]/5 hover:-translate-y-0.5"
                             >
-                                <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-500/15 to-emerald-600/10 border border-emerald-500/20 flex items-center justify-center text-emerald-500 group-hover:scale-110 transition-transform duration-300">
+                                <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#1a73e8]/15 to-[#1a73e8]/10 border border-[#1a73e8]/20 flex items-center justify-center text-[#1a73e8] group-hover:scale-110 transition-transform duration-300">
                                     <MessageSquare className="w-4 h-4" />
                                 </div>
                                 <div className="text-left min-w-0 flex-1">
-                                    <span className="text-xs font-bold text-foreground block group-hover:text-emerald-500 transition-colors duration-200 leading-none">Live Inbox</span>
+                                    <span className="text-xs font-bold text-foreground block group-hover:text-[#1a73e8] transition-colors duration-200 leading-none">Live Inbox</span>
                                     <span className="text-[9px] text-muted-foreground mt-1 block truncate font-medium">Manage interactive chats</span>
                                 </div>
-                                <ArrowUpRight className="w-4 h-4 text-muted-foreground/40 group-hover:text-emerald-500 transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                                <ArrowUpRight className="w-4 h-4 text-muted-foreground/40 group-hover:text-[#1a73e8] transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                             </Link>
 
                             {/* System Preferences */}
                             <Link 
                                 href="/dashboard/settings" 
-                                className="h-16 rounded-xl border border-border bg-card/40 flex flex-row items-center px-4 hover:bg-violet-500/5 hover:border-violet-500/35 cursor-pointer transition-all duration-300 group gap-3 shadow-sm hover:shadow-md hover:shadow-violet-500/5 hover:-translate-y-0.5"
+                                className="h-16 rounded-xl border border-border bg-card/40 flex flex-row items-center px-4 hover:bg-[#1a73e8]/5 hover:border-[#1a73e8]/35 cursor-pointer transition-all duration-300 group gap-3 shadow-sm hover:shadow-md hover:shadow-[#1a73e8]/5 hover:-translate-y-0.5"
                             >
-                                <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-violet-500/15 to-violet-600/10 border border-violet-500/20 flex items-center justify-center text-violet-500 group-hover:scale-110 transition-transform duration-300">
+                                <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#1a73e8]/15 to-[#1a73e8]/10 border border-[#1a73e8]/20 flex items-center justify-center text-[#1a73e8] group-hover:scale-110 transition-transform duration-300">
                                     <Settings className="w-4 h-4" />
                                 </div>
                                 <div className="text-left min-w-0 flex-1">
-                                    <span className="text-xs font-bold text-foreground block group-hover:text-violet-500 transition-colors duration-200 leading-none">AI Settings</span>
+                                    <span className="text-xs font-bold text-foreground block group-hover:text-[#1a73e8] transition-colors duration-200 leading-none">AI Settings</span>
                                     <span className="text-[9px] text-muted-foreground mt-1 block truncate font-medium">Configure preferences</span>
                                 </div>
-                                <ArrowUpRight className="w-4 h-4 text-muted-foreground/40 group-hover:text-violet-500 transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                                <ArrowUpRight className="w-4 h-4 text-muted-foreground/40 group-hover:text-[#1a73e8] transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                             </Link>
                         </div>
                         <div className="pt-2.5 border-t border-border text-center shrink-0">
