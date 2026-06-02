@@ -125,6 +125,17 @@
   * {
     @apply border-border outline-ring/50;
   }
+  html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  @media (min-width: 768px) {
+    html, body {
+      overflow: hidden !important;
+      height: 100vh;
+    }
+  }
   body {
     @apply bg-background text-foreground antialiased selection:bg-dmspark-blue/20;
   }
