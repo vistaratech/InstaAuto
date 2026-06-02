@@ -293,10 +293,10 @@ export default function DashboardPage() {
             </div>
 
             {/* Bottom Section */}
-            <div className={`grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6 md:flex-1 md:min-h-0 shrink-0 md:shrink z-10 transition-all duration-700 delay-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+            <div className={`grid grid-cols-1 gap-4 md:gap-6 md:flex-1 md:min-h-0 shrink-0 md:shrink z-10 transition-all duration-700 delay-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
                 
                 {/* Recent Activity */}
-                <Card className="p-3.5 md:p-4.5 bg-card/80 backdrop-blur-md border-border lg:col-span-2 shadow-sm flex flex-col justify-between overflow-hidden hover:shadow-md transition-shadow duration-300">
+                <Card className="p-3.5 md:p-4.5 bg-card/80 backdrop-blur-md border-border shadow-sm flex flex-col justify-between overflow-hidden hover:shadow-md transition-shadow duration-300 w-full">
                     <div className="flex items-center justify-between border-b border-border/50 pb-2.5 shrink-0">
                         <h3 className="font-extrabold text-foreground text-sm tracking-tight flex items-center gap-2">
                             <span className="w-6 h-6 rounded-lg bg-blue-500/10 flex items-center justify-center">
@@ -344,96 +344,76 @@ export default function DashboardPage() {
                         )}
                     </div>
                 </Card>
+            </div>
 
-                {/* Quick Access Card with Popup */}
-                <Card className="p-4.5 bg-card/60 backdrop-blur-md border-border shadow-sm flex flex-col justify-between hover:shadow-md transition-all duration-300 overflow-visible relative min-h-[250px]">
-                    {/* Subtle gradient bg */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-blue-500/[0.02] via-transparent to-violet-500/[0.02] pointer-events-none rounded-xl" />
-                    
-                    <div className="space-y-4 flex flex-col h-full justify-between relative z-10">
-                        <h3 className="font-extrabold text-foreground text-sm tracking-tight border-b border-border/50 pb-2.5 flex items-center gap-2 shrink-0">
-                            <span className="w-6 h-6 rounded-lg bg-[#1a73e8]/10 flex items-center justify-center">
-                                <Zap className="w-3.5 h-3.5 text-[#1a73e8]" />
+            {/* Floating Quick Access FAB & Popup */}
+            <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end" ref={popupRef}>
+                {isQuickAccessOpen && (
+                    <div className="mb-3 w-[260px] bg-card border border-border/80 rounded-2xl shadow-2xl p-2.5 space-y-1.5 animate-in fade-in slide-in-from-bottom-5 duration-200">
+                        <div className="flex items-center gap-2 border-b border-border/50 pb-2 mb-1">
+                            <span className="w-5 h-5 rounded-lg bg-[#1a73e8]/10 flex items-center justify-center">
+                                <Zap className="w-3 h-3 text-[#1a73e8]" />
                             </span>
-                            Quick Access
-                        </h3>
+                            <span className="text-xs font-extrabold text-foreground tracking-tight">Quick Access Menu</span>
+                        </div>
                         
-                        {/* Custom Styled Select Dropdown Container */}
-                        <div className="flex-1 flex flex-col justify-start relative my-auto max-w-[280px] mx-auto w-full" ref={popupRef}>
-                            <button
-                                onClick={() => setIsQuickAccessOpen(!isQuickAccessOpen)}
-                                className="w-full h-12 px-4 rounded-xl border border-border/80 bg-secondary/30 flex items-center justify-between hover:bg-secondary/60 hover:border-primary/50 active:scale-[0.98] transition-all duration-300 group z-20 shadow-sm relative overflow-hidden"
-                            >
-                                <span className="absolute inset-0 bg-gradient-to-r from-blue-500/[0.01] to-violet-500/[0.01] pointer-events-none" />
-                                <span className="text-xs font-bold text-foreground flex items-center gap-2">
-                                    <Sparkles className="w-3.5 h-3.5 text-primary animate-pulse" />
-                                    Choose Action...
-                                </span>
-                                <ChevronDown className={`w-4 h-4 text-muted-foreground transition-transform duration-300 ${isQuickAccessOpen ? 'rotate-180 text-primary' : ''}`} />
-                            </button>
+                        {/* New Automation */}
+                        <Link 
+                            href="/dashboard/automations" 
+                            onClick={() => setIsQuickAccessOpen(false)}
+                            className="flex items-center gap-3 p-2 rounded-xl hover:bg-blue-500/5 hover:border-blue-500/35 border border-transparent transition-all group"
+                        >
+                            <div className="w-8 h-8 rounded-lg bg-blue-500/15 flex items-center justify-center text-blue-500 group-hover:scale-105 transition-transform">
+                                <Zap className="w-4 h-4" />
+                            </div>
+                            <div className="text-left min-w-0 flex-1">
+                                <span className="text-[11px] font-extrabold text-foreground block group-hover:text-blue-500 transition-colors">New Automation</span>
+                                <span className="text-[9px] text-muted-foreground block truncate">Configure active replies</span>
+                            </div>
+                            <ArrowUpRight className="w-3.5 h-3.5 text-muted-foreground/40 group-hover:text-blue-500 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+                        </Link>
 
-                            {/* Dropdown Options Popup (spans downward in that place) */}
-                            {isQuickAccessOpen && (
-                                <div className="absolute top-full left-0 right-0 mt-2 bg-card border border-border/80 rounded-2xl shadow-2xl p-1.5 space-y-1 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
-                                    {/* New Automation */}
-                                    <Link 
-                                        href="/dashboard/automations" 
-                                        onClick={() => setIsQuickAccessOpen(false)}
-                                        className="flex items-center gap-3 p-2 rounded-xl hover:bg-blue-500/5 hover:border-blue-500/35 border border-transparent transition-all group"
-                                    >
-                                        <div className="w-8 h-8 rounded-lg bg-blue-500/15 flex items-center justify-center text-blue-500 group-hover:scale-105 transition-transform">
-                                            <Zap className="w-4 h-4" />
-                                        </div>
-                                        <div className="text-left min-w-0 flex-1">
-                                            <span className="text-[11px] font-extrabold text-foreground block group-hover:text-blue-500 transition-colors">New Automation</span>
-                                            <span className="text-[9px] text-muted-foreground block truncate">Configure active replies</span>
-                                        </div>
-                                        <ArrowUpRight className="w-3.5 h-3.5 text-muted-foreground/40 group-hover:text-blue-500 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
-                                    </Link>
+                        {/* Live Inbox */}
+                        <Link 
+                            href="/dashboard/inbox" 
+                            onClick={() => setIsQuickAccessOpen(false)}
+                            className="flex items-center gap-3 p-2 rounded-xl hover:bg-[#1a73e8]/5 hover:border-[#1a73e8]/35 border border-transparent transition-all group"
+                        >
+                            <div className="w-8 h-8 rounded-lg bg-[#1a73e8]/15 flex items-center justify-center text-[#1a73e8] group-hover:scale-105 transition-transform">
+                                <MessageSquare className="w-4 h-4" />
+                            </div>
+                            <div className="text-left min-w-0 flex-1">
+                                <span className="text-[11px] font-extrabold text-foreground block group-hover:text-[#1a73e8] transition-colors">Live Inbox</span>
+                                <span className="text-[9px] text-muted-foreground block truncate">Manage interactive chats</span>
+                            </div>
+                            <ArrowUpRight className="w-3.5 h-3.5 text-muted-foreground/40 group-hover:text-[#1a73e8] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+                        </Link>
 
-                                    {/* Live Inbox */}
-                                    <Link 
-                                        href="/dashboard/inbox" 
-                                        onClick={() => setIsQuickAccessOpen(false)}
-                                        className="flex items-center gap-3 p-2 rounded-xl hover:bg-[#1a73e8]/5 hover:border-[#1a73e8]/35 border border-transparent transition-all group"
-                                    >
-                                        <div className="w-8 h-8 rounded-lg bg-[#1a73e8]/15 flex items-center justify-center text-[#1a73e8] group-hover:scale-105 transition-transform">
-                                            <MessageSquare className="w-4 h-4" />
-                                        </div>
-                                        <div className="text-left min-w-0 flex-1">
-                                            <span className="text-[11px] font-extrabold text-foreground block group-hover:text-[#1a73e8] transition-colors">Live Inbox</span>
-                                            <span className="text-[9px] text-muted-foreground block truncate">Manage interactive chats</span>
-                                        </div>
-                                        <ArrowUpRight className="w-3.5 h-3.5 text-muted-foreground/40 group-hover:text-[#1a73e8] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
-                                    </Link>
-
-                                    {/* AI Settings */}
-                                    <Link 
-                                        href="/dashboard/settings" 
-                                        onClick={() => setIsQuickAccessOpen(false)}
-                                        className="flex items-center gap-3 p-2 rounded-xl hover:bg-[#1a73e8]/5 hover:border-[#1a73e8]/35 border border-transparent transition-all group"
-                                    >
-                                        <div className="w-8 h-8 rounded-lg bg-[#1a73e8]/15 flex items-center justify-center text-[#1a73e8] group-hover:scale-105 transition-transform">
-                                            <Settings className="w-4 h-4" />
-                                        </div>
-                                        <div className="text-left min-w-0 flex-1">
-                                            <span className="text-[11px] font-extrabold text-foreground block group-hover:text-[#1a73e8] transition-colors">AI Settings</span>
-                                            <span className="text-[9px] text-muted-foreground block truncate">Configure preferences</span>
-                                        </div>
-                                        <ArrowUpRight className="w-3.5 h-3.5 text-muted-foreground/40 group-hover:text-[#1a73e8] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
-                                    </Link>
-                                </div>
-                            )}
-                        </div>
-
-                        <div className="pt-2.5 border-t border-border text-center shrink-0">
-                            <span className="text-[9px] text-muted-foreground font-black uppercase tracking-widest block opacity-75 flex items-center justify-center gap-1.5">
-                                <Sparkles className="w-3 h-3 text-amber-500/60" />
-                                DMSpark Enterprise Edition
-                            </span>
-                        </div>
+                        {/* AI Settings */}
+                        <Link 
+                            href="/dashboard/settings" 
+                            onClick={() => setIsQuickAccessOpen(false)}
+                            className="flex items-center gap-3 p-2 rounded-xl hover:bg-[#1a73e8]/5 hover:border-[#1a73e8]/35 border border-transparent transition-all group"
+                        >
+                            <div className="w-8 h-8 rounded-lg bg-[#1a73e8]/15 flex items-center justify-center text-[#1a73e8] group-hover:scale-105 transition-transform">
+                                <Settings className="w-4 h-4" />
+                            </div>
+                            <div className="text-left min-w-0 flex-1">
+                                <span className="text-[11px] font-extrabold text-foreground block group-hover:text-[#1a73e8] transition-colors">AI Settings</span>
+                                <span className="text-[9px] text-muted-foreground block truncate">Configure preferences</span>
+                            </div>
+                            <ArrowUpRight className="w-3.5 h-3.5 text-muted-foreground/40 group-hover:text-[#1a73e8] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+                        </Link>
                     </div>
-                </Card>
+                )}
+                
+                <button
+                    onClick={() => setIsQuickAccessOpen(!isQuickAccessOpen)}
+                    className="w-14 h-14 rounded-full bg-gradient-to-br from-[#1a73e8] to-blue-600 text-white flex items-center justify-center shadow-2xl hover:shadow-blue-500/30 hover:scale-105 active:scale-95 transition-all duration-300 group relative border border-white/10"
+                >
+                    <span className="absolute inset-0 rounded-full bg-gradient-to-br from-[#1a73e8] to-blue-600 blur-md opacity-45 group-hover:opacity-75 transition-opacity duration-300" />
+                    <Plus className={`w-6 h-6 relative z-10 transition-transform duration-300 ${isQuickAccessOpen ? 'rotate-45' : ''}`} />
+                </button>
             </div>
         </div>
     )
