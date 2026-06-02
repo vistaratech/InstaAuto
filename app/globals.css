@@ -189,18 +189,38 @@
 
 /* Premium scrollbar visible only on hover */
 .hover-scrollbar {
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
 }
 .hover-scrollbar::-webkit-scrollbar {
   width: 4px;
-  display: none;
+  height: 4px;
+}
+.hover-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.hover-scrollbar::-webkit-scrollbar-thumb {
+  background: transparent; /* Invisible by default */
+  border-radius: 9999px;
 }
 .hover-scrollbar:hover {
-  scrollbar-width: thin;
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: rgba(0, 0, 0, 0.12) transparent; /* Firefox standard hover */
 }
-.hover-scrollbar:hover::-webkit-scrollbar {
-  display: block;
+.dark .hover-scrollbar:hover {
+  scrollbar-color: rgba(255, 255, 255, 0.12) transparent;
+}
+.hover-scrollbar:hover::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.12); /* Extremely subtle light gray on hover */
+}
+.hover-scrollbar:hover::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.22); /* Slightly darker on active thumb hover */
+}
+.dark .hover-scrollbar:hover::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12); /* Subtle faint white in dark mode */
+}
+.dark .hover-scrollbar:hover::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.22);
 }
 
 /* Shimmer animation for active nav items */
