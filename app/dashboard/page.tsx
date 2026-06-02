@@ -339,7 +339,7 @@ export default function DashboardPage() {
                             <div className="py-12 text-center text-muted-foreground text-xs border border-dashed border-border rounded-xl flex flex-col items-center gap-2">
                                 <MessageCircle className="w-8 h-8 text-muted-foreground/30" />
                                 <span>No recent activity yet.</span>
-                                <Link href="/dashboard/automations" className="text-primary font-bold text-[10px] hover:underline">Create your first automation →</Link>
+                                <Link href="/dashboard/automations?create=true" className="text-primary font-bold text-[10px] hover:underline">Create your first automation →</Link>
                             </div>
                         )}
                     </div>
@@ -347,7 +347,7 @@ export default function DashboardPage() {
             </div>
 
             {/* Floating Quick Access FAB & Popup */}
-            <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end" ref={popupRef}>
+            <div className="fixed bottom-10 right-8 md:bottom-12 md:right-16 z-50 flex flex-col items-end" ref={popupRef}>
                 {isQuickAccessOpen && (
                     <div className="mb-3 w-[260px] bg-card border border-border/80 rounded-2xl shadow-2xl p-2.5 space-y-1.5 animate-in fade-in slide-in-from-bottom-5 duration-200">
                         <div className="flex items-center gap-2 border-b border-border/50 pb-2 mb-1">
@@ -359,7 +359,7 @@ export default function DashboardPage() {
                         
                         {/* New Automation */}
                         <Link 
-                            href="/dashboard/automations" 
+                            href="/dashboard/automations?create=true" 
                             onClick={() => setIsQuickAccessOpen(false)}
                             className="flex items-center gap-3 p-2 rounded-xl hover:bg-blue-500/5 hover:border-blue-500/35 border border-transparent transition-all group"
                         >

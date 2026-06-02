@@ -37,6 +37,16 @@ export default function AutomationsPage() {
         if (userId) fetchAutomations()
     }, [userId, fetchAutomations])
 
+    // Automatically open create form if query parameter 'create' is set to true
+    useEffect(() => {
+        if (typeof window !== "undefined") {
+            const params = new URLSearchParams(window.location.search)
+            if (params.get("create") === "true") {
+                setShowCreateForm(true)
+            }
+        }
+    }, [])
+
     const handleDeleteRule = async (id: string) => {
         await fetch(`/api/automations?id=${id}&userId=${userId}`, { method: "DELETE" })
         fetchAutomations()
