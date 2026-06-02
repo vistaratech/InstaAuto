@@ -35,6 +35,15 @@ export default function SettingsPage() {
   const [saving, setSaving] = useState(false)
   const [saveSuccess, setSaveSuccess] = useState(false)
 
+  // Entrance animation state
+  const [isVisible, setIsVisible] = useState(false)
+  useEffect(() => {
+    if (!loading && !sessionLoading) {
+      const timer = setTimeout(() => setIsVisible(true), 50)
+      return () => clearTimeout(timer)
+    }
+  }, [loading, sessionLoading])
+
   // Fetch Instagram profile picture and Groq preferences on load
   useEffect(() => {
     if (!userId) return
@@ -94,19 +103,33 @@ export default function SettingsPage() {
 
   if (sessionLoading || loading) {
     return (
-      <div className="flex items-center justify-center min-h-[50vh]">
-        <Loader2 className="w-8 h-8 text-primary animate-spin" />
+      <div className="flex flex-col items-center justify-center min-h-[50vh] gap-4">
+        <div className="relative">
+          <div className="absolute inset-0 w-12 h-12 rounded-full border-2 border-primary/20 animate-ping" />
+          <Loader2 className="w-12 h-12 text-primary animate-spin" />
+        </div>
+        <p className="text-sm text-muted-foreground font-medium animate-pulse">Loading your settings...</p>
       </div>
     )
   }
 
   return (
-    <div className="space-y-8 max-w-4xl mx-auto pb-20 p-4 md:p-8 animate-in fade-in duration-500">
+    <div className="space-y-8 max-w-4xl mx-auto pb-20 p-4 md:p-8 animate-in fade-in duration-500 relative">
+
+      {/* Ambient background glows */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden -z-10" aria-hidden>
+        <div className="absolute -top-24 -left-24 w-72 h-72 bg-indigo-500/[0.04] rounded-full blur-3xl animate-pulse" style={{ animationDuration: '4s' }} />
+        <div className="absolute top-1/3 -right-20 w-64 h-64 bg-purple-500/[0.04] rounded-full blur-3xl animate-pulse" style={{ animationDuration: '6s', animationDelay: '1s' }} />
+        <div className="absolute bottom-20 left-1/4 w-56 h-56 bg-blue-500/[0.03] rounded-full blur-3xl animate-pulse" style={{ animationDuration: '5s', animationDelay: '2s' }} />
+      </div>
       
       {/* Title Header */}
-      <div className="flex flex-col gap-1.5 border-b border-border pb-4">
-        <h1 className="text-3xl font-bold text-foreground">Account & Automation Settings</h1>
-        <p className="text-muted-foreground text-sm">
+      <div className={`flex flex-col gap-1.5 border-b border-border pb-4 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+        <div className="flex items-center gap-3">
+          <div className="w-1 h-8 rounded-full bg-gradient-to-b from-indigo-500 via-purple-500 to-pink-500" />
+          <h1 className="text-3xl font-bold text-foreground">Account & Automation Settings</h1>
+        </div>
+        <p className="text-muted-foreground text-sm ml-[1.15rem]">
           Manage your connected accounts, customize AI replies, and review Meta compliance status.
         </p>
       </div>
@@ -117,7 +140,7 @@ export default function SettingsPage() {
         <div className="md:col-span-1 space-y-6">
           
           {/* Instagram Account Details */}
-          <Card className="border-border bg-card/65 shadow-sm overflow-hidden">
+          <Card className={`border-border bg-card/65 shadow-sm overflow-hidden hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`} style={{ transitionDelay: isVisible ? '150ms' : '0ms', transitionDuration: '700ms' }}>
             <div className="h-16 bg-gradient-to-tr from-blue-600 via-indigo-500 to-purple-600 relative flex items-center justify-center">
               <Instagram className="absolute top-2.5 right-3 w-4 h-4 text-white/50" />
             </div>
@@ -157,9 +180,11 @@ export default function SettingsPage() {
           </Card>
 
           {/* Compliance Card */}
-          <Card className="border-border bg-card/65 shadow-sm p-5 space-y-4">
+          <Card className={`border-border bg-card/65 shadow-sm p-5 space-y-4 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`} style={{ transitionDelay: isVisible ? '300ms' : '0ms', transitionDuration: '700ms' }}>
             <div className="flex items-center gap-2 border-b border-border pb-3">
-              <ShieldCheck className="w-4 h-4 text-blue-500" />
+              <div className="p-1.5 rounded-lg bg-gradient-to-br from-blue-500/10 to-cyan-500/10">
+                <ShieldCheck className="w-4 h-4 text-blue-500" />
+              </div>
               <h3 className="font-bold text-foreground text-sm">Meta Compliance</h3>
             </div>
             <div className="space-y-3.5 text-xs text-muted-foreground font-medium">
@@ -188,11 +213,13 @@ export default function SettingsPage() {
         {/* Right Side: AI Configuration form */}
         <div className="md:col-span-2 space-y-6">
           
-          <Card className="border-border bg-card/65 shadow-sm">
+          <Card className={`border-border bg-card/65 shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`} style={{ transitionDelay: isVisible ? '200ms' : '0ms', transitionDuration: '700ms' }}>
             <CardHeader className="border-b border-border/50 pb-5">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <BrainCircuit className="w-5 h-5 text-indigo-500" />
+                  <div className="p-1.5 rounded-lg bg-gradient-to-br from-indigo-500/10 to-purple-500/10">
+                    <BrainCircuit className="w-5 h-5 text-indigo-500" />
+                  </div>
                   <CardTitle className="text-base text-foreground font-bold">Dynamic AI Responses (Groq LLaMA 3)</CardTitle>
                 </div>
                 
@@ -272,8 +299,11 @@ export default function SettingsPage() {
           </Card>
 
           {/* Additional settings placeholder */}
-          <Card className="border-border bg-card/65 shadow-sm p-6 space-y-4">
-            <h3 className="font-bold text-foreground text-sm">Meta Developer & Webhook Settings</h3>
+          <Card className={`border-border bg-card/65 shadow-sm p-6 space-y-4 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`} style={{ transitionDelay: isVisible ? '400ms' : '0ms', transitionDuration: '700ms' }}>
+            <div className="flex items-center gap-2">
+              <div className="w-1 h-5 rounded-full bg-gradient-to-b from-indigo-500 to-purple-500" />
+              <h3 className="font-bold text-foreground text-sm">Meta Developer & Webhook Settings</h3>
+            </div>
             <p className="text-xs text-muted-foreground font-medium leading-relaxed">
               If you are integrating a custom Meta App with our system, make sure the App Token matches the database environment. For developer support, refer to Meta's guides.
             </p>
