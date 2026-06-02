@@ -187,6 +187,22 @@
   display: none;
 }
 
+/* Premium scrollbar visible only on hover */
+.hover-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.hover-scrollbar::-webkit-scrollbar {
+  width: 4px;
+  display: none;
+}
+.hover-scrollbar:hover {
+  scrollbar-width: thin;
+}
+.hover-scrollbar:hover::-webkit-scrollbar {
+  display: block;
+}
+
 /* Shimmer animation for active nav items */
 @keyframes shimmer {
   0% { transform: translateX(-100%); }

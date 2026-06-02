@@ -74,7 +74,7 @@ export function ConversationList({ userId, selectedId, onSelect }: ConversationL
                 </div>
             </div>
 
-            <div className="flex-1 overflow-y-auto p-2 space-y-1 scrollbar-hide">
+            <div className="flex-1 overflow-y-auto p-2 space-y-1 hover-scrollbar">
                 {filtered.length === 0 ? (
                     <div className="text-center py-10 text-muted-foreground text-sm">
                         {searchQuery ? "No matching conversations." : "No conversations yet."}
