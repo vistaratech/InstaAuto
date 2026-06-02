@@ -205,22 +205,22 @@
 }
 .hover-scrollbar:hover {
   scrollbar-width: thin; /* Firefox */
-  scrollbar-color: rgba(0, 0, 0, 0.12) transparent; /* Firefox standard hover */
+  scrollbar-color: rgba(0, 0, 0, 0.08) transparent; /* Firefox standard hover */
 }
 .dark .hover-scrollbar:hover {
-  scrollbar-color: rgba(255, 255, 255, 0.12) transparent;
+  scrollbar-color: rgba(255, 255, 255, 0.08) transparent;
 }
 .hover-scrollbar:hover::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.12); /* Extremely subtle light gray on hover */
+  background: rgba(0, 0, 0, 0.08); /* Faint light gray (8% opacity) on hover */
 }
 .hover-scrollbar:hover::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.22); /* Slightly darker on active thumb hover */
+  background: rgba(0, 0, 0, 0.18); /* Faint dark gray (18% opacity) on active hover */
 }
 .dark .hover-scrollbar:hover::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.12); /* Subtle faint white in dark mode */
+  background: rgba(255, 255, 255, 0.08); /* Faint white (8% opacity) in dark mode */
 }
 .dark .hover-scrollbar:hover::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.18);
 }
 
 /* Shimmer animation for active nav items */
