@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef } from "react"
 import { Card } from "@/components/ui/card"
 import { useInstagramSession } from "@/hooks/use-instagram-session"
-import { Activity, Users, MessageCircle, Zap, Loader2, Settings, MessageSquare, ArrowUpRight, Sparkles, TrendingUp, Send, Plus } from "lucide-react"
+import { Activity, Users, MessageCircle, Zap, Loader2, Settings, MessageSquare, ArrowUpRight, Sparkles, TrendingUp, Send, Plus, ChevronDown } from "lucide-react"
 import Link from "next/link"
 
 interface DashboardStats {
@@ -358,26 +358,23 @@ export default function DashboardPage() {
                             Quick Access
                         </h3>
                         
-                        {/* Interactive Plus Button and Menu Container */}
-                        <div className="flex-1 flex flex-col items-center justify-center relative my-3" ref={popupRef}>
+                        {/* Custom Styled Select Dropdown Container */}
+                        <div className="flex-1 flex flex-col justify-start relative my-auto max-w-[280px] mx-auto w-full" ref={popupRef}>
                             <button
                                 onClick={() => setIsQuickAccessOpen(!isQuickAccessOpen)}
-                                className={`w-14 h-14 rounded-full bg-gradient-to-br from-[#1a73e8] to-blue-600 text-white flex items-center justify-center shadow-lg hover:shadow-xl hover:shadow-blue-500/20 active:scale-95 transition-all duration-300 group relative ${isQuickAccessOpen ? 'rotate-45' : ''}`}
+                                className="w-full h-12 px-4 rounded-xl border border-border/80 bg-secondary/30 flex items-center justify-between hover:bg-secondary/60 hover:border-primary/50 active:scale-[0.98] transition-all duration-300 group z-20 shadow-sm relative overflow-hidden"
                             >
-                                <span className="absolute inset-0 rounded-full bg-gradient-to-br from-[#1a73e8] to-blue-600 blur-sm opacity-50 group-hover:opacity-75 transition-opacity duration-300" />
-                                <span className="absolute -inset-1 rounded-full border border-blue-400/30 animate-pulse pointer-events-none" />
-                                <Plus className="w-6 h-6 relative z-10 transition-transform duration-300 group-hover:scale-110" />
+                                <span className="absolute inset-0 bg-gradient-to-r from-blue-500/[0.01] to-violet-500/[0.01] pointer-events-none" />
+                                <span className="text-xs font-bold text-foreground flex items-center gap-2">
+                                    <Sparkles className="w-3.5 h-3.5 text-primary animate-pulse" />
+                                    Choose Action...
+                                </span>
+                                <ChevronDown className={`w-4 h-4 text-muted-foreground transition-transform duration-300 ${isQuickAccessOpen ? 'rotate-180 text-primary' : ''}`} />
                             </button>
-                            
-                            <p className="text-[11px] font-bold text-muted-foreground mt-3 tracking-wide uppercase">
-                                {isQuickAccessOpen ? "Click to Close" : "Click for Quick Actions"}
-                            </p>
 
-                            {/* Dropdown Popup Menu */}
+                            {/* Dropdown Options Popup (spans downward in that place) */}
                             {isQuickAccessOpen && (
-                                <div className="absolute bottom-full mb-3 w-[260px] bg-card border border-border/80 rounded-2xl shadow-2xl p-2.5 space-y-1.5 z-50 animate-in fade-in slide-in-from-bottom-2 duration-200">
-                                    <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-card border-r border-b border-border/80 rotate-45" />
-                                    
+                                <div className="absolute top-full left-0 right-0 mt-2 bg-card border border-border/80 rounded-2xl shadow-2xl p-1.5 space-y-1 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
                                     {/* New Automation */}
                                     <Link 
                                         href="/dashboard/automations" 
