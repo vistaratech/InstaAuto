@@ -22,7 +22,10 @@ import {
   Database,
   TrendingUp,
   RefreshCw,
-  Info
+  Info,
+  Flame,
+  Inbox,
+  Heart
 } from "lucide-react"
 import Link from "next/link"
 
@@ -92,6 +95,64 @@ export default function HowToUsePage() {
   return (
     <div className="p-4 md:p-8 space-y-6 text-foreground min-h-[90vh] flex flex-col justify-between font-sans relative z-10 animate-in fade-in duration-500">
       
+      {/* Global CSS keyframes matching landing-page.tsx exactly */}
+      <style jsx global>{`
+        @keyframes commentPop {
+          0%, 100% { opacity: 0; transform: translateY(10px) scale(0.95); }
+          5%, 45% { opacity: 1; transform: translateY(0) scale(1); }
+          50% { opacity: 0; transform: translateY(-10px) scale(0.95); }
+        }
+        @keyframes replyPop {
+          0%, 45%, 100% { opacity: 0; transform: translateY(10px) scale(0.95); }
+          50%, 95% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        @keyframes dotPulse {
+          0%, 100% { opacity: 0.3; }
+          50% { opacity: 1; }
+        }
+        @keyframes slideInRight {
+          from {
+            opacity: 0;
+            transform: translateX(40px) scale(0.95);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(0) scale(1);
+          }
+        }
+        
+        .anim-comment {
+          animation: commentPop 8s infinite ease-in-out;
+        }
+        .anim-reply {
+          animation: replyPop 8s infinite ease-in-out;
+        }
+        .dot-1 { animation: dotPulse 1.2s infinite 0s; }
+        .dot-2 { animation: dotPulse 1.2s infinite 0.2s; }
+        .dot-3 { animation: dotPulse 1.2s infinite 0.4s; }
+
+        .laptop-mockup-scaler-help {
+          transform: scale(0.68);
+          transform-origin: center;
+          transition: transform 0.2s ease;
+        }
+        @media (min-width: 480px) {
+          .laptop-mockup-scaler-help {
+            transform: scale(0.78);
+          }
+        }
+        @media (min-width: 1200px) {
+          .laptop-mockup-scaler-help {
+            transform: scale(0.92);
+          }
+        }
+        @media (min-width: 1400px) {
+          .laptop-mockup-scaler-help {
+            transform: scale(1);
+          }
+        }
+      `}</style>
+
       {/* Page Header */}
       <div className={`flex flex-col sm:flex-row sm:items-center justify-between gap-4 shrink-0 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
         <div>
@@ -289,339 +350,395 @@ export default function HowToUsePage() {
               
               {/* MOBILE SIMULATOR */}
               {deviceMode === "mobile" ? (
-                <div className="w-[230px] h-[365px] rounded-[38px] border-[6px] border-slate-700 dark:border-slate-800 bg-slate-950 shadow-2xl relative overflow-hidden flex flex-col justify-between animate-in zoom-in-95 duration-500">
-                  
-                  {/* Phone Speaker/Camera Notch */}
-                  <div className="absolute top-2 left-1/2 -translate-x-1/2 w-16 h-3.5 rounded-full bg-slate-700 dark:bg-slate-800 z-50 flex items-center justify-center">
-                    <div className="w-1.5 h-1.5 rounded-full bg-slate-900 mr-1.5 animate-pulse" />
-                    <div className="w-6 h-0.5 rounded-full bg-slate-900" />
+                /* EXTACT iPhone Mockup from landing-page.tsx */
+                <div 
+                  className="relative bg-white border-[6px] border-slate-900 rounded-[34px] shadow-2xl w-[200px] h-[360px] flex flex-col justify-between overflow-hidden select-none shrink-0 animate-in zoom-in-95 duration-500"
+                >
+                  {/* Phone Notch/Island */}
+                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-20 h-3 bg-slate-900 rounded-b-lg z-20" />
+
+                  {/* Instagram Mock Header */}
+                  <div className="flex items-center gap-2 border-b border-slate-100 pb-2 pt-4 px-3 shrink-0 bg-white/90 backdrop-blur-sm z-10 select-none">
+                    <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-[#fbbc04] via-[#ea4335] to-[#1a73e8] p-0.5">
+                      <div className="w-full h-full rounded-full bg-white p-0.5">
+                        <img src="/logo.png" alt="Profile" className="w-full h-full object-contain rounded-full" />
+                      </div>
+                    </div>
+                    <div>
+                      <p className="text-[10px] font-black text-slate-800 leading-none">dmspark_bot</p>
+                      <p className="text-[7px] text-slate-400 mt-0.5">Instagram Reel</p>
+                    </div>
                   </div>
 
-                  {/* Phone Instagram App Header */}
-                  <div className="bg-slate-900 border-b border-slate-800/80 px-4 pt-6 pb-2.5 flex items-center gap-2 shrink-0 select-none">
-                    <div className="w-5.5 h-5.5 rounded-full bg-gradient-to-br from-blue-600 to-violet-600 flex items-center justify-center text-[9px] font-black text-white shadow-md">
-                      D
-                    </div>
-                    <div className="min-w-0">
-                      <p className="text-[8.5px] font-black text-white leading-none">@vistaratech</p>
-                      <p className="text-[6.5px] text-emerald-400 font-bold leading-none mt-1 uppercase flex items-center gap-0.5">
-                        <span className="w-1 h-1 rounded-full bg-emerald-400 animate-pulse" /> Active
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Phone Chat Feed Frame content */}
-                  <div className="flex-1 p-3 space-y-2.5 overflow-y-auto flex flex-col justify-end bg-slate-950 relative">
+                  {/* Chat Content Area depending on Step state */}
+                  <div className="relative flex-1 bg-slate-50/50 p-3 overflow-hidden">
                     
-                    {/* STEP 0: Idle State / Inbox feed */}
+                    {/* STEP 0: Loop animation exactly like landing page */}
                     {animationStep === 0 && (
-                      <div className="absolute inset-0 p-3 flex flex-col justify-start space-y-2 text-slate-400 select-none animate-in fade-in duration-300">
-                        <p className="text-[8px] font-extrabold text-slate-500 uppercase tracking-widest mb-1">Direct Messages</p>
-                        <div className="flex items-center gap-2 p-1.5 rounded-lg bg-slate-900/60 border border-slate-800/50">
-                          <div className="w-5 h-5 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center text-[8px] font-bold">@I</div>
-                          <div className="flex-1 min-w-0">
-                            <div className="h-1.5 w-16 bg-slate-700 rounded mb-1" />
-                            <div className="h-1 w-20 bg-slate-800 rounded" />
-                          </div>
-                          <div className="w-1.5 h-1.5 rounded-full bg-blue-500" />
-                        </div>
-                        <div className="flex items-center gap-2 p-1.5 rounded-lg bg-slate-900/30">
-                          <div className="w-5 h-5 rounded-full bg-violet-500/20 text-violet-400 flex items-center justify-center text-[8px] font-bold">@S</div>
-                          <div className="flex-1 min-w-0">
-                            <div className="h-1.5 w-12 bg-slate-800 rounded mb-1" />
-                            <div className="h-1 w-16 bg-slate-800 rounded" />
-                          </div>
-                        </div>
-                        <div className="flex-1 flex flex-col items-center justify-center text-center opacity-40">
-                          <Compass className="w-6 h-6 mb-1 text-slate-500" />
-                          <p className="text-[7.5px] font-bold">Waiting for Keyword Triggers</p>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* STEP 1: OAuth Connect Permission popup */}
-                    {animationStep === 1 && (
-                      <div className="absolute inset-x-3 bottom-3 top-auto bg-slate-900 rounded-2xl border border-slate-800 p-3 text-center space-y-2.5 animate-in slide-in-from-bottom-6 duration-300 shadow-xl">
-                        <div className="w-8 h-8 rounded-full bg-blue-500/10 border border-blue-500/25 flex items-center justify-center mx-auto text-blue-400">
-                          <UserCheck className="w-4 h-4" />
-                        </div>
-                        <div>
-                          <h4 className="text-[9px] font-black text-white">Meta Integration Request</h4>
-                          <p className="text-[7px] text-slate-400 font-semibold leading-relaxed mt-0.5">
-                            Allow **DMSpark Integration** to read and write Instagram direct messaging comments?
-                          </p>
-                        </div>
-                        <Button className="h-6 w-full text-[8px] font-bold rounded-lg bg-blue-500 hover:bg-blue-600 text-white shrink-0 shadow-md">
-                          Authorize Business Profile
-                        </Button>
-                        <p className="text-[5.5px] text-slate-500 font-bold uppercase tracking-wider">Secured OAuth 2.0 via Meta Inc.</p>
-                      </div>
-                    )}
-
-                    {/* STEP 2: Instagram Post and comment triggers keyword */}
-                    {animationStep === 2 && (
-                      <div className="absolute inset-0 p-3 flex flex-col justify-between animate-in fade-in duration-300 text-slate-100">
-                        {/* Simulated Post Image */}
-                        <div className="h-28 rounded-xl bg-slate-900 border border-slate-800 relative flex items-center justify-center overflow-hidden">
-                          <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 via-transparent to-violet-500/20" />
-                          <div className="text-center p-2">
-                            <span className="text-[7px] font-black px-1.5 py-0.5 rounded bg-blue-500 text-white uppercase tracking-wider">Giveaway</span>
-                            <p className="text-[8px] font-black mt-1 text-slate-200">50% DISCOUNT COUPON</p>
-                            <p className="text-[6px] text-slate-400 mt-0.5">Comment keyword "coupon" to receive code</p>
-                          </div>
-                        </div>
-                        {/* Comment slider bubble */}
-                        <div className="bg-slate-900 border border-blue-500/30 rounded-xl p-2 flex items-start gap-2 shadow-lg ring-4 ring-blue-500/10 animate-in slide-in-from-bottom-4 duration-300">
-                          <div className="w-4 h-4 rounded-full bg-slate-800 flex items-center justify-center text-[7px] font-bold border border-slate-700 text-slate-200">U</div>
-                          <div className="flex-1">
-                            <p className="text-[7px] font-extrabold text-blue-400">@insta_shopper</p>
-                            <p className="text-[8px] font-semibold text-white mt-0.5">"coupon"</p>
-                          </div>
-                          <span className="text-[6px] px-1 py-0.2 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20 font-bold animate-pulse uppercase">Match</span>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* STEP 3: Automated DM Chat bubble with link */}
-                    {animationStep === 3 && (
                       <>
-                        <div className="self-start max-w-[80%] bg-slate-800 border border-slate-700/60 rounded-2xl rounded-tl-none p-2 text-left text-slate-100 shadow-sm animate-in slide-in-from-left-3 duration-300 select-none">
-                          <p className="text-[7px] font-bold text-blue-400 uppercase tracking-wider mb-0.5">User Comment Trigger</p>
-                          <p className="text-[8.5px] font-semibold">"coupon"</p>
+                        {/* Looping Comment Bubble */}
+                        <div className="anim-comment absolute left-2.5 right-2.5 top-3 flex items-start gap-1.5">
+                          <div className="w-5.5 h-5.5 rounded-full bg-slate-200 flex items-center justify-center text-[8px] font-bold text-slate-500 shrink-0">U</div>
+                          <div className="bg-white rounded-xl rounded-tl-none p-2 max-w-[80%] border border-slate-200/50 shadow-sm text-left">
+                            <p className="text-[8px] font-black text-slate-800 leading-none">user_101</p>
+                            <p className="text-[9px] text-slate-600 mt-0.5 font-semibold flex items-center gap-0.5">
+                              price? <Flame className="w-3 h-3 text-orange-500 fill-orange-500" />
+                            </p>
+                          </div>
                         </div>
 
-                        <div className="self-center bg-blue-500/10 border border-blue-500/25 px-2 py-0.8 rounded-full text-blue-400 text-[7px] font-black uppercase flex items-center gap-1 animate-pulse">
-                          <RefreshCw className="w-2 h-2 animate-spin" /> Processing Rules...
+                        {/* Looping DM Reply Bubble */}
+                        <div className="anim-reply absolute left-2.5 right-2.5 top-3 flex items-start gap-1.5 justify-end">
+                          <div className="bg-[#1a73e8] text-white rounded-xl rounded-tr-none p-2 max-w-[80%] shadow-lg shadow-blue-500/10 text-left">
+                            <div className="flex items-center gap-1">
+                              <img src="/logo.png" alt="DMSpark" className="w-2.5 h-2.5 object-contain brightness-0 invert" />
+                              <span className="text-[7px] font-black uppercase tracking-wider opacity-85">DMSpark</span>
+                            </div>
+                            <p className="text-[9px] mt-0.5 leading-snug font-medium flex items-center gap-0.5">
+                              Sent! Check DMs <Inbox className="w-2.5 h-2.5 opacity-90" />
+                            </p>
+                          </div>
+                          <div className="w-5.5 h-5.5 rounded-full bg-blue-100 flex items-center justify-center p-0.5 border border-blue-200/30 shrink-0">
+                            <img src="/logo.png" alt="Profile" className="w-full h-full object-contain rounded-full" />
+                          </div>
                         </div>
+                      </>
+                    )}
 
-                        {/* Bot Reply bubble with link */}
-                        <div className="self-end max-w-[85%] bg-[#1a73e8] border border-blue-600/25 text-white rounded-2xl rounded-tr-none p-2.5 text-left shadow-md space-y-1 animate-in slide-in-from-right-3 duration-300">
-                          <p className="text-[7px] font-bold text-blue-200 uppercase tracking-wider flex items-center gap-0.5">
-                            <CheckCircle2 className="w-2.5 h-2.5 text-blue-100" /> Automated Reply Sent
+                    {/* STEP 1: OAuth Connect authorization window */}
+                    {animationStep === 1 && (
+                      <div className="absolute inset-x-2.5 bottom-2.5 top-2 bg-white rounded-2xl border border-slate-200 p-2.5 text-center flex flex-col justify-between animate-in slide-in-from-bottom-5 duration-300 shadow-xl select-none">
+                        <div className="space-y-1">
+                          <div className="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center mx-auto text-blue-500 border border-blue-100">
+                            <UserCheck className="w-4 h-4" />
+                          </div>
+                          <h4 className="text-[9px] font-extrabold text-slate-800">Meta Integration</h4>
+                          <p className="text-[7.5px] text-slate-500 font-semibold leading-relaxed mt-0.5">
+                            Connect your profile to allow DMSpark to auto-reply to your business comments and story mentions.
                           </p>
+                        </div>
+                        <Button className="h-6 w-full text-[8.5px] font-bold rounded-lg bg-blue-500 hover:bg-blue-600 text-white shadow-md flex items-center justify-center gap-1">
+                          Connect Instagram <ArrowRight className="w-2.5 h-2.5" />
+                        </Button>
+                        <p className="text-[5.5px] text-slate-400 font-bold uppercase tracking-wider">Secured OAuth 2.0 via Meta Inc.</p>
+                      </div>
+                    )}
+
+                    {/* STEP 2: Instgram Post comments matching trigger keyword */}
+                    {animationStep === 2 && (
+                      <div className="absolute inset-0 p-2.5 flex flex-col justify-between animate-in fade-in duration-300 select-none">
+                        {/* Simulated Post Image layout */}
+                        <div className="h-28 rounded-xl bg-slate-900 relative flex items-center justify-center overflow-hidden border border-slate-200">
+                          <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-transparent to-violet-500/10" />
+                          <div className="text-center p-2">
+                            <span className="text-[6.5px] font-black px-1.5 py-0.5 rounded bg-blue-500 text-white uppercase tracking-wider">Giveaway</span>
+                            <p className="text-[8px] font-black mt-1 text-slate-100">50% DISCOUNT COUPON</p>
+                            <p className="text-[6px] text-slate-400 mt-0.5">Comment word "coupon" to auto get code</p>
+                          </div>
+                        </div>
+                        {/* Interactive comment bubble matching keyword */}
+                        <div className="bg-white border border-blue-500/30 rounded-xl p-2 flex items-start gap-1.5 shadow-lg ring-4 ring-blue-500/5 animate-in slide-in-from-bottom-3 duration-350 text-left">
+                          <div className="w-4 h-4 rounded-full bg-slate-200 flex items-center justify-center text-[7px] font-bold border border-slate-300 text-slate-600">U</div>
+                          <div className="flex-1">
+                            <p className="text-[7.5px] font-extrabold text-blue-500">@insta_shopper</p>
+                            <p className="text-[8px] font-semibold text-slate-700 mt-0.5 flex items-center gap-0.5">
+                              coupon <Flame className="w-2.5 h-2.5 text-orange-500 fill-orange-500 animate-pulse" />
+                            </p>
+                          </div>
+                          <span className="text-[6px] px-1 py-0.2 rounded bg-amber-500/10 text-amber-500 border border-amber-500/20 font-bold animate-pulse uppercase">Match</span>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* STEP 3: Animated DM message template with dynamic click button */}
+                    {animationStep === 3 && (
+                      <div className="flex flex-col justify-end space-y-2 h-full animate-in fade-in duration-300 text-left select-none pb-1">
+                        <div className="self-start max-w-[80%] bg-slate-100 border border-slate-200 rounded-xl rounded-tl-none p-2 text-left text-slate-800 shadow-sm animate-in slide-in-from-left-3 duration-300">
+                          <p className="text-[7px] font-bold text-blue-500 uppercase tracking-wider mb-0.5">User Comment Trigger</p>
+                          <p className="text-[8.5px] font-semibold">coupon</p>
+                        </div>
+
+                        {/* Bot DM Reply Bubble */}
+                        <div className="self-end max-w-[85%] bg-[#1a73e8] border border-blue-600/25 text-white rounded-xl rounded-tr-none p-2 shadow-md space-y-1 animate-in slide-in-from-right-3 duration-300">
+                          <div className="flex items-center gap-1">
+                            <img src="/logo.png" alt="DMSpark" className="w-2.5 h-2.5 object-contain brightness-0 invert" />
+                            <span className="text-[7px] font-black uppercase tracking-wider opacity-85">DMSpark Reply</span>
+                          </div>
                           <p className="text-[8.5px] font-semibold leading-relaxed">
                             Here is your 50% discount coupon code: **DMSPARK50**! 🎟️
                           </p>
                           <div className="pt-1.5 border-t border-white/20">
-                            <span className="text-[7px] font-black uppercase tracking-wider bg-white/10 px-1.5 py-0.5 rounded flex items-center justify-between hover:bg-white/20">
+                            <span className="text-[7px] font-black uppercase tracking-wider bg-white/10 px-1.5 py-0.5 rounded flex items-center justify-between hover:bg-white/20 cursor-pointer">
                               Claim Coupon Code <ArrowUpRight className="w-2 h-2" />
                             </span>
                           </div>
                         </div>
-                      </>
+                      </div>
                     )}
 
-                    {/* STEP 4: Double Tap engagement heart reaction */}
+                    {/* STEP 4: Double Tap heart reaction bubble for conversions */}
                     {animationStep === 4 && (
-                      <>
-                        <div className="self-end max-w-[85%] bg-[#1a73e8] border border-blue-600/25 text-white rounded-2xl rounded-tr-none p-2.5 text-left shadow-md space-y-1 select-none relative">
-                          <p className="text-[7px] font-bold text-blue-200 uppercase tracking-wider flex items-center gap-0.5">
-                            <CheckCircle2 className="w-2.5 h-2.5 text-blue-100" /> Automated Reply Sent
-                          </p>
+                      <div className="flex flex-col justify-end space-y-2 h-full animate-in fade-in duration-300 text-left select-none pb-1">
+                        <div className="self-end max-w-[85%] bg-[#1a73e8] border border-blue-600/25 text-white rounded-xl rounded-tr-none p-2 shadow-md space-y-1 relative">
+                          <div className="flex items-center gap-1">
+                            <img src="/logo.png" alt="DMSpark" className="w-2.5 h-2.5 object-contain brightness-0 invert" />
+                            <span className="text-[7px] font-black uppercase tracking-wider opacity-85">DMSpark Reply</span>
+                          </div>
                           <p className="text-[8.5px] font-semibold leading-relaxed">
                             Here is your 50% discount coupon code: **DMSPARK50**! 🎟️
                           </p>
-                          <div className="absolute -bottom-1.5 -left-1.5 bg-slate-900 border border-red-500/40 w-4 h-4 rounded-full flex items-center justify-center animate-bounce shadow-md">
+                          
+                          {/* Pulsing red heart bubble reaction */}
+                          <div className="absolute -bottom-1.5 -left-1.5 bg-white border border-red-500/20 w-4 h-4 rounded-full flex items-center justify-center animate-bounce shadow-md">
                             <span className="text-[8px] text-red-500">❤️</span>
                           </div>
                         </div>
-                        <div className="self-center bg-violet-500/10 border border-violet-500/25 px-2 py-1 rounded-full text-violet-400 text-[7px] font-black uppercase flex items-center gap-1.5 animate-pulse mt-1">
-                          <TrendingUp className="w-2 h-2 text-violet-400" /> Engagement Captured!
+                        <div className="self-center bg-violet-500/10 border border-violet-500/25 px-2 py-0.8 rounded-full text-violet-500 text-[6.5px] font-black uppercase flex items-center gap-1 animate-pulse mt-0.5">
+                          <TrendingUp className="w-2 h-2 text-violet-500" /> Goal Achieved!
                         </div>
-                      </>
+                      </div>
                     )}
 
                   </div>
 
-                  {/* Phone Footer chat bar */}
-                  <div className="bg-slate-900 border-t border-slate-800/80 p-2 flex items-center justify-between shrink-0 select-none">
-                    <div className="h-5 flex-1 bg-slate-950 rounded-full border border-slate-800 px-2.5 flex items-center justify-start text-[6px] text-slate-500 font-bold uppercase">
-                      Type a message...
+                  {/* Interaction footer bar */}
+                  <div className="border-t border-slate-100 p-2.5 flex items-center justify-between text-[8px] text-slate-500 font-bold shrink-0 bg-white select-none">
+                    <div className="flex items-center gap-2">
+                      <span className="flex items-center gap-0.5 text-[#ea4335]">
+                        <Heart className="w-2.5 h-2.5 fill-current" /> 1.2k
+                      </span>
+                      <span className="flex items-center gap-0.5 text-slate-500">
+                        <MessageSquare className="w-2.5 h-2.5 text-slate-400" /> Auto Active
+                      </span>
                     </div>
-                    <div className="w-5 h-5 rounded-full bg-[#1a73e8]/20 border border-[#1a73e8]/30 flex items-center justify-center ml-1.5 text-[#1a73e8]">
-                      <Zap className="w-2.5 h-2.5" />
-                    </div>
+                    <span className="text-[#34a853] flex items-center gap-0.5">
+                      <span className="w-1 h-1 rounded-full bg-[#34a853] animate-pulse" /> Live
+                    </span>
                   </div>
 
                 </div>
               ) : (
                 
-                /* LAPTOP SIMULATOR (CSS Macbook Frame) */
-                <div className="w-[330px] sm:w-[350px] aspect-[16/10] rounded-xl border-[4px] border-slate-700/90 dark:border-slate-800 bg-slate-950 shadow-2xl relative overflow-hidden flex flex-col justify-between select-none animate-in zoom-in-95 duration-500">
-                  
-                  {/* Laptop Camera sensor */}
-                  <div className="absolute top-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-slate-900 z-50" />
-                  
-                  {/* Laptop Screen Content Display */}
-                  <div className="flex-1 bg-slate-950 flex flex-col text-[8.5px] text-slate-300 font-sans overflow-hidden p-2 relative">
+                /* LAPTOP SIMULATOR (CSS Macbook Frame matching landing-page.tsx scaled correctly) */
+                <div className="laptop-mockup-scaler-help shrink-0 flex items-center justify-center">
+                  <div className="flex flex-col items-center select-none animate-in zoom-in-95 duration-500">
                     
-                    {/* Inner Application Dashboard Header */}
-                    <div className="border-b border-slate-800 pb-1.5 mb-1.5 flex items-center justify-between shrink-0">
-                      <div className="flex items-center gap-1.5">
-                        <span className="font-extrabold text-[7.5px] text-[#1a73e8] tracking-tight">DMSpark Workspace</span>
-                        <span className="text-[5.5px] px-1 py-0.2 rounded bg-[#1a73e8]/10 text-[#1a73e8] font-bold border border-[#1a73e8]/20">v1.5.1</span>
+                    {/* Laptop Screen matching landing-page.tsx exactly */}
+                    <div className="relative w-[420px] h-[270px] bg-white border-[8px] border-slate-800 rounded-t-2xl shadow-2xl flex flex-col overflow-hidden text-slate-800">
+                      
+                      {/* Browser Top Bar */}
+                      <div className="h-6 bg-slate-100 border-b border-slate-200/60 px-3 flex items-center gap-2 shrink-0 select-none">
+                        <div className="flex gap-1 shrink-0">
+                          <div className="w-1.5 h-1.5 rounded-full bg-[#ea4335]" />
+                          <div className="w-1.5 h-1.5 rounded-full bg-[#fbbc04]" />
+                          <div className="w-1.5 h-1.5 rounded-full bg-[#34a853]" />
+                        </div>
+                        <div className="bg-white rounded border border-slate-200/60 px-2 py-0.5 text-[8px] text-slate-400 w-36 mx-auto text-center font-bold">
+                          dmspark.in/dashboard
+                        </div>
                       </div>
-                      <div className="flex items-center gap-0.8">
-                        <div className="w-1 h-1 rounded-full bg-red-500" />
-                        <div className="w-1 h-1 rounded-full bg-yellow-500" />
-                        <div className="w-1 h-1 rounded-full bg-green-500" />
+
+                      {/* Dashboard layout inside Screen */}
+                      <div className="flex-1 flex text-[9px] bg-slate-50">
+                        
+                        {/* Left Mini Sidebar */}
+                        <div className="w-[70px] border-r border-slate-200 bg-white p-2 space-y-1.5 shrink-0 flex flex-col text-left">
+                          <div className="flex items-center gap-1.5 mb-2.5">
+                            <img src="/logo.png" alt="Logo" className="w-4 h-4 object-contain" />
+                            <span className="font-black text-[8px] text-[#1a73e8] leading-none">DMSpark</span>
+                          </div>
+                          <div className={`h-4 w-full px-1.5 rounded flex items-center gap-1 text-[7px] shrink-0 font-bold transition-all ${
+                            animationStep === 0 || animationStep === 4 ? "bg-blue-50 text-[#1a73e8]" : "text-slate-400"
+                          }`}>📊 Dash</div>
+                          <div className={`h-4 w-full px-1.5 rounded flex items-center gap-1 text-[7px] shrink-0 font-bold transition-all ${
+                            animationStep === 2 ? "bg-blue-50 text-[#1a73e8]" : "text-slate-400"
+                          }`}>⚡ Rules</div>
+                          <div className={`h-4 w-full px-1.5 rounded flex items-center gap-1 text-[7px] shrink-0 font-bold transition-all ${
+                            animationStep === 1 || animationStep === 3 ? "bg-blue-50 text-[#1a73e8]" : "text-slate-400"
+                          }`}>📥 Inbox</div>
+                        </div>
+
+                        {/* Main Screen Panel depending on step state */}
+                        <div className="flex-1 p-2.5 flex flex-col justify-between overflow-hidden text-left">
+                          
+                          {/* STEP 0: Overview mini dashboard identical to landing page */}
+                          {animationStep === 0 && (
+                            <>
+                              <div>
+                                <p className="font-black text-slate-800 text-[10px] leading-tight">Welcome back, user!</p>
+                                <p className="text-[7px] text-slate-400">Here's your automation stats today.</p>
+                              </div>
+
+                              {/* Stats blocks */}
+                              <div className="grid grid-cols-3 gap-1.5">
+                                <div className="bg-white p-1 rounded border border-slate-200/50 shadow-sm flex flex-col justify-center">
+                                  <div className="text-[5px] text-slate-400 font-bold uppercase tracking-wider">Automations</div>
+                                  <div className="text-[10px] font-black text-blue-600 leading-tight">12</div>
+                                </div>
+                                <div className="bg-white p-1 rounded border border-slate-200/50 shadow-sm flex flex-col justify-center">
+                                  <div className="text-[5px] text-slate-400 font-bold uppercase tracking-wider">Replies</div>
+                                  <div className="text-[10px] font-black text-[#34a853] leading-tight">1.4K</div>
+                                </div>
+                                <div className="bg-white p-1 rounded border border-slate-200/50 shadow-sm flex flex-col justify-center">
+                                  <div className="text-[5px] text-slate-400 font-bold uppercase tracking-wider">Triggers</div>
+                                  <div className="text-[10px] font-black text-[#fbbc04] leading-tight">8</div>
+                                </div>
+                              </div>
+
+                              {/* Live Activity Feed */}
+                              <div className="bg-white p-1.5 rounded border border-slate-200 shadow-sm flex flex-col justify-between h-[50px] relative overflow-hidden">
+                                <div className="flex items-center justify-between border-b border-slate-100 pb-0.5 mb-1 shrink-0 select-none">
+                                  <span className="font-black text-[6px] text-slate-500 uppercase tracking-wider flex items-center gap-0.5">
+                                    <span className="w-1 h-1 rounded-full bg-[#ea4335] animate-ping" /> Live Activity Feed
+                                  </span>
+                                  <span className="text-[5px] text-slate-400">Real-time</span>
+                                </div>
+                                
+                                <div className="flex-1 relative font-semibold text-[6.5px]">
+                                  <div className="flex items-center justify-between text-slate-600 leading-none">
+                                    <span>💬 @user_101: "price?"</span>
+                                    <span className="text-[#34a853] font-black flex items-center gap-0.5">➡️ Sent DM <Inbox className="w-2 h-2" /></span>
+                                  </div>
+                                </div>
+                              </div>
+                            </>
+                          )}
+
+                          {/* STEP 1: OAuth Connect Integrations panel */}
+                          {animationStep === 1 && (
+                            <div className="flex-1 flex flex-col justify-between space-y-2 animate-in fade-in duration-300">
+                              <div>
+                                <p className="font-black text-slate-800 text-[10px] leading-tight">Instagram Integrations</p>
+                                <p className="text-[7px] text-slate-400">Link your Instagram Business Account.</p>
+                              </div>
+                              <div className="flex-1 border border-slate-200 rounded-lg bg-white p-2 flex flex-col justify-between relative shadow-sm">
+                                <div className="flex items-center gap-2">
+                                  <div className="w-5 h-5 rounded-full bg-blue-50 flex items-center justify-center text-blue-500 border border-blue-100 text-[8px] font-bold">IG</div>
+                                  <div>
+                                    <p className="font-extrabold text-slate-800 text-[7.5px]">Instagram Connection Status</p>
+                                    <p className="text-[6.5px] text-slate-400 font-semibold mt-0.5">Authorized business page handle</p>
+                                  </div>
+                                </div>
+                                
+                                {/* Animated cursor clicking connection button */}
+                                <div className="flex items-center justify-center py-1">
+                                  <Button className="h-5 text-[6.5px] px-3 font-black uppercase tracking-wider rounded bg-blue-500 hover:bg-blue-600 text-white shadow relative">
+                                    Connecting Account...
+                                    <MousePointerClick className="w-2.5 h-2.5 text-blue-900 absolute -bottom-1 -right-1 animate-bounce" />
+                                  </Button>
+                                </div>
+
+                                <div className="border-t border-slate-100 pt-1 flex items-center justify-between">
+                                  <span className="text-[6px] font-bold text-slate-400 uppercase tracking-wide">Meta Secure Protocol</span>
+                                  <span className="text-[6px] px-1 py-0.2 rounded bg-amber-500/10 text-amber-500 border border-amber-500/20 font-bold animate-pulse uppercase">Staging</span>
+                                </div>
+                              </div>
+                            </div>
+                          )}
+
+                          {/* STEP 2: Rule Node Flow Builder display */}
+                          {animationStep === 2 && (
+                            <div className="flex-1 flex flex-col justify-between space-y-2 animate-in fade-in duration-300">
+                              <div>
+                                <p className="font-black text-slate-800 text-[10px] leading-tight">Keyword Rule Builder</p>
+                                <p className="text-[7px] text-slate-400">Map comments keyword triggers to actions.</p>
+                              </div>
+                              
+                              {/* Simulated automation node flow chart */}
+                              <div className="flex-1 border border-slate-200 rounded-lg bg-white p-2.5 flex items-center justify-between relative shadow-sm">
+                                <div className="p-1 bg-slate-50 border border-amber-500/30 rounded text-center w-20 z-10">
+                                  <span className="text-[5px] text-amber-500 font-black uppercase tracking-wider block">Trigger Comment</span>
+                                  <span className="text-[7px] font-extrabold text-slate-700 block mt-0.5">"coupon"</span>
+                                </div>
+
+                                {/* Flow line with moving spark */}
+                                <div className="flex-1 h-[2px] bg-slate-100 relative mx-1">
+                                  <div className="absolute top-1/2 -translate-y-1/2 h-1.5 w-1.5 rounded-full bg-blue-500 shadow-md animate-ping" style={{ left: '50%' }} />
+                                  <div className="absolute top-1/2 -translate-y-1/2 h-1 w-1 rounded-full bg-blue-400 shadow-md" style={{ left: '50%' }} />
+                                </div>
+
+                                <div className="p-1 bg-slate-50 border border-blue-500/30 rounded text-center w-20 z-10">
+                                  <span className="text-[5px] text-blue-400 font-black uppercase tracking-wider block">Action Send DM</span>
+                                  <span className="text-[7px] font-extrabold text-slate-700 block mt-0.5">Discount Template</span>
+                                </div>
+                              </div>
+                              <p className="text-[6.5px] text-center font-bold text-amber-500 uppercase tracking-widest animate-pulse">Match Event Active!</p>
+                            </div>
+                          )}
+
+                          {/* STEP 3: Automated webhook logging console screen */}
+                          {animationStep === 3 && (
+                            <div className="flex-1 flex flex-col justify-between space-y-1.5 animate-in fade-in duration-300">
+                              <div>
+                                <p className="font-black text-slate-800 text-[10px] leading-tight">API Webhook Console Logs</p>
+                                <p className="text-[7px] text-slate-400">Meta comment delivery callback stream.</p>
+                              </div>
+                              
+                              {/* Simulated terminal logging scrolling */}
+                              <div className="flex-1 bg-slate-950 border border-slate-900 rounded-lg p-2 font-mono text-[6.5px] text-emerald-400/90 leading-normal space-y-1 shadow-inner">
+                                <p className="text-slate-500 select-none">[2026-06-02T16:21:40] INIT Webhook Meta Stream</p>
+                                <p className="text-blue-400">[Webhook] Received comment: "coupon" from @insta_shopper</p>
+                                <p className="text-amber-400">[Engine] Match index: keyword matches "coupon". Matching Rule #104</p>
+                                <p className="text-white flex items-center gap-1 select-none">
+                                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                                  [Graph API] POST /me/messages {"->"} HTTP 200 OK (Msg sent successfully)
+                                </p>
+                              </div>
+                            </div>
+                          )}
+
+                          {/* STEP 4: Deep Analytics page with counter increase */}
+                          {animationStep === 4 && (
+                            <div className="flex-1 flex flex-col justify-between space-y-2 animate-in fade-in duration-300">
+                              <div>
+                                <p className="font-black text-slate-800 text-[10px] leading-tight">Automation Insights</p>
+                                <p className="text-[7px] text-slate-400">Real-time engagement performance.</p>
+                              </div>
+                              
+                              {/* Dynamic stats cards */}
+                              <div className="grid grid-cols-3 gap-1.5">
+                                <div className="bg-white p-1 rounded border border-slate-200/50 shadow-sm flex flex-col justify-center relative overflow-hidden">
+                                  <div className="text-[5px] text-slate-400 font-bold uppercase tracking-wider">Automations</div>
+                                  <div className="text-[10px] font-black text-blue-600 leading-tight">12</div>
+                                </div>
+                                <div className="bg-white p-1 rounded border border-slate-200/50 shadow-sm flex flex-col justify-center relative overflow-hidden">
+                                  <div className="text-[5px] text-slate-400 font-bold uppercase tracking-wider">Replies</div>
+                                  <div className="flex items-baseline gap-0.5 mt-0.5">
+                                    <span className="text-[10px] font-black text-[#34a853] leading-tight">1,401</span>
+                                    <span className="text-[5.5px] font-bold text-emerald-500 animate-pulse">▲ +1</span>
+                                  </div>
+                                  <div className="absolute top-0.5 right-0.5 w-1 h-1 rounded-full bg-emerald-500 animate-pulse" />
+                                </div>
+                                <div className="bg-white p-1 rounded border border-slate-200/50 shadow-sm flex flex-col justify-center">
+                                  <div className="text-[5px] text-slate-400 font-bold uppercase tracking-wider">Conversion</div>
+                                  <div className="text-[10px] font-black text-violet-600 leading-tight">33%</div>
+                                </div>
+                              </div>
+                              
+                              {/* Small simulated analytics chart bar */}
+                              <div className="h-10 bg-white border border-slate-200/60 rounded-md flex items-end justify-between px-5 py-1 relative">
+                                <div className="w-4 bg-slate-100 rounded-t h-4" />
+                                <div className="w-4 bg-slate-100 rounded-t h-5" />
+                                <div className="w-4 bg-[#1a73e8] rounded-t h-8 shadow-md shadow-blue-500/10 animate-in slide-in-from-bottom duration-500" />
+                                <div className="absolute inset-0 flex items-center justify-center opacity-[0.05] select-none pointer-events-none">
+                                  <TrendingUp className="w-5 h-5 text-slate-900" />
+                                </div>
+                              </div>
+                            </div>
+                          )}
+
+                        </div>
+
                       </div>
                     </div>
 
-                    {/* DYNAMIC SCREENS FOR LAPTOP VIEW */}
-                    
-                    {/* STEP 0: Idle State / Dashboard overview metrics */}
-                    {animationStep === 0 && (
-                      <div className="flex-1 flex flex-col justify-between space-y-2 animate-in fade-in duration-300">
-                        <div className="flex items-center justify-between shrink-0">
-                          <h4 className="font-black text-white text-[8px] uppercase tracking-wide">System Dashboard</h4>
-                          <span className="text-[6.5px] text-emerald-400 font-bold uppercase flex items-center gap-0.5">
-                            <span className="w-1 h-1 rounded-full bg-emerald-400 animate-pulse" /> Connected
-                          </span>
-                        </div>
-                        <div className="grid grid-cols-2 gap-2 flex-1 items-center">
-                          <div className="p-2 bg-slate-900 border border-slate-800 rounded-lg text-center">
-                            <p className="text-[6px] text-slate-400 font-bold uppercase">Replies Sent</p>
-                            <p className="text-sm font-extrabold text-white mt-0.5">2</p>
-                          </div>
-                          <div className="p-2 bg-slate-900 border border-slate-800 rounded-lg text-center">
-                            <p className="text-[6px] text-slate-400 font-bold uppercase">Audience Reached</p>
-                            <p className="text-sm font-extrabold text-white mt-0.5">1</p>
-                          </div>
-                        </div>
-                        <div className="h-6 rounded bg-slate-900 border border-slate-800/80 flex items-center justify-center text-[7px] text-slate-400 uppercase tracking-widest font-black animate-pulse">
-                          Awaiting Keyword Event Triggers...
-                        </div>
-                      </div>
-                    )}
-
-                    {/* STEP 1: OAuth Connect Integrations page */}
-                    {animationStep === 1 && (
-                      <div className="flex-1 flex flex-col justify-between space-y-2 animate-in fade-in duration-300">
-                        <div className="flex items-center justify-between shrink-0">
-                          <h4 className="font-black text-white text-[8px] uppercase tracking-wide">Instagram Profile Integration</h4>
-                        </div>
-                        <div className="flex-1 border border-slate-800 rounded-lg bg-slate-900/60 p-2 flex flex-col justify-between relative">
-                          <div className="flex items-center gap-2">
-                            <div className="w-5 h-5 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 border border-slate-700">IG</div>
-                            <div>
-                              <p className="font-extrabold text-white text-[7.5px]">Instagram Connection Status</p>
-                              <p className="text-[6px] text-slate-400 font-semibold mt-0.5">Authorized business page handles</p>
-                            </div>
-                          </div>
-                          
-                          {/* Animated cursor integration clicking connection button */}
-                          <div className="flex items-center justify-center py-1">
-                            <Button className="h-5 text-[6.5px] px-3.5 font-black uppercase tracking-wider rounded bg-blue-500 hover:bg-blue-600 text-white shadow relative">
-                              Connecting Account...
-                              <MousePointerClick className="w-2.5 h-2.5 text-white absolute -bottom-1 -right-1.5 animate-bounce shadow-md" />
-                            </Button>
-                          </div>
-
-                          <div className="border-t border-slate-800/50 pt-1.5 flex items-center justify-between">
-                            <span className="text-[6.5px] font-bold text-slate-400 uppercase tracking-wide">Meta Secure Proxy</span>
-                            <span className="text-[6px] px-1 py-0.2 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20 font-bold animate-pulse uppercase">OAuth Staging</span>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* STEP 2: Setting trigger keywords block workspace */}
-                    {animationStep === 2 && (
-                      <div className="flex-1 flex flex-col justify-between space-y-2 animate-in fade-in duration-300">
-                        <div className="flex items-center justify-between shrink-0">
-                          <h4 className="font-black text-white text-[8px] uppercase tracking-wide">Rule Node Flow Builder</h4>
-                        </div>
-                        
-                        {/* Simulated Automation nodes flow graph */}
-                        <div className="flex-1 border border-slate-800 rounded-lg bg-slate-900 p-2.5 flex items-center justify-between relative">
-                          <div className="p-1.5 bg-slate-950 border border-amber-500/30 rounded-md text-center w-20 z-10 relative">
-                            <span className="text-[5.5px] text-amber-500 font-black uppercase tracking-wider block">Trigger Comment</span>
-                            <span className="text-[7.5px] font-extrabold text-white block mt-0.5">"coupon"</span>
-                          </div>
-
-                          {/* Animated flowing vector line */}
-                          <div className="flex-1 h-[2px] bg-slate-800 relative mx-1">
-                            <div className="absolute top-1/2 -translate-y-1/2 h-1.5 w-1.5 rounded-full bg-blue-500 shadow-md animate-ping" style={{ left: '50%' }} />
-                            <div className="absolute top-1/2 -translate-y-1/2 h-1 w-1 rounded-full bg-blue-400 shadow-md" style={{ left: '50%' }} />
-                          </div>
-
-                          <div className="p-1.5 bg-slate-950 border border-blue-500/30 rounded-md text-center w-20 z-10">
-                            <span className="text-[5.5px] text-blue-400 font-black uppercase tracking-wider block">Action DM</span>
-                            <span className="text-[7.5px] font-extrabold text-white block mt-0.5">Send Response</span>
-                          </div>
-                        </div>
-                        <p className="text-[6.5px] text-center font-bold text-amber-400 uppercase tracking-widest animate-pulse">Keyword Match Detected!</p>
-                      </div>
-                    )}
-
-                    {/* STEP 3: Automated webhook logging console screen */}
-                    {animationStep === 3 && (
-                      <div className="flex-1 flex flex-col justify-between space-y-1.5 animate-in fade-in duration-300">
-                        <div className="flex items-center justify-between shrink-0">
-                          <h4 className="font-black text-white text-[8px] uppercase tracking-wide">Meta Graph Webhook Live Logs</h4>
-                        </div>
-                        
-                        {/* Simulated terminal logging scrolling */}
-                        <div className="flex-1 bg-slate-950 border border-slate-850 rounded-lg p-2 font-mono text-[6.5px] text-emerald-400/90 leading-normal space-y-1">
-                          <p className="text-slate-500 select-none">[2026-06-02T16:21:40] INIT Webhook Meta Stream</p>
-                          <p className="text-blue-400">[Webhook] Received IG comment: "coupon" from @insta_shopper</p>
-                          <p className="text-amber-400">[Engine] Match index: keyword matches "coupon". Matching Rule #104</p>
-                          <p className="text-white flex items-center gap-1">
-                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                            [Graph API] POST /me/messages {"->"} HTTP 200 OK (Msg sent successfully)
-                          </p>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* STEP 4: Deep Analytics page with counter increase */}
-                    {animationStep === 4 && (
-                      <div className="flex-1 flex flex-col justify-between space-y-2 animate-in fade-in duration-300">
-                        <div className="flex items-center justify-between shrink-0">
-                          <h4 className="font-black text-white text-[8px] uppercase tracking-wide">Deep Engagement Analytics</h4>
-                          <span className="text-[6px] px-1 py-0.2 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-bold uppercase animate-pulse">Updated</span>
-                        </div>
-                        
-                        {/* Dynamic counter cards */}
-                        <div className="grid grid-cols-2 gap-2">
-                          <div className="p-1.5 bg-slate-900 border border-slate-800 rounded-md relative overflow-hidden">
-                            <span className="text-[5.5px] text-slate-400 font-bold uppercase tracking-wider block">Replies Sent</span>
-                            <div className="flex items-baseline gap-1 mt-0.5">
-                              <span className="text-xs font-black text-white">3</span>
-                              <span className="text-[6px] font-bold text-emerald-400 select-none animate-pulse">▲ +1</span>
-                            </div>
-                            <div className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                          </div>
-                          
-                          <div className="p-1.5 bg-slate-900 border border-slate-800 rounded-md">
-                            <span className="text-[5.5px] text-slate-400 font-bold uppercase tracking-wider block">Conversion Rate</span>
-                            <div className="flex items-baseline gap-1 mt-0.5">
-                              <span className="text-xs font-black text-white">33%</span>
-                              <span className="text-[6px] font-bold text-emerald-400 select-none animate-pulse">▲ +33%</span>
-                            </div>
-                          </div>
-                        </div>
-                        
-                        {/* Simulated chart bars */}
-                        <div className="h-10 bg-slate-900/60 border border-slate-800/80 rounded-md flex items-end justify-between px-4 py-1.5 relative">
-                          <div className="w-4 bg-slate-800 rounded-t h-3" />
-                          <div className="w-4 bg-slate-800 rounded-t h-4" />
-                          <div className="w-4 bg-[#1a73e8] rounded-t h-8 shadow-lg shadow-blue-500/20 animate-in slide-in-from-bottom duration-500" />
-                          <div className="absolute inset-0 flex items-center justify-center opacity-10 select-none">
-                            <TrendingUp className="w-6 h-6 text-white" />
-                          </div>
-                        </div>
-                      </div>
-                    )}
+                    {/* Laptop Keyboard Base matching landing-page.tsx exactly */}
+                    <div className="w-[470px] h-[10px] bg-slate-350 rounded-b-md shadow-lg relative border-b-[3px] border-slate-400 shrink-0">
+                      {/* Macbook opening notch */}
+                      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-12 h-2 bg-slate-400 rounded-b" />
+                    </div>
 
                   </div>
-
-                  {/* Laptop keyboard lip bottom */}
-                  <div className="h-4 bg-slate-800 border-t border-slate-700 flex items-center justify-center relative shrink-0">
-                    <div className="w-14 h-1 rounded-t-sm bg-slate-900 absolute top-0" />
-                  </div>
-
                 </div>
               )}
             </div>
