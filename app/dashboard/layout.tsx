@@ -130,7 +130,7 @@ export default function DashboardLayout({
                             <span>Login Error: {error}</span>
                         </div>
                     )}
-                    <div className="flex-1 overflow-y-auto md:overflow-hidden w-full h-full flex flex-col relative">
+                    <div className="flex-1 overflow-y-auto w-full h-full flex flex-col relative">
                         {/* Premium Global Fixed Ambient Background Glows */}
                         <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
                             <div className="pointer-events-none absolute -top-32 -left-32 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '6s' }} />
