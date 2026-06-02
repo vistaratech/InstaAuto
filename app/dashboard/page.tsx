@@ -3,8 +3,9 @@
 import { useEffect, useState, useRef } from "react"
 import { Card } from "@/components/ui/card"
 import { useInstagramSession } from "@/hooks/use-instagram-session"
-import { Activity, Users, MessageCircle, Zap, Loader2, Settings, MessageSquare, ArrowUpRight, Sparkles, TrendingUp, Send, Plus, ChevronDown } from "lucide-react"
+import { Activity, Users, MessageCircle, Zap, Loader2, Settings, MessageSquare, ArrowUpRight, Sparkles, TrendingUp, Send, Plus, ChevronDown, Trash2 } from "lucide-react"
 import Link from "next/link"
+import { toast } from "sonner"
 
 interface DashboardStats {
     metrics: {
@@ -136,6 +137,34 @@ export default function DashboardPage() {
 
         fetchStats()
     }, [userId])
+
+    const handleClearActivity = async () => {
+        if (!userId) return
+        const confirmClear = window.confirm("Are you sure you want to clear your Recent Activity log?")
+        if (!confirmClear) return
+
+        try {
+            // Optimistic UI update
+            if (stats) {
+                setStats({
+                    ...stats,
+                    recentActivity: []
+                })
+            }
+
+            const res = await fetch(`/api/dashboard/clear-activity?userId=${userId}`, {
+                method: "POST"
+            })
+            if (res.ok) {
+                toast.success("Recent Activity cleared successfully!")
+            } else {
+                toast.error("Failed to clear Recent Activity log.")
+            }
+        } catch (err) {
+            console.error("Failed to clear Recent Activity log:", err)
+            toast.error("Failed to clear Recent Activity log.")
+        }
+    }
 
     // Trigger entrance animations
     useEffect(() => {
@@ -304,9 +333,19 @@ export default function DashboardPage() {
                             </span>
                             Recent Activity
                         </h3>
-                        <Link href="/dashboard/inbox" className="text-[10px] font-bold text-primary flex items-center gap-0.5 hover:underline">
-                            View All <ArrowUpRight className="w-3 h-3" />
-                        </Link>
+                        <div className="flex items-center gap-3">
+                            {stats?.recentActivity && stats.recentActivity.length > 0 && (
+                                <button 
+                                    onClick={handleClearActivity}
+                                    className="text-[10px] font-bold text-destructive hover:text-destructive/80 flex items-center gap-1 transition-colors hover:underline cursor-pointer"
+                                >
+                                    <Trash2 className="w-3.5 h-3.5" /> Clear Logs
+                                </button>
+                            )}
+                            <Link href="/dashboard/inbox" className="text-[10px] font-bold text-primary flex items-center gap-0.5 hover:underline">
+                                View All <ArrowUpRight className="w-3 h-3" />
+                            </Link>
+                        </div>
                     </div>
                     <div className="flex-1 overflow-y-auto space-y-1.5 md:space-y-2 mt-2 md:mt-3 pr-1 scrollbar-thin max-h-[250px] md:max-h-none">
                         {stats?.recentActivity && stats.recentActivity.length > 0 ? (
