@@ -178,38 +178,45 @@
   }
 }
 
-/* Force ALL scrollbars in the app to be super thin (3px), rounded, and extremely light */
+/* Force ALL scrollbars in the app to be super thin (6px), rounded, and extremely light */
 ::-webkit-scrollbar {
-  width: 3px !important;
-  height: 3px !important;
+  width: 6px !important;
+  height: 6px !important;
 }
 ::-webkit-scrollbar-track {
   background: transparent !important;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.05) !important; /* Extremely faint light gray (5% opacity) */
+  background: rgba(0, 0, 0, 0.15) !important; /* Elegant light gray (15% opacity) */
   border-radius: 9999px !important;
-  border: 1px solid transparent !important;
+  border: 1.5px solid transparent !important;
+  background-clip: padding-box !important;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.12) !important; /* Faint gray (12% opacity) on direct hover */
+  background: rgba(0, 0, 0, 0.3) !important; /* Gray (30% opacity) on direct hover */
+  border: 1.5px solid transparent !important;
+  background-clip: padding-box !important;
 }
 
 /* Dark mode scrollbars */
 .dark ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.05) !important;
+  background: rgba(255, 255, 255, 0.15) !important;
+  border: 1.5px solid transparent !important;
+  background-clip: padding-box !important;
 }
 .dark ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.12) !important;
+  background: rgba(255, 255, 255, 0.3) !important;
+  border: 1.5px solid transparent !important;
+  background-clip: padding-box !important;
 }
 
 /* Firefox Support */
 * {
   scrollbar-width: thin !important;
-  scrollbar-color: rgba(0, 0, 0, 0.05) transparent !important;
+  scrollbar-color: rgba(0, 0, 0, 0.15) transparent !important;
 }
 .dark * {
-  scrollbar-color: rgba(255, 255, 255, 0.05) transparent !important;
+  scrollbar-color: rgba(255, 255, 255, 0.15) transparent !important;
 }
 
 /* Scrollbar hide utility */
@@ -242,31 +249,41 @@
   }
 }
 .hover-scrollbar::-webkit-scrollbar {
-  width: 3px !important;
-  height: 3px !important;
+  width: 6px !important;
+  height: 6px !important;
 }
 .hover-scrollbar::-webkit-scrollbar-thumb {
   background: transparent !important; /* Hidden by default */
   border-radius: 9999px !important;
+  border: 1.5px solid transparent !important;
+  background-clip: padding-box !important;
 }
 .hover-scrollbar:hover {
   scrollbar-width: thin !important;
-  scrollbar-color: rgba(0, 0, 0, 0.05) transparent !important;
+  scrollbar-color: rgba(0, 0, 0, 0.15) transparent !important;
 }
 .dark .hover-scrollbar:hover {
-  scrollbar-color: rgba(255, 255, 255, 0.08) transparent !important;
+  scrollbar-color: rgba(255, 255, 255, 0.15) transparent !important;
 }
 .hover-scrollbar:hover::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.05) !important; /* Extremely faint light gray (5% opacity) on hover */
+  background: rgba(0, 0, 0, 0.15) !important; /* Elegant light gray on hover */
+  border: 1.5px solid transparent !important;
+  background-clip: padding-box !important;
 }
 .hover-scrollbar:hover::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.12) !important;
+  background: rgba(0, 0, 0, 0.3) !important;
+  border: 1.5px solid transparent !important;
+  background-clip: padding-box !important;
 }
 .dark .hover-scrollbar:hover::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.05) !important; /* Faint white in dark mode */
+  background: rgba(255, 255, 255, 0.15) !important; /* Faint white in dark mode */
+  border: 1.5px solid transparent !important;
+  background-clip: padding-box !important;
 }
 .dark .hover-scrollbar:hover::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.12) !important;
+  background: rgba(255, 255, 255, 0.3) !important;
+  border: 1.5px solid transparent !important;
+  background-clip: padding-box !important;
 }
 
 /* Shimmer animation for active nav items */

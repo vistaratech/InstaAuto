@@ -3,29 +3,32 @@
 import { useState, useEffect } from "react"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { 
-  Compass, 
-  Zap, 
-  MessageSquare, 
-  Settings, 
-  ArrowRight, 
-  Sparkles, 
-  ArrowUpRight, 
-  Play, 
+import {
+  Compass,
+  Zap,
+  MessageSquare,
+  ArrowRight,
+  Sparkles,
+  ArrowUpRight,
+  Play,
   Pause,
-  CheckCircle2, 
-  Clock, 
   UserCheck,
   Laptop,
   Smartphone,
-  MousePointerClick,
-  Database,
   TrendingUp,
-  RefreshCw,
   Info,
   Flame,
   Inbox,
-  Heart
+  Heart,
+  BarChart3,
+  Users,
+  Send,
+  Activity,
+  LayoutDashboard,
+  Settings,
+  Menu,
+  MessageCircle,
+  MousePointerClick
 } from "lucide-react"
 import Link from "next/link"
 
@@ -39,7 +42,6 @@ export default function HowToUsePage() {
     setIsVisible(true)
   }, [])
 
-  // Dynamic Auto-Play loop transitions through steps 0 to 4
   useEffect(() => {
     if (!isPlaying) return
     const interval = setInterval(() => {
@@ -92,64 +94,300 @@ export default function HowToUsePage() {
     }
   ]
 
-  return (
-    <div className="p-4 md:p-8 space-y-6 text-foreground min-h-[90vh] flex flex-col justify-between font-sans relative z-10 animate-in fade-in duration-500">
-      
-      {/* Global CSS keyframes matching landing-page.tsx exactly */}
-      <style jsx global>{`
-        @keyframes commentPop {
-          0%, 100% { opacity: 0; transform: translateY(10px) scale(0.95); }
-          5%, 45% { opacity: 1; transform: translateY(0) scale(1); }
-          50% { opacity: 0; transform: translateY(-10px) scale(0.95); }
-        }
-        @keyframes replyPop {
-          0%, 45%, 100% { opacity: 0; transform: translateY(10px) scale(0.95); }
-          50%, 95% { opacity: 1; transform: translateY(0) scale(1); }
-        }
-        @keyframes dotPulse {
-          0%, 100% { opacity: 0.3; }
-          50% { opacity: 1; }
-        }
-        @keyframes slideInRight {
-          from {
-            opacity: 0;
-            transform: translateX(40px) scale(0.95);
-          }
-          to {
-            opacity: 1;
-            transform: translateX(0) scale(1);
-          }
-        }
-        
-        .anim-comment {
-          animation: commentPop 8s infinite ease-in-out;
-        }
-        .anim-reply {
-          animation: replyPop 8s infinite ease-in-out;
-        }
-        .dot-1 { animation: dotPulse 1.2s infinite 0s; }
-        .dot-2 { animation: dotPulse 1.2s infinite 0.2s; }
-        .dot-3 { animation: dotPulse 1.2s infinite 0.4s; }
+  // ─── Shared Screen Content Components ───
+  const DashboardScreen = () => (
+    <div className="flex-1 p-2 flex flex-col gap-1.5 overflow-hidden text-left">
+      <div>
+        <div className="flex items-center gap-1 mb-0.5">
+          <Sparkles className="w-2 h-2 text-[#1a73e8]" />
+          <span className="text-[5px] font-bold text-[#1a73e8] uppercase tracking-widest">Good Morning</span>
+        </div>
+        <p className="font-black text-[8px] text-slate-800 leading-tight">Welcome back, <span className="text-[#1a73e8]">user</span></p>
+        <p className="text-[5px] text-slate-400 flex items-center gap-0.5 mt-0.5">
+          <span className="w-1 h-1 rounded-full bg-emerald-500 animate-pulse" /> Your automations are running smoothly.
+        </p>
+      </div>
+      <div className="grid grid-cols-2 gap-1">
+        {[
+          { label: "Automations", val: "12", color: "#1a73e8", icon: <Zap className="w-2 h-2" /> },
+          { label: "Messages", val: "1.4K", color: "#1a73e8", icon: <Send className="w-2 h-2" /> },
+          { label: "Triggers", val: "8", color: "#1a73e8", icon: <Activity className="w-2 h-2" /> },
+          { label: "Audience", val: "320", color: "#1a73e8", icon: <Users className="w-2 h-2" /> },
+        ].map((s, i) => (
+          <div key={i} className="bg-white p-1.5 rounded border border-slate-200/60 shadow-sm">
+            <div className="flex items-center justify-between mb-0.5">
+              <span className="p-0.5 rounded bg-blue-50 text-[#1a73e8]">{s.icon}</span>
+              <span className="text-[4px] font-bold text-slate-400 uppercase">Active</span>
+            </div>
+            <div className="text-[9px] font-black text-slate-800 leading-tight">{s.val}</div>
+            <div className="text-[4.5px] text-slate-400 font-semibold uppercase tracking-wider mt-0.5">{s.label}</div>
+          </div>
+        ))}
+      </div>
+      <div className="bg-white p-1.5 rounded border border-slate-200/60 shadow-sm flex-1">
+        <div className="flex items-center justify-between border-b border-slate-100 pb-0.5 mb-1">
+          <span className="text-[5px] font-black text-slate-500 uppercase tracking-wider flex items-center gap-0.5">
+            <TrendingUp className="w-2 h-2 text-blue-500" /> Recent Activity
+          </span>
+          <span className="text-[4px] text-[#1a73e8] font-bold">View All</span>
+        </div>
+        {[
+          { user: "@shop_lover", msg: "Auto-reply sent", time: "2m ago" },
+          { user: "@insta_deal", msg: "Coupon delivered", time: "5m ago" },
+        ].map((a, i) => (
+          <div key={i} className="flex items-center justify-between py-0.5 text-[5px]">
+            <div className="flex items-center gap-1">
+              <div className="w-3 h-3 rounded-full bg-blue-50 flex items-center justify-center">
+                <MessageCircle className="w-1.5 h-1.5 text-blue-500" />
+              </div>
+              <div>
+                <span className="font-bold text-slate-700">{a.user}</span>
+                <span className="text-slate-400 ml-0.5">{a.msg}</span>
+              </div>
+            </div>
+            <span className="text-slate-300 font-semibold">{a.time}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
 
+  const ConnectScreen = () => (
+    <div className="flex-1 p-2 flex items-center justify-center">
+      <div className="bg-white rounded-xl border border-slate-200 p-3 text-center space-y-2 shadow-lg w-full max-w-[160px] animate-in zoom-in-95 duration-300">
+        <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-[#fbbc04] via-[#ea4335] to-[#833ab4] p-0.5 mx-auto">
+          <div className="w-full h-full rounded-full bg-white flex items-center justify-center">
+            <UserCheck className="w-3.5 h-3.5 text-[#1a73e8]" />
+          </div>
+        </div>
+        <div>
+          <h4 className="text-[8px] font-extrabold text-slate-800">Connect Instagram</h4>
+          <p className="text-[5.5px] text-slate-500 font-medium mt-0.5 leading-relaxed">
+            Link your Business or Creator account to enable DM automation.
+          </p>
+        </div>
+        <div className="h-5 w-full rounded-lg bg-[#1a73e8] flex items-center justify-center gap-1 text-white text-[6px] font-bold shadow-md relative">
+          Connect Account <ArrowRight className="w-2 h-2" />
+          <MousePointerClick className="w-2.5 h-2.5 text-blue-200 absolute -bottom-1 -right-1 animate-bounce" />
+        </div>
+        <p className="text-[4px] text-slate-400 font-bold uppercase tracking-wider">Secured via Meta OAuth 2.0</p>
+      </div>
+    </div>
+  )
+
+  const AutomationsScreen = () => (
+    <div className="flex-1 p-2 flex flex-col gap-1.5 overflow-hidden text-left">
+      <div className="flex items-center justify-between">
+        <div>
+          <p className="font-black text-[8px] text-slate-800 flex items-center gap-0.5"><Zap className="w-2 h-2 text-amber-500" /> Automations</p>
+          <p className="text-[5px] text-slate-400">3 active rules</p>
+        </div>
+        <div className="h-4 px-1.5 rounded-md bg-[#1a73e8] text-white text-[5px] font-bold flex items-center gap-0.5 shadow-sm">+ New Rule</div>
+      </div>
+      <div className="flex gap-0.5 bg-slate-100 p-0.5 rounded-md">
+        {["Comments", "DMs", "Stories"].map((t, i) => (
+          <div key={i} className={`flex-1 text-center text-[5px] py-0.5 rounded font-bold ${i === 0 ? "bg-white text-slate-800 shadow-sm" : "text-slate-400"}`}>{t}</div>
+        ))}
+      </div>
+      {[
+        { keyword: "coupon", reply: "50% discount code: DMSPARK50", status: "Active" },
+        { keyword: "price", reply: "Check our latest catalog!", status: "Active" },
+        { keyword: "info", reply: "Visit dmspark.vercel.app", status: "Paused" },
+      ].map((rule, i) => (
+        <div key={i} className="bg-white rounded-lg border border-slate-200/60 p-1.5 shadow-sm">
+          <div className="flex items-center justify-between mb-0.5">
+            <span className="text-[6px] font-extrabold text-slate-700 flex items-center gap-0.5">
+              <Zap className="w-2 h-2 text-amber-500" /> &quot;{rule.keyword}&quot;
+            </span>
+            <span className={`text-[4px] px-1 py-0.5 rounded-full font-bold ${rule.status === "Active" ? "bg-emerald-50 text-emerald-500 border border-emerald-200" : "bg-slate-100 text-slate-400 border border-slate-200"}`}>
+              {rule.status}
+            </span>
+          </div>
+          <p className="text-[5px] text-slate-500 truncate">→ {rule.reply}</p>
+        </div>
+      ))}
+    </div>
+  )
+
+  const ResponseScreen = () => (
+    <div className="flex-1 p-2 flex flex-col justify-end gap-1.5 overflow-hidden text-left">
+      <div className="flex items-start gap-1">
+        <div className="w-4 h-4 rounded-full bg-slate-200 flex items-center justify-center text-[6px] font-bold text-slate-500 shrink-0">U</div>
+        <div className="bg-white rounded-xl rounded-tl-none p-1.5 border border-slate-200/50 shadow-sm max-w-[80%]">
+          <p className="text-[6px] font-black text-slate-800">@insta_shopper</p>
+          <p className="text-[7px] text-slate-600 font-semibold mt-0.5 flex items-center gap-0.5">
+            coupon <Flame className="w-2 h-2 text-orange-500 fill-orange-500" />
+          </p>
+        </div>
+      </div>
+      <div className="flex items-center gap-1 self-end">
+        <div className="flex items-center gap-1 bg-slate-100 rounded-full px-1.5 py-0.5">
+          <span className="w-1 h-1 rounded-full bg-slate-400 animate-bounce" style={{ animationDelay: '0s' }} />
+          <span className="w-1 h-1 rounded-full bg-slate-400 animate-bounce" style={{ animationDelay: '0.15s' }} />
+          <span className="w-1 h-1 rounded-full bg-slate-400 animate-bounce" style={{ animationDelay: '0.3s' }} />
+        </div>
+      </div>
+      <div className="flex items-start gap-1 justify-end">
+        <div className="bg-[#1a73e8] text-white rounded-xl rounded-tr-none p-1.5 shadow-md max-w-[85%]">
+          <div className="flex items-center gap-0.5 mb-0.5">
+            <img src="/logo.png" alt="DMSpark" className="w-2 h-2 object-contain brightness-0 invert" />
+            <span className="text-[5px] font-black uppercase tracking-wider opacity-85">DMSpark</span>
+          </div>
+          <p className="text-[7px] font-semibold leading-relaxed">
+            Here&apos;s your 50% discount code: <span className="font-black">DMSPARK50</span> 🎟️
+          </p>
+          <div className="mt-1 pt-1 border-t border-white/20">
+            <span className="text-[5px] font-black uppercase tracking-wider bg-white/10 px-1 py-0.5 rounded flex items-center justify-between">
+              Claim Coupon <ArrowUpRight className="w-1.5 h-1.5" />
+            </span>
+          </div>
+        </div>
+        <div className="w-4 h-4 rounded-full bg-blue-100 flex items-center justify-center p-0.5 border border-blue-200/30 shrink-0">
+          <img src="/logo.png" alt="" className="w-full h-full object-contain rounded-full" />
+        </div>
+      </div>
+      <div className="self-center bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full text-emerald-600 text-[5px] font-black uppercase flex items-center gap-0.5 animate-pulse">
+        <Heart className="w-2 h-2 text-red-500 fill-red-500" /> Auto-Reply Delivered!
+      </div>
+    </div>
+  )
+
+  const AnalyticsScreen = () => (
+    <div className="flex-1 p-2 flex flex-col gap-1.5 overflow-hidden text-left">
+      <div>
+        <p className="font-black text-[8px] text-slate-800">Deep Analytics</p>
+        <p className="text-[5px] text-slate-400">Real-time engagement insights</p>
+      </div>
+      <div className="grid grid-cols-3 gap-1">
+        {[
+          { label: "Replies", val: "1.4K", color: "text-blue-600" },
+          { label: "Audience", val: "320", color: "text-pink-500" },
+          { label: "Rate", val: "33%", color: "text-emerald-500" },
+        ].map((s, i) => (
+          <div key={i} className="bg-white p-1 rounded border border-slate-200/50 shadow-sm">
+            <div className="text-[4px] text-slate-400 font-bold uppercase">{s.label}</div>
+            <div className={`text-[8px] font-black ${s.color} leading-tight`}>{s.val}</div>
+          </div>
+        ))}
+      </div>
+      {/* Mini Chart */}
+      <div className="bg-white rounded border border-slate-200/50 shadow-sm p-1.5 h-[45px]">
+        <div className="text-[4.5px] font-bold text-slate-500 uppercase tracking-wider mb-1">Automation Flow</div>
+        <svg viewBox="0 0 200 40" className="w-full h-[24px]" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="miniGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#1a73e8" stopOpacity="0.3" />
+              <stop offset="100%" stopColor="#1a73e8" stopOpacity="0" />
+            </linearGradient>
+          </defs>
+          <polygon fill="url(#miniGrad)" points="0,40 0,30 30,25 60,28 90,15 120,20 150,8 180,12 200,5 200,40" />
+          <polyline fill="none" stroke="#1a73e8" strokeWidth="2" strokeLinecap="round" points="0,30 30,25 60,28 90,15 120,20 150,8 180,12 200,5" />
+        </svg>
+      </div>
+      {/* Traffic + Activity */}
+      <div className="flex gap-1 flex-1">
+        <div className="bg-white rounded border border-slate-200/50 shadow-sm p-1 flex-1 flex flex-col items-center justify-center">
+          <div className="text-[4px] font-bold text-slate-400 uppercase mb-0.5">Channels</div>
+          <div className="w-8 h-8 relative">
+            <svg viewBox="0 0 36 36" className="w-full h-full">
+              <circle cx="18" cy="18" r="12" fill="none" stroke="#e2e8f0" strokeWidth="4" />
+              <circle cx="18" cy="18" r="12" fill="none" stroke="#1a73e8" strokeWidth="4" strokeDasharray="45 75" strokeDashoffset="0" strokeLinecap="round" />
+              <circle cx="18" cy="18" r="12" fill="none" stroke="#7c3aed" strokeWidth="4" strokeDasharray="30 90" strokeDashoffset="-45" strokeLinecap="round" />
+            </svg>
+            <div className="absolute inset-0 flex items-center justify-center text-[5px] font-black text-slate-700">12</div>
+          </div>
+          <div className="flex items-center gap-1 mt-0.5">
+            <span className="flex items-center gap-0.5 text-[3.5px] text-slate-500"><span className="w-1 h-1 rounded-full bg-[#1a73e8]" />Comments</span>
+            <span className="flex items-center gap-0.5 text-[3.5px] text-slate-500"><span className="w-1 h-1 rounded-full bg-violet-500" />DMs</span>
+          </div>
+        </div>
+        <div className="bg-white rounded border border-slate-200/50 shadow-sm p-1 flex-1">
+          <div className="text-[4px] font-bold text-slate-400 uppercase mb-0.5 flex items-center gap-0.5">
+            <span className="w-1 h-1 rounded-full bg-red-400 animate-ping" /> Live Log
+          </div>
+          {["@user_101 → DM Sent", "@deal_fan → Coupon", "@buyer99 → Reply"].map((l, i) => (
+            <div key={i} className="text-[4px] text-slate-500 font-semibold py-0.5 border-b border-slate-50 last:border-0 truncate">{l}</div>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+
+  // ─── Sidebar for Laptop Mockup ───
+  const LaptopSidebar = ({ activeIdx }: { activeIdx: number }) => {
+    const navItems = [
+      { icon: <LayoutDashboard className="w-2 h-2" />, label: "Dashboard", idx: 0 },
+      { icon: <Zap className="w-2 h-2" />, label: "Automations", idx: 2 },
+      { icon: <MessageSquare className="w-2 h-2" />, label: "Inbox", idx: 3 },
+      { icon: <BarChart3 className="w-2 h-2" />, label: "Analytics", idx: 4 },
+      { icon: <Settings className="w-2 h-2" />, label: "Settings", idx: -1 },
+    ]
+    return (
+      <div className="w-[65px] border-r border-slate-200 bg-white p-1.5 shrink-0 flex flex-col text-left">
+        <div className="flex items-center gap-1 mb-2 pb-1.5 border-b border-slate-100">
+          <img src="/logo.png" alt="Logo" className="w-3.5 h-3.5 object-contain" />
+          <span className="font-black text-[6.5px] text-[#1a73e8] leading-none">DMSpark</span>
+        </div>
+        <div className="space-y-0.5 flex-1">
+          {navItems.map((item, i) => (
+            <div
+              key={i}
+              className={`flex items-center gap-1 px-1 py-0.5 rounded text-[5.5px] font-bold transition-all ${
+                activeIdx === item.idx
+                  ? "bg-[#1a73e8] text-white shadow-sm"
+                  : "text-slate-400 hover:text-slate-600"
+              }`}
+            >
+              {item.icon}
+              <span className="truncate">{item.label}</span>
+            </div>
+          ))}
+        </div>
+        <div className="border-t border-slate-100 pt-1 flex items-center gap-1">
+          <div className="w-3.5 h-3.5 rounded-full bg-slate-200 flex items-center justify-center text-[5px] font-bold text-slate-500">U</div>
+          <div className="text-[5px] font-bold text-slate-500 truncate">user</div>
+        </div>
+      </div>
+    )
+  }
+
+  // ─── Get screen content for step ───
+  const getScreenContent = () => {
+    switch (animationStep) {
+      case 0: return <DashboardScreen />
+      case 1: return <ConnectScreen />
+      case 2: return <AutomationsScreen />
+      case 3: return <ResponseScreen />
+      case 4: return <AnalyticsScreen />
+      default: return <DashboardScreen />
+    }
+  }
+
+  const stepLabels = [
+    "Overview: Your DMSpark Dashboard",
+    "Step 01: Connect via Meta OAuth",
+    "Step 02: Configure keyword triggers",
+    "Step 03: Automated DM reply templates",
+    "Step 04: Real-time analytics & insights"
+  ]
+
+  return (
+    <div className="p-4 md:p-8 space-y-6 text-foreground min-h-0 md:min-h-[90vh] flex flex-col justify-between font-sans relative z-10 animate-in fade-in duration-500">
+
+      <style jsx global>{`
         .laptop-mockup-scaler-help {
-          transform: scale(0.68);
+          transform: scale(0.65);
           transform-origin: center;
           transition: transform 0.2s ease;
         }
         @media (min-width: 480px) {
-          .laptop-mockup-scaler-help {
-            transform: scale(0.78);
-          }
+          .laptop-mockup-scaler-help { transform: scale(0.75); }
         }
         @media (min-width: 1200px) {
-          .laptop-mockup-scaler-help {
-            transform: scale(0.92);
-          }
+          .laptop-mockup-scaler-help { transform: scale(0.9); }
         }
         @media (min-width: 1400px) {
-          .laptop-mockup-scaler-help {
-            transform: scale(1);
-          }
+          .laptop-mockup-scaler-help { transform: scale(1); }
         }
       `}</style>
 
@@ -163,52 +401,38 @@ export default function HowToUsePage() {
             How to Use DMSpark
           </h1>
           <p className="text-muted-foreground mt-1 text-sm font-medium">
-            Click on any step card below to interactively test the live simulation flow in mobile or laptop viewports.
+            Click any step to preview real app screens in Mobile or Laptop mode.
           </p>
         </div>
-
-        {/* Global Autoplay Controls */}
         <div className="flex items-center gap-2 self-start sm:self-center">
-          <Button 
-            variant="outline" 
-            size="sm" 
+          <Button
+            variant="outline"
+            size="sm"
             onClick={() => setIsPlaying(!isPlaying)}
             className="text-xs font-bold gap-1.5 h-9 bg-card/50 border-border/80 rounded-full"
           >
             {isPlaying ? (
-              <>
-                <Pause className="w-3.5 h-3.5 text-amber-500 fill-amber-500" /> Paused Autoplay
-              </>
+              <><Pause className="w-3.5 h-3.5 text-amber-500 fill-amber-500" /> Pause</>
             ) : (
-              <>
-                <Play className="w-3.5 h-3.5 text-emerald-500 fill-emerald-500 animate-pulse" /> Resume Autoplay
-              </>
+              <><Play className="w-3.5 h-3.5 text-emerald-500 fill-emerald-500 animate-pulse" /> Resume</>
             )}
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setAnimationStep(0)}
-            className="text-xs font-bold h-9 hover:bg-secondary/60 rounded-full"
-          >
-            Reset
           </Button>
         </div>
       </div>
 
-      {/* Main Workspace split in Grid */}
+      {/* Main Grid */}
       <div className="flex-1 grid grid-cols-1 lg:grid-cols-5 gap-6 items-stretch relative mt-2">
-        
-        {/* Left Side: Step cards */}
+
+        {/* Left: Step Cards */}
         <div className={`lg:col-span-3 space-y-4 flex flex-col justify-between transition-all duration-700 delay-100 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            
-            {/* Overview / Introduction Step (Step 0) */}
-            <Card 
+
+            {/* Overview Card */}
+            <Card
               onClick={() => handleStepSelect(0)}
               className={`p-4 bg-card/60 backdrop-blur-md cursor-pointer transition-all duration-300 col-span-1 md:col-span-2 group relative overflow-hidden border-2 ${
-                animationStep === 0 
-                  ? 'border-primary shadow-lg ring-2 ring-primary/10 -translate-y-0.5 bg-gradient-to-br from-primary/[0.03] to-violet-500/[0.03]' 
+                animationStep === 0
+                  ? 'border-primary shadow-lg ring-2 ring-primary/10 -translate-y-0.5 bg-gradient-to-br from-primary/[0.03] to-violet-500/[0.03]'
                   : 'border-border/60 hover:border-border hover:-translate-y-0.5'
               }`}
             >
@@ -223,8 +447,8 @@ export default function HowToUsePage() {
                     </span>
                     {animationStep === 0 && (
                       <span className="flex h-1.5 w-1.5 relative">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                        <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-green-500"></span>
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
+                        <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-green-500" />
                       </span>
                     )}
                   </div>
@@ -232,22 +456,22 @@ export default function HowToUsePage() {
                     DMSpark Automation Engine Overview
                   </h3>
                   <p className="text-[11px] text-muted-foreground mt-1.5 leading-relaxed font-semibold">
-                    DMSpark automates interactive user funnels by listening to keyword mentions across Instagram and dispatching custom high-conversion Direct Messages instantly. Explore the interactive walkthrough in Mobile or Laptop mode!
+                    See your real Dashboard with live stats, automation counters, and activity feeds. Toggle between Mobile and Laptop views!
                   </p>
                 </div>
               </div>
             </Card>
 
-            {/* Stepper Cards */}
+            {/* Step Cards */}
             {onboardingSteps.map((step) => {
               const isActiveStep = animationStep === step.num
               return (
-                <Card 
+                <Card
                   key={step.num}
                   onClick={() => handleStepSelect(step.num)}
                   className={`p-4 bg-card/60 backdrop-blur-md cursor-pointer transition-all duration-300 flex flex-col justify-between group relative overflow-hidden border-2 ${
-                    isActiveStep 
-                      ? 'border-primary shadow-lg ring-2 ring-primary/10 -translate-y-0.5 bg-gradient-to-br from-primary/[0.03] to-violet-500/[0.03]' 
+                    isActiveStep
+                      ? 'border-primary shadow-lg ring-2 ring-primary/10 -translate-y-0.5 bg-gradient-to-br from-primary/[0.03] to-violet-500/[0.03]'
                       : 'border-border/60 hover:border-border hover:-translate-y-0.5'
                   }`}
                 >
@@ -259,14 +483,14 @@ export default function HowToUsePage() {
                         </span>
                         {isActiveStep && (
                           <span className="flex h-1.5 w-1.5 relative">
-                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                            <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-green-500"></span>
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
+                            <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-green-500" />
                           </span>
                         )}
                       </div>
                       <span className={`p-1.5 rounded-lg border transition-all duration-300 ${
-                        isActiveStep 
-                          ? 'bg-primary/10 border-primary/20 scale-105' 
+                        isActiveStep
+                          ? 'bg-primary/10 border-primary/20 scale-105'
                           : 'bg-secondary/50 border-border/50 group-hover:bg-secondary'
                       }`}>
                         {step.icon}
@@ -280,7 +504,7 @@ export default function HowToUsePage() {
                     </p>
                   </div>
                   <div className="mt-4 pt-3 border-t border-border/30">
-                    <Link 
+                    <Link
                       href={step.href}
                       className="text-[10px] font-black text-primary uppercase tracking-widest flex items-center gap-1 hover:underline w-fit"
                       onClick={(e) => e.stopPropagation()}
@@ -293,7 +517,7 @@ export default function HowToUsePage() {
             })}
           </div>
 
-          {/* Expert help assistance banner */}
+          {/* Help Banner */}
           <Card className="p-4.5 bg-primary/5 border-primary/20 shadow-sm flex items-start gap-3.5 mt-2">
             <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center text-primary shrink-0 border border-primary/20 shadow-inner">
               <Info className="w-4 h-4" />
@@ -307,20 +531,18 @@ export default function HowToUsePage() {
           </Card>
         </div>
 
-        {/* Right Side: Interactive Device Simulator Mockup */}
+        {/* Right: Device Simulator */}
         <Card className={`lg:col-span-2 p-5 bg-card/60 backdrop-blur-md border-border shadow-md flex flex-col justify-between relative overflow-hidden min-h-[520px] transition-all duration-700 delay-200 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
           <div className="absolute inset-0 bg-gradient-to-br from-blue-500/[0.01] via-transparent to-violet-500/[0.01] pointer-events-none rounded-xl" />
-          
+
           <div className="space-y-4 flex flex-col h-full justify-between relative z-10">
-            
-            {/* Device Toggle Selector Header */}
+
+            {/* Device Toggle */}
             <div className="flex items-center justify-between border-b border-border/50 pb-2.5 shrink-0 gap-2">
               <h3 className="font-extrabold text-foreground text-xs tracking-tight flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-                Live Flow Simulation
+                App Preview
               </h3>
-              
-              {/* Segmented Device Toggle buttons */}
               <div className="flex items-center gap-1.5 p-1 rounded-xl bg-secondary/80 border border-border/40 shadow-inner">
                 <button
                   onClick={() => setDeviceMode("mobile")}
@@ -345,412 +567,76 @@ export default function HowToUsePage() {
               </div>
             </div>
 
-            {/* Simulated Frame Display container */}
+            {/* Device Frame */}
             <div className="flex-1 flex items-center justify-center py-4 min-h-[360px]">
-              
-              {/* MOBILE SIMULATOR */}
+
               {deviceMode === "mobile" ? (
-                /* EXTACT iPhone Mockup from landing-page.tsx */
-                <div 
-                  className="relative bg-white border-[6px] border-slate-900 rounded-[34px] shadow-2xl w-[200px] h-[360px] flex flex-col justify-between overflow-hidden select-none shrink-0 animate-in zoom-in-95 duration-500"
-                >
-                  {/* Phone Notch/Island */}
+                /* ─── MOBILE MOCKUP ─── */
+                <div className="relative bg-white border-[6px] border-slate-900 rounded-[34px] shadow-2xl w-[200px] h-[380px] flex flex-col overflow-hidden select-none shrink-0 animate-in zoom-in-95 duration-500" key={`mobile-${animationStep}`}>
+                  {/* Notch */}
                   <div className="absolute top-0 left-1/2 -translate-x-1/2 w-20 h-3 bg-slate-900 rounded-b-lg z-20" />
 
-                  {/* Instagram Mock Header */}
-                  <div className="flex items-center gap-2 border-b border-slate-100 pb-2 pt-4 px-3 shrink-0 bg-white/90 backdrop-blur-sm z-10 select-none">
-                    <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-[#fbbc04] via-[#ea4335] to-[#1a73e8] p-0.5">
-                      <div className="w-full h-full rounded-full bg-white p-0.5">
-                        <img src="/logo.png" alt="Profile" className="w-full h-full object-contain rounded-full" />
-                      </div>
-                    </div>
-                    <div>
-                      <p className="text-[10px] font-black text-slate-800 leading-none">dmspark_bot</p>
-                      <p className="text-[7px] text-slate-400 mt-0.5">Instagram Reel</p>
-                    </div>
+                  {/* Mobile Header */}
+                  <div className="flex items-center gap-2 border-b border-slate-100 py-2 pt-4 px-3 shrink-0 bg-white z-10">
+                    <Menu className="w-3 h-3 text-slate-400" />
+                    <span className="font-black text-[8px] text-[#1a73e8]">DMSpark</span>
                   </div>
 
-                  {/* Chat Content Area depending on Step state */}
-                  <div className="relative flex-1 bg-slate-50/50 p-3 overflow-hidden">
-                    
-                    {/* STEP 0: Loop animation exactly like landing page */}
-                    {animationStep === 0 && (
-                      <>
-                        {/* Looping Comment Bubble */}
-                        <div className="anim-comment absolute left-2.5 right-2.5 top-3 flex items-start gap-1.5">
-                          <div className="w-5.5 h-5.5 rounded-full bg-slate-200 flex items-center justify-center text-[8px] font-bold text-slate-500 shrink-0">U</div>
-                          <div className="bg-white rounded-xl rounded-tl-none p-2 max-w-[80%] border border-slate-200/50 shadow-sm text-left">
-                            <p className="text-[8px] font-black text-slate-800 leading-none">user_101</p>
-                            <p className="text-[9px] text-slate-600 mt-0.5 font-semibold flex items-center gap-0.5">
-                              price? <Flame className="w-3 h-3 text-orange-500 fill-orange-500" />
-                            </p>
-                          </div>
-                        </div>
-
-                        {/* Looping DM Reply Bubble */}
-                        <div className="anim-reply absolute left-2.5 right-2.5 top-3 flex items-start gap-1.5 justify-end">
-                          <div className="bg-[#1a73e8] text-white rounded-xl rounded-tr-none p-2 max-w-[80%] shadow-lg shadow-blue-500/10 text-left">
-                            <div className="flex items-center gap-1">
-                              <img src="/logo.png" alt="DMSpark" className="w-2.5 h-2.5 object-contain brightness-0 invert" />
-                              <span className="text-[7px] font-black uppercase tracking-wider opacity-85">DMSpark</span>
-                            </div>
-                            <p className="text-[9px] mt-0.5 leading-snug font-medium flex items-center gap-0.5">
-                              Sent! Check DMs <Inbox className="w-2.5 h-2.5 opacity-90" />
-                            </p>
-                          </div>
-                          <div className="w-5.5 h-5.5 rounded-full bg-blue-100 flex items-center justify-center p-0.5 border border-blue-200/30 shrink-0">
-                            <img src="/logo.png" alt="Profile" className="w-full h-full object-contain rounded-full" />
-                          </div>
-                        </div>
-                      </>
-                    )}
-
-                    {/* STEP 1: OAuth Connect authorization window */}
-                    {animationStep === 1 && (
-                      <div className="absolute inset-x-2.5 bottom-2.5 top-2 bg-white rounded-2xl border border-slate-200 p-2.5 text-center flex flex-col justify-between animate-in slide-in-from-bottom-5 duration-300 shadow-xl select-none">
-                        <div className="space-y-1">
-                          <div className="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center mx-auto text-blue-500 border border-blue-100">
-                            <UserCheck className="w-4 h-4" />
-                          </div>
-                          <h4 className="text-[9px] font-extrabold text-slate-800">Meta Integration</h4>
-                          <p className="text-[7.5px] text-slate-500 font-semibold leading-relaxed mt-0.5">
-                            Connect your profile to allow DMSpark to auto-reply to your business comments and story mentions.
-                          </p>
-                        </div>
-                        <Button className="h-6 w-full text-[8.5px] font-bold rounded-lg bg-blue-500 hover:bg-blue-600 text-white shadow-md flex items-center justify-center gap-1">
-                          Connect Instagram <ArrowRight className="w-2.5 h-2.5" />
-                        </Button>
-                        <p className="text-[5.5px] text-slate-400 font-bold uppercase tracking-wider">Secured OAuth 2.0 via Meta Inc.</p>
-                      </div>
-                    )}
-
-                    {/* STEP 2: Instgram Post comments matching trigger keyword */}
-                    {animationStep === 2 && (
-                      <div className="absolute inset-0 p-2.5 flex flex-col justify-between animate-in fade-in duration-300 select-none">
-                        {/* Simulated Post Image layout */}
-                        <div className="h-28 rounded-xl bg-slate-900 relative flex items-center justify-center overflow-hidden border border-slate-200">
-                          <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-transparent to-violet-500/10" />
-                          <div className="text-center p-2">
-                            <span className="text-[6.5px] font-black px-1.5 py-0.5 rounded bg-blue-500 text-white uppercase tracking-wider">Giveaway</span>
-                            <p className="text-[8px] font-black mt-1 text-slate-100">50% DISCOUNT COUPON</p>
-                            <p className="text-[6px] text-slate-400 mt-0.5">Comment word "coupon" to auto get code</p>
-                          </div>
-                        </div>
-                        {/* Interactive comment bubble matching keyword */}
-                        <div className="bg-white border border-blue-500/30 rounded-xl p-2 flex items-start gap-1.5 shadow-lg ring-4 ring-blue-500/5 animate-in slide-in-from-bottom-3 duration-350 text-left">
-                          <div className="w-4 h-4 rounded-full bg-slate-200 flex items-center justify-center text-[7px] font-bold border border-slate-300 text-slate-600">U</div>
-                          <div className="flex-1">
-                            <p className="text-[7.5px] font-extrabold text-blue-500">@insta_shopper</p>
-                            <p className="text-[8px] font-semibold text-slate-700 mt-0.5 flex items-center gap-0.5">
-                              coupon <Flame className="w-2.5 h-2.5 text-orange-500 fill-orange-500 animate-pulse" />
-                            </p>
-                          </div>
-                          <span className="text-[6px] px-1 py-0.2 rounded bg-amber-500/10 text-amber-500 border border-amber-500/20 font-bold animate-pulse uppercase">Match</span>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* STEP 3: Animated DM message template with dynamic click button */}
-                    {animationStep === 3 && (
-                      <div className="flex flex-col justify-end space-y-2 h-full animate-in fade-in duration-300 text-left select-none pb-1">
-                        <div className="self-start max-w-[80%] bg-slate-100 border border-slate-200 rounded-xl rounded-tl-none p-2 text-left text-slate-800 shadow-sm animate-in slide-in-from-left-3 duration-300">
-                          <p className="text-[7px] font-bold text-blue-500 uppercase tracking-wider mb-0.5">User Comment Trigger</p>
-                          <p className="text-[8.5px] font-semibold">coupon</p>
-                        </div>
-
-                        {/* Bot DM Reply Bubble */}
-                        <div className="self-end max-w-[85%] bg-[#1a73e8] border border-blue-600/25 text-white rounded-xl rounded-tr-none p-2 shadow-md space-y-1 animate-in slide-in-from-right-3 duration-300">
-                          <div className="flex items-center gap-1">
-                            <img src="/logo.png" alt="DMSpark" className="w-2.5 h-2.5 object-contain brightness-0 invert" />
-                            <span className="text-[7px] font-black uppercase tracking-wider opacity-85">DMSpark Reply</span>
-                          </div>
-                          <p className="text-[8.5px] font-semibold leading-relaxed">
-                            Here is your 50% discount coupon code: **DMSPARK50**! 🎟️
-                          </p>
-                          <div className="pt-1.5 border-t border-white/20">
-                            <span className="text-[7px] font-black uppercase tracking-wider bg-white/10 px-1.5 py-0.5 rounded flex items-center justify-between hover:bg-white/20 cursor-pointer">
-                              Claim Coupon Code <ArrowUpRight className="w-2 h-2" />
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* STEP 4: Double Tap heart reaction bubble for conversions */}
-                    {animationStep === 4 && (
-                      <div className="flex flex-col justify-end space-y-2 h-full animate-in fade-in duration-300 text-left select-none pb-1">
-                        <div className="self-end max-w-[85%] bg-[#1a73e8] border border-blue-600/25 text-white rounded-xl rounded-tr-none p-2 shadow-md space-y-1 relative">
-                          <div className="flex items-center gap-1">
-                            <img src="/logo.png" alt="DMSpark" className="w-2.5 h-2.5 object-contain brightness-0 invert" />
-                            <span className="text-[7px] font-black uppercase tracking-wider opacity-85">DMSpark Reply</span>
-                          </div>
-                          <p className="text-[8.5px] font-semibold leading-relaxed">
-                            Here is your 50% discount coupon code: **DMSPARK50**! 🎟️
-                          </p>
-                          
-                          {/* Pulsing red heart bubble reaction */}
-                          <div className="absolute -bottom-1.5 -left-1.5 bg-white border border-red-500/20 w-4 h-4 rounded-full flex items-center justify-center animate-bounce shadow-md">
-                            <span className="text-[8px] text-red-500">❤️</span>
-                          </div>
-                        </div>
-                        <div className="self-center bg-violet-500/10 border border-violet-500/25 px-2 py-0.8 rounded-full text-violet-500 text-[6.5px] font-black uppercase flex items-center gap-1 animate-pulse mt-0.5">
-                          <TrendingUp className="w-2 h-2 text-violet-500" /> Goal Achieved!
-                        </div>
-                      </div>
-                    )}
-
+                  {/* Screen Content */}
+                  <div className="flex-1 bg-slate-50/50 flex flex-col overflow-hidden">
+                    {getScreenContent()}
                   </div>
 
-                  {/* Interaction footer bar */}
-                  <div className="border-t border-slate-100 p-2.5 flex items-center justify-between text-[8px] text-slate-500 font-bold shrink-0 bg-white select-none">
-                    <div className="flex items-center gap-2">
-                      <span className="flex items-center gap-0.5 text-[#ea4335]">
-                        <Heart className="w-2.5 h-2.5 fill-current" /> 1.2k
-                      </span>
-                      <span className="flex items-center gap-0.5 text-slate-500">
-                        <MessageSquare className="w-2.5 h-2.5 text-slate-400" /> Auto Active
-                      </span>
-                    </div>
-                    <span className="text-[#34a853] flex items-center gap-0.5">
-                      <span className="w-1 h-1 rounded-full bg-[#34a853] animate-pulse" /> Live
+                  {/* Footer */}
+                  <div className="border-t border-slate-100 p-2 flex items-center justify-between text-[6px] text-slate-400 font-bold shrink-0 bg-white">
+                    <span className="flex items-center gap-0.5">
+                      <Heart className="w-2 h-2 text-red-400 fill-red-400" /> 1.2k
+                    </span>
+                    <span className="text-emerald-500 flex items-center gap-0.5">
+                      <span className="w-1 h-1 rounded-full bg-emerald-500 animate-pulse" /> Live
                     </span>
                   </div>
-
                 </div>
               ) : (
-                
-                /* LAPTOP SIMULATOR (CSS Macbook Frame matching landing-page.tsx scaled correctly) */
-                <div className="laptop-mockup-scaler-help shrink-0 flex items-center justify-center">
+                /* ─── LAPTOP MOCKUP ─── */
+                <div className="laptop-mockup-scaler-help shrink-0 flex items-center justify-center" key={`laptop-${animationStep}`}>
                   <div className="flex flex-col items-center select-none animate-in zoom-in-95 duration-500">
-                    
-                    {/* Laptop Screen matching landing-page.tsx exactly */}
                     <div className="relative w-[420px] h-[270px] bg-white border-[8px] border-slate-800 rounded-t-2xl shadow-2xl flex flex-col overflow-hidden text-slate-800">
-                      
-                      {/* Browser Top Bar */}
-                      <div className="h-6 bg-slate-100 border-b border-slate-200/60 px-3 flex items-center gap-2 shrink-0 select-none">
+
+                      {/* Browser Chrome */}
+                      <div className="h-6 bg-slate-100 border-b border-slate-200/60 px-3 flex items-center gap-2 shrink-0">
                         <div className="flex gap-1 shrink-0">
                           <div className="w-1.5 h-1.5 rounded-full bg-[#ea4335]" />
                           <div className="w-1.5 h-1.5 rounded-full bg-[#fbbc04]" />
                           <div className="w-1.5 h-1.5 rounded-full bg-[#34a853]" />
                         </div>
-                        <div className="bg-white rounded border border-slate-200/60 px-2 py-0.5 text-[8px] text-slate-400 w-36 mx-auto text-center font-bold">
-                          dmspark.in/dashboard
+                        <div className="bg-white rounded border border-slate-200/60 px-2 py-0.5 text-[7px] text-slate-400 w-40 mx-auto text-center font-bold">
+                          dmspark.vercel.app/dashboard
                         </div>
                       </div>
 
-                      {/* Dashboard layout inside Screen */}
-                      <div className="flex-1 flex text-[9px] bg-slate-50">
-                        
-                        {/* Left Mini Sidebar */}
-                        <div className="w-[70px] border-r border-slate-200 bg-white p-2 space-y-1.5 shrink-0 flex flex-col text-left">
-                          <div className="flex items-center gap-1.5 mb-2.5">
-                            <img src="/logo.png" alt="Logo" className="w-4 h-4 object-contain" />
-                            <span className="font-black text-[8px] text-[#1a73e8] leading-none">DMSpark</span>
-                          </div>
-                          <div className={`h-4 w-full px-1.5 rounded flex items-center gap-1 text-[7px] shrink-0 font-bold transition-all ${
-                            animationStep === 0 || animationStep === 4 ? "bg-blue-50 text-[#1a73e8]" : "text-slate-400"
-                          }`}>📊 Dash</div>
-                          <div className={`h-4 w-full px-1.5 rounded flex items-center gap-1 text-[7px] shrink-0 font-bold transition-all ${
-                            animationStep === 2 ? "bg-blue-50 text-[#1a73e8]" : "text-slate-400"
-                          }`}>⚡ Rules</div>
-                          <div className={`h-4 w-full px-1.5 rounded flex items-center gap-1 text-[7px] shrink-0 font-bold transition-all ${
-                            animationStep === 1 || animationStep === 3 ? "bg-blue-50 text-[#1a73e8]" : "text-slate-400"
-                          }`}>📥 Inbox</div>
+                      {/* App Layout */}
+                      <div className="flex-1 flex bg-slate-50">
+                        <LaptopSidebar activeIdx={animationStep} />
+                        <div className="flex-1 flex flex-col overflow-hidden">
+                          {getScreenContent()}
                         </div>
-
-                        {/* Main Screen Panel depending on step state */}
-                        <div className="flex-1 p-2.5 flex flex-col justify-between overflow-hidden text-left">
-                          
-                          {/* STEP 0: Overview mini dashboard identical to landing page */}
-                          {animationStep === 0 && (
-                            <>
-                              <div>
-                                <p className="font-black text-slate-800 text-[10px] leading-tight">Welcome back, user!</p>
-                                <p className="text-[7px] text-slate-400">Here's your automation stats today.</p>
-                              </div>
-
-                              {/* Stats blocks */}
-                              <div className="grid grid-cols-3 gap-1.5">
-                                <div className="bg-white p-1 rounded border border-slate-200/50 shadow-sm flex flex-col justify-center">
-                                  <div className="text-[5px] text-slate-400 font-bold uppercase tracking-wider">Automations</div>
-                                  <div className="text-[10px] font-black text-blue-600 leading-tight">12</div>
-                                </div>
-                                <div className="bg-white p-1 rounded border border-slate-200/50 shadow-sm flex flex-col justify-center">
-                                  <div className="text-[5px] text-slate-400 font-bold uppercase tracking-wider">Replies</div>
-                                  <div className="text-[10px] font-black text-[#34a853] leading-tight">1.4K</div>
-                                </div>
-                                <div className="bg-white p-1 rounded border border-slate-200/50 shadow-sm flex flex-col justify-center">
-                                  <div className="text-[5px] text-slate-400 font-bold uppercase tracking-wider">Triggers</div>
-                                  <div className="text-[10px] font-black text-[#fbbc04] leading-tight">8</div>
-                                </div>
-                              </div>
-
-                              {/* Live Activity Feed */}
-                              <div className="bg-white p-1.5 rounded border border-slate-200 shadow-sm flex flex-col justify-between h-[50px] relative overflow-hidden">
-                                <div className="flex items-center justify-between border-b border-slate-100 pb-0.5 mb-1 shrink-0 select-none">
-                                  <span className="font-black text-[6px] text-slate-500 uppercase tracking-wider flex items-center gap-0.5">
-                                    <span className="w-1 h-1 rounded-full bg-[#ea4335] animate-ping" /> Live Activity Feed
-                                  </span>
-                                  <span className="text-[5px] text-slate-400">Real-time</span>
-                                </div>
-                                
-                                <div className="flex-1 relative font-semibold text-[6.5px]">
-                                  <div className="flex items-center justify-between text-slate-600 leading-none">
-                                    <span>💬 @user_101: "price?"</span>
-                                    <span className="text-[#34a853] font-black flex items-center gap-0.5">➡️ Sent DM <Inbox className="w-2 h-2" /></span>
-                                  </div>
-                                </div>
-                              </div>
-                            </>
-                          )}
-
-                          {/* STEP 1: OAuth Connect Integrations panel */}
-                          {animationStep === 1 && (
-                            <div className="flex-1 flex flex-col justify-between space-y-2 animate-in fade-in duration-300">
-                              <div>
-                                <p className="font-black text-slate-800 text-[10px] leading-tight">Instagram Integrations</p>
-                                <p className="text-[7px] text-slate-400">Link your Instagram Business Account.</p>
-                              </div>
-                              <div className="flex-1 border border-slate-200 rounded-lg bg-white p-2 flex flex-col justify-between relative shadow-sm">
-                                <div className="flex items-center gap-2">
-                                  <div className="w-5 h-5 rounded-full bg-blue-50 flex items-center justify-center text-blue-500 border border-blue-100 text-[8px] font-bold">IG</div>
-                                  <div>
-                                    <p className="font-extrabold text-slate-800 text-[7.5px]">Instagram Connection Status</p>
-                                    <p className="text-[6.5px] text-slate-400 font-semibold mt-0.5">Authorized business page handle</p>
-                                  </div>
-                                </div>
-                                
-                                {/* Animated cursor clicking connection button */}
-                                <div className="flex items-center justify-center py-1">
-                                  <Button className="h-5 text-[6.5px] px-3 font-black uppercase tracking-wider rounded bg-blue-500 hover:bg-blue-600 text-white shadow relative">
-                                    Connecting Account...
-                                    <MousePointerClick className="w-2.5 h-2.5 text-blue-900 absolute -bottom-1 -right-1 animate-bounce" />
-                                  </Button>
-                                </div>
-
-                                <div className="border-t border-slate-100 pt-1 flex items-center justify-between">
-                                  <span className="text-[6px] font-bold text-slate-400 uppercase tracking-wide">Meta Secure Protocol</span>
-                                  <span className="text-[6px] px-1 py-0.2 rounded bg-amber-500/10 text-amber-500 border border-amber-500/20 font-bold animate-pulse uppercase">Staging</span>
-                                </div>
-                              </div>
-                            </div>
-                          )}
-
-                          {/* STEP 2: Rule Node Flow Builder display */}
-                          {animationStep === 2 && (
-                            <div className="flex-1 flex flex-col justify-between space-y-2 animate-in fade-in duration-300">
-                              <div>
-                                <p className="font-black text-slate-800 text-[10px] leading-tight">Keyword Rule Builder</p>
-                                <p className="text-[7px] text-slate-400">Map comments keyword triggers to actions.</p>
-                              </div>
-                              
-                              {/* Simulated automation node flow chart */}
-                              <div className="flex-1 border border-slate-200 rounded-lg bg-white p-2.5 flex items-center justify-between relative shadow-sm">
-                                <div className="p-1 bg-slate-50 border border-amber-500/30 rounded text-center w-20 z-10">
-                                  <span className="text-[5px] text-amber-500 font-black uppercase tracking-wider block">Trigger Comment</span>
-                                  <span className="text-[7px] font-extrabold text-slate-700 block mt-0.5">"coupon"</span>
-                                </div>
-
-                                {/* Flow line with moving spark */}
-                                <div className="flex-1 h-[2px] bg-slate-100 relative mx-1">
-                                  <div className="absolute top-1/2 -translate-y-1/2 h-1.5 w-1.5 rounded-full bg-blue-500 shadow-md animate-ping" style={{ left: '50%' }} />
-                                  <div className="absolute top-1/2 -translate-y-1/2 h-1 w-1 rounded-full bg-blue-400 shadow-md" style={{ left: '50%' }} />
-                                </div>
-
-                                <div className="p-1 bg-slate-50 border border-blue-500/30 rounded text-center w-20 z-10">
-                                  <span className="text-[5px] text-blue-400 font-black uppercase tracking-wider block">Action Send DM</span>
-                                  <span className="text-[7px] font-extrabold text-slate-700 block mt-0.5">Discount Template</span>
-                                </div>
-                              </div>
-                              <p className="text-[6.5px] text-center font-bold text-amber-500 uppercase tracking-widest animate-pulse">Match Event Active!</p>
-                            </div>
-                          )}
-
-                          {/* STEP 3: Automated webhook logging console screen */}
-                          {animationStep === 3 && (
-                            <div className="flex-1 flex flex-col justify-between space-y-1.5 animate-in fade-in duration-300">
-                              <div>
-                                <p className="font-black text-slate-800 text-[10px] leading-tight">API Webhook Console Logs</p>
-                                <p className="text-[7px] text-slate-400">Meta comment delivery callback stream.</p>
-                              </div>
-                              
-                              {/* Simulated terminal logging scrolling */}
-                              <div className="flex-1 bg-slate-950 border border-slate-900 rounded-lg p-2 font-mono text-[6.5px] text-emerald-400/90 leading-normal space-y-1 shadow-inner">
-                                <p className="text-slate-500 select-none">[2026-06-02T16:21:40] INIT Webhook Meta Stream</p>
-                                <p className="text-blue-400">[Webhook] Received comment: "coupon" from @insta_shopper</p>
-                                <p className="text-amber-400">[Engine] Match index: keyword matches "coupon". Matching Rule #104</p>
-                                <p className="text-white flex items-center gap-1 select-none">
-                                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                                  [Graph API] POST /me/messages {"->"} HTTP 200 OK (Msg sent successfully)
-                                </p>
-                              </div>
-                            </div>
-                          )}
-
-                          {/* STEP 4: Deep Analytics page with counter increase */}
-                          {animationStep === 4 && (
-                            <div className="flex-1 flex flex-col justify-between space-y-2 animate-in fade-in duration-300">
-                              <div>
-                                <p className="font-black text-slate-800 text-[10px] leading-tight">Automation Insights</p>
-                                <p className="text-[7px] text-slate-400">Real-time engagement performance.</p>
-                              </div>
-                              
-                              {/* Dynamic stats cards */}
-                              <div className="grid grid-cols-3 gap-1.5">
-                                <div className="bg-white p-1 rounded border border-slate-200/50 shadow-sm flex flex-col justify-center relative overflow-hidden">
-                                  <div className="text-[5px] text-slate-400 font-bold uppercase tracking-wider">Automations</div>
-                                  <div className="text-[10px] font-black text-blue-600 leading-tight">12</div>
-                                </div>
-                                <div className="bg-white p-1 rounded border border-slate-200/50 shadow-sm flex flex-col justify-center relative overflow-hidden">
-                                  <div className="text-[5px] text-slate-400 font-bold uppercase tracking-wider">Replies</div>
-                                  <div className="flex items-baseline gap-0.5 mt-0.5">
-                                    <span className="text-[10px] font-black text-[#34a853] leading-tight">1,401</span>
-                                    <span className="text-[5.5px] font-bold text-emerald-500 animate-pulse">▲ +1</span>
-                                  </div>
-                                  <div className="absolute top-0.5 right-0.5 w-1 h-1 rounded-full bg-emerald-500 animate-pulse" />
-                                </div>
-                                <div className="bg-white p-1 rounded border border-slate-200/50 shadow-sm flex flex-col justify-center">
-                                  <div className="text-[5px] text-slate-400 font-bold uppercase tracking-wider">Conversion</div>
-                                  <div className="text-[10px] font-black text-violet-600 leading-tight">33%</div>
-                                </div>
-                              </div>
-                              
-                              {/* Small simulated analytics chart bar */}
-                              <div className="h-10 bg-white border border-slate-200/60 rounded-md flex items-end justify-between px-5 py-1 relative">
-                                <div className="w-4 bg-slate-100 rounded-t h-4" />
-                                <div className="w-4 bg-slate-100 rounded-t h-5" />
-                                <div className="w-4 bg-[#1a73e8] rounded-t h-8 shadow-md shadow-blue-500/10 animate-in slide-in-from-bottom duration-500" />
-                                <div className="absolute inset-0 flex items-center justify-center opacity-[0.05] select-none pointer-events-none">
-                                  <TrendingUp className="w-5 h-5 text-slate-900" />
-                                </div>
-                              </div>
-                            </div>
-                          )}
-
-                        </div>
-
                       </div>
                     </div>
 
-                    {/* Laptop Keyboard Base matching landing-page.tsx exactly */}
-                    <div className="w-[470px] h-[10px] bg-slate-350 rounded-b-md shadow-lg relative border-b-[3px] border-slate-400 shrink-0">
-                      {/* Macbook opening notch */}
+                    {/* Keyboard Base */}
+                    <div className="w-[470px] h-[10px] bg-slate-300 rounded-b-md shadow-lg relative border-b-[3px] border-slate-400 shrink-0">
                       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-12 h-2 bg-slate-400 rounded-b" />
                     </div>
-
                   </div>
                 </div>
               )}
             </div>
 
-            {/* Stepper dynamic visual state message text banner */}
+            {/* Step Status Banner */}
             <div className="pt-2.5 border-t border-border/50 text-center shrink-0">
               <span className="text-[10px] text-primary font-black uppercase tracking-widest block opacity-85 leading-normal">
-                {animationStep === 0 && "Overview: Interactive automation pipeline active"}
-                {animationStep === 1 && "Step 01: Connect via Meta OAuth authorization"}
-                {animationStep === 2 && "Step 02: Specify comment triggers keyword"}
-                {animationStep === 3 && "Step 03: Construct automated DM templates"}
-                {animationStep === 4 && "Step 04: Watch real-time engagement analytics update"}
+                {stepLabels[animationStep]}
               </span>
             </div>
           </div>
