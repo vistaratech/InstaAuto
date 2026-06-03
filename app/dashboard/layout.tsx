@@ -60,6 +60,29 @@ export default function DashboardLayout({
         }
     }, [])
 
+    // Lock html and body scrolling when dashboard layout is mounted
+    useEffect(() => {
+        const html = document.documentElement;
+        const body = document.body;
+        
+        const originalHtmlOverflow = html.style.overflow;
+        const originalBodyOverflow = body.style.overflow;
+        const originalHtmlHeight = html.style.height;
+        const originalBodyHeight = body.style.height;
+
+        html.style.overflow = "hidden";
+        html.style.height = "100dvh";
+        body.style.overflow = "hidden";
+        body.style.height = "100dvh";
+
+        return () => {
+            html.style.overflow = originalHtmlOverflow;
+            html.style.height = originalHtmlHeight;
+            body.style.overflow = originalBodyOverflow;
+            body.style.height = originalBodyHeight;
+        };
+    }, []);
+
     const handleToggleCollapse = () => {
         const nextState = !isCollapsed
         setIsCollapsed(nextState)

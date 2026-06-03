@@ -178,45 +178,45 @@
   }
 }
 
-/* Force ALL scrollbars in the app to be super thin (6px), rounded, and extremely light */
+/* Force ALL scrollbars in the app to be super thin (4px), rounded, and extremely light */
 ::-webkit-scrollbar {
-  width: 6px !important;
-  height: 6px !important;
+  width: 4px !important;
+  height: 4px !important;
 }
 ::-webkit-scrollbar-track {
   background: transparent !important;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.15) !important; /* Elegant light gray (15% opacity) */
+  background: rgba(0, 0, 0, 0.08) !important; /* Elegant very light gray (8% opacity) */
   border-radius: 9999px !important;
-  border: 1.5px solid transparent !important;
+  border: 1px solid transparent !important;
   background-clip: padding-box !important;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.3) !important; /* Gray (30% opacity) on direct hover */
-  border: 1.5px solid transparent !important;
+  background: rgba(0, 0, 0, 0.2) !important; /* Gray (20% opacity) on direct hover */
+  border: 1px solid transparent !important;
   background-clip: padding-box !important;
 }
 
 /* Dark mode scrollbars */
 .dark ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.15) !important;
-  border: 1.5px solid transparent !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid transparent !important;
   background-clip: padding-box !important;
 }
 .dark ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.3) !important;
-  border: 1.5px solid transparent !important;
+  background: rgba(255, 255, 255, 0.2) !important;
+  border: 1px solid transparent !important;
   background-clip: padding-box !important;
 }
 
 /* Firefox Support */
 * {
   scrollbar-width: thin !important;
-  scrollbar-color: rgba(0, 0, 0, 0.15) transparent !important;
+  scrollbar-color: rgba(0, 0, 0, 0.08) transparent !important;
 }
 .dark * {
-  scrollbar-color: rgba(255, 255, 255, 0.15) transparent !important;
+  scrollbar-color: rgba(255, 255, 255, 0.08) transparent !important;
 }
 
 /* Scrollbar hide utility */
@@ -249,40 +249,40 @@
   }
 }
 .hover-scrollbar::-webkit-scrollbar {
-  width: 6px !important;
-  height: 6px !important;
+  width: 4px !important;
+  height: 4px !important;
 }
 .hover-scrollbar::-webkit-scrollbar-thumb {
   background: transparent !important; /* Hidden by default */
   border-radius: 9999px !important;
-  border: 1.5px solid transparent !important;
+  border: 1px solid transparent !important;
   background-clip: padding-box !important;
 }
 .hover-scrollbar:hover {
   scrollbar-width: thin !important;
-  scrollbar-color: rgba(0, 0, 0, 0.15) transparent !important;
+  scrollbar-color: rgba(0, 0, 0, 0.08) transparent !important;
 }
 .dark .hover-scrollbar:hover {
-  scrollbar-color: rgba(255, 255, 255, 0.15) transparent !important;
+  scrollbar-color: rgba(255, 255, 255, 0.08) transparent !important;
 }
 .hover-scrollbar:hover::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.15) !important; /* Elegant light gray on hover */
-  border: 1.5px solid transparent !important;
+  background: rgba(0, 0, 0, 0.08) !important; /* Elegant light gray on hover */
+  border: 1px solid transparent !important;
   background-clip: padding-box !important;
 }
 .hover-scrollbar:hover::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.3) !important;
-  border: 1.5px solid transparent !important;
+  background: rgba(0, 0, 0, 0.2) !important;
+  border: 1px solid transparent !important;
   background-clip: padding-box !important;
 }
 .dark .hover-scrollbar:hover::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.15) !important; /* Faint white in dark mode */
-  border: 1.5px solid transparent !important;
+  background: rgba(255, 255, 255, 0.08) !important; /* Faint white in dark mode */
+  border: 1px solid transparent !important;
   background-clip: padding-box !important;
 }
 .dark .hover-scrollbar:hover::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.3) !important;
-  border: 1.5px solid transparent !important;
+  background: rgba(255, 255, 255, 0.2) !important;
+  border: 1px solid transparent !important;
   background-clip: padding-box !important;
 }
 
