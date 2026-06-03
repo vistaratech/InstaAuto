@@ -210,13 +210,22 @@
   background-clip: padding-box !important;
 }
 
-/* Firefox Support */
-* {
-  scrollbar-width: thin !important;
-  scrollbar-color: rgba(0, 0, 0, 0.08) transparent !important;
-}
-.dark * {
-  scrollbar-color: rgba(255, 255, 255, 0.08) transparent !important;
+/* Firefox Support - Wrapped to prevent Chrome/Edge from ignoring custom webkit styles */
+@-moz-document url-prefix() {
+  * {
+    scrollbar-width: thin !important;
+    scrollbar-color: rgba(0, 0, 0, 0.08) transparent !important;
+  }
+  .dark * {
+    scrollbar-color: rgba(255, 255, 255, 0.08) transparent !important;
+  }
+  .hover-scrollbar:hover {
+    scrollbar-width: thin !important;
+    scrollbar-color: rgba(0, 0, 0, 0.08) transparent !important;
+  }
+  .dark .hover-scrollbar:hover {
+    scrollbar-color: rgba(255, 255, 255, 0.08) transparent !important;
+  }
 }
 
 /* Scrollbar hide utility */
@@ -230,7 +239,6 @@
 
 /* Hover-only Scrollbar Overlays */
 .hover-scrollbar {
-  scrollbar-width: none !important;
   -ms-overflow-style: none !important;
   overflow-y: auto !important;
 }
@@ -245,7 +253,6 @@
   .hover-scrollbar {
     overflow-y: auto !important;
     -webkit-overflow-scrolling: touch;
-    scrollbar-width: thin !important;
   }
 }
 .hover-scrollbar::-webkit-scrollbar {
@@ -257,13 +264,6 @@
   border-radius: 9999px !important;
   border: 1px solid transparent !important;
   background-clip: padding-box !important;
-}
-.hover-scrollbar:hover {
-  scrollbar-width: thin !important;
-  scrollbar-color: rgba(0, 0, 0, 0.08) transparent !important;
-}
-.dark .hover-scrollbar:hover {
-  scrollbar-color: rgba(255, 255, 255, 0.08) transparent !important;
 }
 .hover-scrollbar:hover::-webkit-scrollbar-thumb {
   background: rgba(0, 0, 0, 0.08) !important; /* Elegant light gray on hover */
