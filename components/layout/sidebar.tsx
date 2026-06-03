@@ -260,7 +260,7 @@ function NavItem({
       className={cn(
         "flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all duration-200 font-semibold text-[13px] group relative overflow-hidden hover:translate-x-1",
         active 
-          ? "bg-primary text-primary-foreground shadow-md shadow-primary/20 border-l-[3px] border-white/70" 
+          ? "bg-primary text-primary-foreground shadow-md shadow-primary/20" 
           : "text-sidebar-foreground/80 hover:text-foreground hover:bg-sidebar-accent/50 hover:shadow-md hover:shadow-primary/10",
         isCollapsed ? "justify-center px-2 hover:translate-x-0" : ""
       )}
