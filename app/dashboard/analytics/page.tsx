@@ -283,7 +283,7 @@ export default function AnalyticsPage() {
     })
 
     return (
-        <div className="relative p-4 md:p-8 space-y-8 animate-in fade-in duration-500 text-foreground overflow-hidden">
+        <div className="relative p-4 md:p-8 space-y-6 md:space-y-8 animate-in fade-in duration-500 text-foreground overflow-visible md:overflow-hidden pb-8">
 
             {/* Header section */}
             <div className={`flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`} style={{ transitionDelay: '0ms' }}>
@@ -321,7 +321,7 @@ export default function AnalyticsPage() {
             </div>
 
             {/* Quick Metrics Grid */}
-            <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`} style={{ transitionDelay: '150ms' }}>
+            <div className={`grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`} style={{ transitionDelay: '150ms' }}>
                 <MiniMetricCard 
                     title="Total Replies Sent" 
                     value={messagesSentVal.toString()} 
@@ -609,15 +609,15 @@ export default function AnalyticsPage() {
 
 function MiniMetricCard({ title, value, trend, icon }: { title: string, value: string, trend: string, icon: React.ReactNode }) {
     return (
-        <Card className="group relative p-6 bg-card border-border shadow-sm hover:shadow-lg hover:-translate-y-0.5 hover:border-primary/20 transition-all duration-300 flex items-center justify-between overflow-hidden">
+        <Card className="group relative p-3 md:p-6 bg-card border-border shadow-sm hover:shadow-lg hover:-translate-y-0.5 hover:border-primary/20 transition-all duration-300 flex flex-col md:flex-row items-start md:items-center justify-between overflow-hidden gap-2 md:gap-4">
             {/* Radial gradient glow on hover */}
             <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none bg-[radial-gradient(circle_at_50%_50%,oklch(0.52_0.19_275_/_0.08),transparent_70%)]" />
-            <div className="relative space-y-2">
-                <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">{title}</span>
-                <h3 className="text-2xl font-bold tracking-tight text-foreground">{value}</h3>
-                <p className="text-[10px] text-muted-foreground font-medium">{trend}</p>
+            <div className="relative space-y-1 md:space-y-2 flex-1 min-w-0">
+                <span className="text-[10px] md:text-xs font-semibold text-muted-foreground uppercase tracking-wider leading-tight block">{title}</span>
+                <h3 className="text-xl md:text-2xl font-bold tracking-tight text-foreground">{value}</h3>
+                <p className="text-[9px] md:text-[10px] text-muted-foreground font-medium hidden sm:block">{trend}</p>
             </div>
-            <div className="relative p-3 bg-secondary rounded-xl border border-border">
+            <div className="relative p-2 md:p-3 bg-secondary rounded-lg md:rounded-xl border border-border">
                 {icon}
             </div>
         </Card>

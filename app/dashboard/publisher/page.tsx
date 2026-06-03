@@ -9,7 +9,7 @@ export default function PublisherPage() {
   const [requested, setRequested] = useState(false)
 
   return (
-    <div className="min-h-[85vh] flex items-center justify-center p-4 md:p-8 relative overflow-x-hidden select-none">
+    <div className="min-h-0 md:min-h-[85vh] flex items-center justify-center p-4 md:p-8 relative overflow-x-hidden select-none">
       {/* Background Decorative Glow */}
       <div className="absolute top-[-10%] left-[-10%] w-[350px] h-[350px] rounded-full bg-pink-500/10 blur-[100px] pointer-events-none" />
       <div className="absolute bottom-[-10%] right-[-10%] w-[350px] h-[350px] rounded-full bg-yellow-500/10 blur-[100px] pointer-events-none" />
