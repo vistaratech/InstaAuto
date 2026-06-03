@@ -225,7 +225,21 @@
 .hover-scrollbar {
   scrollbar-width: none !important;
   -ms-overflow-style: none !important;
-  overflow-y: overlay !important;
+  overflow-y: auto !important;
+}
+/* Use overlay scrollbar on desktop browsers that support it */
+@media (min-width: 768px) {
+  .hover-scrollbar {
+    overflow-y: overlay !important;
+  }
+}
+/* Ensure smooth touch scrolling on mobile */
+@media (max-width: 767px) {
+  .hover-scrollbar {
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin !important;
+  }
 }
 .hover-scrollbar::-webkit-scrollbar {
   width: 3px !important;

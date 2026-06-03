@@ -123,7 +123,7 @@ export default function DashboardLayout({
                     <span className="font-black text-xl tracking-tighter bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent ml-1">DMSpark</span>
                 </header>
 
-                <main className="flex-1 relative overflow-hidden h-[calc(100dvh-4rem)] md:h-full flex flex-col">
+                <main className="flex-1 relative overflow-y-auto md:overflow-hidden min-h-[calc(100vh-4rem)] h-[calc(100dvh-4rem)] md:min-h-0 md:h-full flex flex-col">
                     {error && (
                         <div className="bg-destructive/10 border border-destructive/30 text-destructive px-4 py-3 text-sm m-4 rounded-lg shrink-0 flex items-center gap-2">
                             <AlertTriangle className="w-4 h-4 shrink-0 text-destructive" />
