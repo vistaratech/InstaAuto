@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DMSpark Poster 2</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #e2e8f0;
+        }
+        .poster {
+            width: 1080px;
+            height: 1080px;
+            background: linear-gradient(145deg, #ffffff, #f8fafc);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        /* Beautiful Background Gradients */
+        .bg-blob-1 {
+            position: absolute;
+            top: -100px;
+            left: -100px;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(26,115,232,0.1) 0%, rgba(255,255,255,0) 70%);
+            border-radius: 50%;
+        }
+        .bg-blob-2 {
+            position: absolute;
+            bottom: -100px;
+            right: -100px;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(139,92,246,0.1) 0%, rgba(255,255,255,0) 70%);
+            border-radius: 50%;
+        }
+
+        .logo {
+            position: absolute;
+            top: 60px;
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+        }
+
+        .visual-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 80px;
+            margin-bottom: 80px;
+            z-index: 10;
+        }
+
+        /* 3D Comment Bubble */
+        .comment-bubble {
+            background: white;
+            border-radius: 30px;
+            border-bottom-left-radius: 5px;
+            padding: 30px 40px;
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.1), 0 0 0 1px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            transform: rotate(-2deg);
+        }
+        .comment-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+            padding: 3px;
+        }
+        .comment-avatar-inner {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: white;
+            border: 2px solid white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 24px;
+            color: #ccc;
+        }
+        .comment-text {
+            font-size: 42px;
+            font-weight: 800;
+            color: #0f172a;
+            letter-spacing: -1px;
+        }
+
+        /* Arrow */
+        .arrow-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        .arrow {
+            width: 100px;
+            height: 60px;
+            background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="%231a73e8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+        }
+        .auto-badge {
+            background: #dbeafe;
+            color: #1d4ed8;
+            padding: 8px 16px;
+            border-radius: 100px;
+            font-weight: 800;
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* DM Popup */
+        .dm-popup {
+            background: #1a73e8;
+            border-radius: 25px;
+            border-bottom-right-radius: 5px;
+            padding: 25px 35px;
+            box-shadow: 0 25px 50px -12px rgba(26,115,232,0.4);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            color: white;
+            transform: rotate(2deg);
+        }
+        .dm-logo {
+            width: 40px;
+            height: 40px;
+            filter: brightness(0) invert(1);
+        }
+        .dm-content h4 {
+            font-size: 16px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 0;
+            opacity: 0.9;
+        }
+        .dm-content p {
+            font-size: 28px;
+            font-weight: 700;
+            margin: 0;
+            margin-top: 5px;
+        }
+
+        /* Typography Area */
+        .text-area {
+            text-align: center;
+            z-index: 10;
+        }
+        .main-title {
+            font-size: 64px;
+            font-weight: 900;
+            letter-spacing: -0.03em;
+            color: #0f172a;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+        .main-title span {
+            background: linear-gradient(to right, #1a73e8, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .coming-soon-badge {
+            display: inline-block;
+            background: #0f172a;
+            color: white;
+            padding: 16px 40px;
+            border-radius: 100px;
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-top: 30px;
+            box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.3);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="poster">
+        <div class="bg-blob-1"></div>
+        <div class="bg-blob-2"></div>
+
+        <img src="/logo.png" alt="DMSpark Logo" class="logo">
+
+        <div class="visual-container">
+            <!-- Left: Comment -->
+            <div class="comment-bubble">
+                <div class="comment-avatar">
+                    <div class="comment-avatar-inner">U</div>
+                </div>
+                <div class="comment-text">"LINK"</div>
+            </div>
+
+            <!-- Middle: Arrow -->
+            <div class="arrow-container">
+                <div class="auto-badge">Instant Auto-DM</div>
+                <div class="arrow"></div>
+            </div>
+
+            <!-- Right: DM -->
+            <div class="dm-popup">
+                <img src="/logo.png" alt="Logo" class="dm-logo">
+                <div class="dm-content">
+                    <h4>DMSpark</h4>
+                    <p>Here is your link! 🚀</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-area">
+            <h1 class="main-title">The Ultimate<br><span>Instagram Comment Automation</span> Tool</h1>
+            <div class="coming-soon-badge">Coming Soon</div>
+        </div>
+    </div>
+
+</body>
+</html>

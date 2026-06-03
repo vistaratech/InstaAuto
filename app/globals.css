@@ -168,11 +168,14 @@
 /* PREMIUM GLOBAL SCROLLBAR DESIGN SYSTEM               */
 /* ---------------------------------------------------- */
 
-/* Lock root HTML and body viewport globally to completely eliminate double scrollbars */
-html, body, #__next, [data-nextjs-scroll-focus-boundary] {
-  overflow: hidden !important;
-  height: 100vh !important;
-  max-height: 100vh !important;
+/* Lock root HTML and body viewport on DESKTOP ONLY to eliminate double scrollbars */
+/* Mobile needs normal scrolling to display pages properly */
+@media (min-width: 768px) {
+  html, body, #__next, [data-nextjs-scroll-focus-boundary] {
+    overflow: hidden !important;
+    height: 100vh !important;
+    max-height: 100vh !important;
+  }
 }
 
 /* Force ALL scrollbars in the app to be super thin (3px), rounded, and extremely light */

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DMSpark Poster</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f8fafc;
+        }
+        .poster-container {
+            width: 1080px;
+            height: 1080px; /* Instagram Post Size */
+            background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        /* Background Glows */
+        .glow-1 {
+            position: absolute;
+            top: -20%;
+            left: -10%;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(26,115,232,0.08) 0%, rgba(255,255,255,0) 70%);
+            border-radius: 50%;
+        }
+        .glow-2 {
+            position: absolute;
+            bottom: -20%;
+            right: -10%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(139,92,246,0.08) 0%, rgba(255,255,255,0) 70%);
+            border-radius: 50%;
+        }
+        .logo {
+            width: 140px;
+            height: 140px;
+            margin-bottom: 40px;
+            z-index: 10;
+            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.05));
+        }
+        .title {
+            font-size: 110px;
+            font-weight: 900;
+            letter-spacing: -0.04em;
+            color: #0f172a;
+            line-height: 1.1;
+            z-index: 10;
+            margin-bottom: 24px;
+        }
+        .subtitle {
+            font-size: 38px;
+            font-weight: 700;
+            color: #1a73e8;
+            letter-spacing: -0.01em;
+            z-index: 10;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, #1a73e8, #6366f1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .description {
+            font-size: 28px;
+            font-weight: 400;
+            color: #64748b;
+            z-index: 10;
+        }
+        .badge {
+            background: #0f172a;
+            color: white;
+            padding: 12px 32px;
+            border-radius: 100px;
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 60px;
+            z-index: 10;
+            box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.3);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1080x1080 Poster Area -->
+    <div class="poster-container" id="poster">
+        <div class="glow-1"></div>
+        <div class="glow-2"></div>
+        
+        <img src="/logo.png" alt="DMSpark Logo" class="logo">
+        
+        <div class="badge">Coming Soon</div>
+        
+        <h1 class="title">DMSpark</h1>
+        <h2 class="subtitle">Instagram Comment Automation Tool</h2>
+        <p class="description">Grow your audience on autopilot.</p>
+    </div>
+
+</body>
+</html>
