@@ -2,11 +2,16 @@
 
 import React, { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { MessageCircle, Shield, Clock, ArrowRight, Instagram, Flame, Inbox, Heart, MessageSquare } from "lucide-react"
+import { MessageCircle, Shield, Clock, ArrowRight, Instagram, Flame, Inbox, Heart, MessageSquare, PhoneCall, Sparkles } from "lucide-react"
 import Link from "next/link"
+import { useWhatsAppSession } from "@/hooks/use-whatsapp-session"
 
 export function LandingPage() {
   const [viewMode, setViewMode] = useState<'mobile' | 'laptop'>('mobile')
+  const { loginWhatsApp } = useWhatsAppSession()
+  const [waModalOpen, setWaModalOpen] = useState(false)
+  const [waPhone, setWaPhone] = useState("")
+  const [waName, setWaName] = useState("")
 
   const instagramAuthUrl = `https://www.instagram.com/oauth/authorize?client_id=${process.env.NEXT_PUBLIC_INSTAGRAM_APP_ID}&redirect_uri=${process.env.NEXT_PUBLIC_INSTAGRAM_REDIRECT_URI}&response_type=code&scope=instagram_business_basic%2Cinstagram_business_manage_messages%2Cinstagram_business_manage_comments%2Cinstagram_business_content_publish%2Cinstagram_business_manage_insights#weblink`
 
@@ -142,7 +147,7 @@ export function LandingPage() {
           </p>
 
           <div 
-            className="flex flex-col sm:flex-row gap-3 pt-2 animate-fade-in-up w-full justify-center md:justify-start"
+            className="flex flex-col sm:flex-row gap-3 pt-2 animate-fade-in-up w-full justify-center md:justify-start z-30 relative"
             style={{ animationDelay: "400ms" }}
           >
             <Button
@@ -153,7 +158,91 @@ export function LandingPage() {
                 Connect Instagram <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
               </a>
             </Button>
+
+            <Button
+              onClick={() => setWaModalOpen(true)}
+              className="bg-gradient-to-r from-[#25D366] to-[#128C7E] text-white h-13 sm:h-14 px-6 sm:px-8 rounded-xl sm:rounded-2xl font-bold text-sm sm:text-base hover:scale-[1.03] transition-all duration-300 shadow-xl shadow-emerald-500/20 hover:from-[#20ba56] hover:to-[#0f7267] flex items-center justify-center gap-2 group w-full sm:w-auto cursor-pointer"
+            >
+              Connect WhatsApp <MessageCircle className="w-5 h-5 transition-transform group-hover:scale-110" />
+            </Button>
           </div>
+
+          {/* WhatsApp Coming Soon / Beta Waitlist Modal Dialog */}
+          {waModalOpen && (
+            <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-950/65 backdrop-blur-md p-4 animate-in fade-in duration-300">
+              <div 
+                className="max-w-md w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6 shadow-2xl relative animate-in zoom-in-95 duration-200 text-left"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-[#25D366]">
+                      <MessageSquare className="w-6 h-6 fill-current" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-black text-slate-900 dark:text-white leading-tight">WhatsApp Automation</h3>
+                      <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 text-[9px] uppercase font-black tracking-widest mt-1 select-none">
+                        <Sparkles className="w-3 h-3 animate-spin" style={{ animationDuration: "12s" }} /> Coming Soon
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-semibold leading-relaxed">
+                    Our high-performance **WhatsApp Business API** integration is currently under active development. Auto-replies, keyword rules, templates, and WhatsApp Web Inbox simulation are in private Beta.
+                  </p>
+                  
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-black uppercase tracking-wider text-slate-400 dark:text-slate-500">Email Address for Beta Access</label>
+                    <input 
+                      type="email" 
+                      placeholder="e.g. yourname@domain.com" 
+                      value={waPhone}
+                      onChange={(e) => setWaPhone(e.target.value)}
+                      className="w-full h-11 px-4 text-xs bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl focus:outline-none focus:border-emerald-500/50 focus:ring-2 focus:ring-emerald-500/10 transition-all font-semibold"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex flex-col gap-2.5 pt-2">
+                  <Button 
+                    onClick={() => {
+                      if (!waPhone.trim() || !waPhone.includes("@")) {
+                        alert("Please enter a valid email address.")
+                        return
+                      }
+                      alert("Successfully joined waitlist! We will notify you when early access is available.")
+                      setWaModalOpen(false)
+                      setWaPhone("")
+                    }}
+                    className="w-full h-12 text-xs font-bold rounded-xl bg-gradient-to-r from-[#25D366] to-[#128C7E] hover:from-[#20ba56] hover:to-[#0f7267] text-white shadow-md shadow-emerald-500/15 cursor-pointer flex items-center justify-center gap-1.5"
+                  >
+                    Join Beta Waitlist
+                  </Button>
+                  
+                  <div className="flex gap-2">
+                    <Button 
+                      variant="outline" 
+                      onClick={() => setWaModalOpen(false)}
+                      className="flex-1 h-11 text-xs font-bold rounded-xl bg-transparent border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
+                    >
+                      Close
+                    </Button>
+                    <Button 
+                      onClick={() => {
+                        loginWhatsApp("+919876543210", "WhatsApp Sandbox")
+                        setWaModalOpen(false)
+                      }}
+                      className="flex-1 h-11 text-xs font-bold rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-350 border border-slate-200 dark:border-slate-700 cursor-pointer"
+                    >
+                      Try Sandbox Demo
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Right Side: Mockups & Switcher */}

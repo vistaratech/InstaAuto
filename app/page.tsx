@@ -15,6 +15,8 @@ function HomeContent() {
     const code = searchParams.get("code")
     const errorParam = searchParams.get("error")
     const savedId = localStorage.getItem("ig_user_id")
+    const savedWaId = localStorage.getItem("wa_user_id")
+    const loginType = localStorage.getItem("login_type")
 
     if (errorParam) {
       setError(`Instagram login error: ${errorParam}`)
@@ -23,7 +25,10 @@ function HomeContent() {
 
     if (code) {
       setProcessing(true)
+      localStorage.setItem("login_type", "instagram")
       router.replace("/dashboard?code=" + code)
+    } else if (loginType === "whatsapp" && savedWaId) {
+      router.replace("/whatsapp-dashboard")
     } else if (savedId) {
       router.replace("/dashboard")
     }
