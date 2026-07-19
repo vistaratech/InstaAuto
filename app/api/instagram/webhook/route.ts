@@ -734,8 +734,15 @@ export async function POST(request: NextRequest) {
                   continue
                 }
 
-                // Fetch recent conversation history to match tone
-                let chatHistory: { role: string; content: string }[] = []
+                // ---- Conversation sessions ----
+                // Messages more than SESSION_GAP_MS apart belong to different sessions.
+                // The AI's context, the reply cap and the handoff all reset per session,
+                // so a lead who comes back a day later gets a fresh conversation instead
+                // of instant silence/handoff from an old thread.
+                const SESSION_GAP_MS = 24 * 60 * 60 * 1000 // 24h
+                const MAX_AI_REPLIES = 4 // AI replies per session (welcomes/handoff don't count)
+                const HANDOFF_TEXT = "Perfect — that's everything I need for now! 🙌 I've passed your details to the FECO team and a real person will follow up with you right here soon. I'll step back so you're chatting with the team from here. 💬"
+
                 const { data: convData } = await supabase
                   .from("conversations")
                   .select("id")
@@ -743,16 +750,27 @@ export async function POST(request: NextRequest) {
                   .eq("recipient_id", senderId)
                   .single()
 
+                // Pull recent messages WITH timestamps, newest first, then walk back
+                // until we hit a >24h gap — everything after that gap is this session.
+                let sessionMsgs: { role: string; content: string }[] = []
                 if (convData?.id) {
                   const { data: recentMsgs } = await supabase
                     .from("messages")
-                    .select("content, sender_id, is_from_instagram")
+                    .select("content, is_from_instagram, created_at")
                     .eq("conversation_id", convData.id)
                     .order("created_at", { ascending: false })
-                    .limit(10)
+                    .limit(30)
 
                   if (recentMsgs && recentMsgs.length > 0) {
-                    chatHistory = recentMsgs
+                    const session: any[] = []
+                    let prevTs = Date.now() // the message that triggered us just arrived
+                    for (const m of recentMsgs) {
+                      const ts = new Date(m.created_at).getTime()
+                      if (Number.isFinite(ts) && prevTs - ts > SESSION_GAP_MS) break // session boundary
+                      session.push(m)
+                      if (Number.isFinite(ts)) prevTs = ts
+                    }
+                    sessionMsgs = session
                       .reverse()
                       .map((m: any) => ({
                         role: m.is_from_instagram ? "user" : "assistant",
@@ -760,37 +778,23 @@ export async function POST(request: NextRequest) {
                       }))
                   }
                 }
+                const chatHistory = sessionMsgs.slice(-10)
 
-                // Cap how many times the bot messages so it doesn't nag the lead.
-                // Counts ALL prior bot replies (keyword welcome + AI) across the WHOLE
-                // conversation — NOT just the recent 10-message window — then sends ONE
-                // handoff and stays silent. Using the windowed chatHistory here was a bug:
-                // the count kept sliding back onto MAX as new DMs pushed old bot messages
-                // out of the window, re-firing the handoff on every message. The handoff
-                // is also de-duped by its text so it can never be sent twice.
-                const MAX_BOT_MESSAGES = 4 // tune this: ~3 exchanges then handoff
-                const HANDOFF_TEXT = "Perfect — that's everything I need for now! 🙌 I've passed your details to the FECO team and a real person will follow up with you right here soon. I'll step back so you're chatting with the team from here. 💬"
+                // Welcome texts (keyword automation replies) don't count toward the cap —
+                // only real AI back-and-forth does. Neither does the handoff itself.
+                const welcomeTexts = new Set(
+                  automations
+                    .map((a: any) => a?.response_content?.message)
+                    .filter((t: any) => typeof t === "string" && t.length > 0),
+                )
+                const aiReplyCount = sessionMsgs.filter(
+                  m => m.role === "assistant" && m.content !== HANDOFF_TEXT && !welcomeTexts.has(m.content),
+                ).length
+                const handoffAlreadySent = sessionMsgs.some(
+                  m => m.role === "assistant" && m.content === HANDOFF_TEXT,
+                )
 
-                let totalBotMsgs = chatHistory.filter(m => m.role === "assistant").length
-                let handoffAlreadySent = false
-                if (convData?.id) {
-                  const { count } = await supabase
-                    .from("messages")
-                    .select("id", { count: "exact", head: true })
-                    .eq("conversation_id", convData.id)
-                    .eq("is_from_instagram", false)
-                  totalBotMsgs = count ?? totalBotMsgs
-                  const { data: priorHandoff } = await supabase
-                    .from("messages")
-                    .select("id")
-                    .eq("conversation_id", convData.id)
-                    .eq("is_from_instagram", false)
-                    .eq("content", HANDOFF_TEXT)
-                    .limit(1)
-                  handoffAlreadySent = !!priorHandoff?.length
-                }
-
-                if (totalBotMsgs >= MAX_BOT_MESSAGES) {
+                if (aiReplyCount >= MAX_AI_REPLIES || handoffAlreadySent) {
                   if (!handoffAlreadySent && convData?.id) {
                     await fetch(
                       `https://graph.instagram.com/v24.0/me/messages?access_token=${encodeURIComponent(user.access_token)}`,
@@ -805,9 +809,9 @@ export async function POST(request: NextRequest) {
                       content: HANDOFF_TEXT,
                       is_from_instagram: false,
                     })
-                    console.log(`[v0] 🛑 Q-limit (${totalBotMsgs}) reached — sent handoff, going silent`)
+                    console.log(`[v0] 🛑 Session AI-limit (${aiReplyCount}/${MAX_AI_REPLIES}) reached — sent handoff, silent until next session`)
                   } else {
-                    console.log(`[v0] 🤫 Past Q-limit (${totalBotMsgs}) — staying silent`)
+                    console.log(`[v0] 🤫 Handoff already sent this session — staying silent`)
                   }
                   continue
                 }
