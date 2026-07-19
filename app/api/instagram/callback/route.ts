@@ -6,14 +6,21 @@ export async function GET(request: NextRequest) {
   const code = searchParams.get("code")
   const error = searchParams.get("error")
 
+  // Redirect to the app's public origin, not request.url — behind the Cloudflare
+  // tunnel the latter resolves to the internal bind host (localhost:3065), which
+  // the user's browser can't reach.
+  const appOrigin = process.env.NEXT_PUBLIC_INSTAGRAM_REDIRECT_URI
+    ? new URL(process.env.NEXT_PUBLIC_INSTAGRAM_REDIRECT_URI).origin
+    : request.url
+
   if (error) {
-    const redirectUrl = new URL("/", request.url)
+    const redirectUrl = new URL("/", appOrigin)
     redirectUrl.searchParams.set("error", error)
     return NextResponse.redirect(redirectUrl)
   }
 
   if (code) {
-    const redirectUrl = new URL("/", request.url)
+    const redirectUrl = new URL("/", appOrigin)
     redirectUrl.searchParams.set("code", code)
     return NextResponse.redirect(redirectUrl)
   }
@@ -114,6 +121,20 @@ export async function POST(request: NextRequest) {
       .upsert({ id: loginUserId, ...updates }, { onConflict: "id" })
 
     if (upsertError) throw upsertError
+
+    // Subscribe this account to webhooks (messages, comments). Without this,
+    // Instagram delivers NO events for the account even though the app-level
+    // fields are subscribed. Non-fatal — log and continue on failure.
+    try {
+      const subRes = await fetch(
+        `https://graph.instagram.com/v24.0/me/subscribed_apps?subscribed_fields=messages,comments`,
+        { method: "POST", headers: { Authorization: `Bearer ${accessToken}` } }
+      )
+      const subData = await subRes.json()
+      console.log(`[v0] 🔔 subscribed_apps:`, JSON.stringify(subData))
+    } catch (e) {
+      console.error("[v0] ⚠️ subscribed_apps subscription failed:", e)
+    }
 
     const response = NextResponse.json({ success: true, username, userId: loginUserId })
     response.cookies.set("insta_session", JSON.stringify({ username, userId: loginUserId }), {

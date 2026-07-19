@@ -4,6 +4,110 @@ import crypto from "crypto"
 
 const WEBHOOK_VERIFY_TOKEN = process.env.INSTAGRAM_WEBHOOK_VERIFY_TOKEN || "your_verify_token"
 
+type LlmProvider = { url: string; key: string; model: string; label: string; kind: "openai" | "litellm"; reasoningEffort?: string }
+
+// Provider chain for AI replies. Primary = local litellm (gemma4:e4b). Optional
+// backup = any OpenAI-compatible endpoint (e.g. Groq / OpenAI) via AI_BACKUP_* env.
+function llmProviders(primaryModelOverride?: string, backupModelOverride?: string): LlmProvider[] {
+  const list: LlmProvider[] = []
+  const primaryKey = process.env.GATEWAY_SECRET
+  if (primaryKey) {
+    list.push({
+      url: process.env.AI_PROXY_URL || "https://triderai.vercel.app/api/chat",
+      key: primaryKey,
+      model: (primaryModelOverride && primaryModelOverride.trim()) || process.env.AI_MODEL || "gemma4",
+      label: "primary",
+      kind: "litellm",
+    })
+  }
+  // Backup model is configurable per-account in Settings (backupModelOverride);
+  // falls back to the AI_BACKUP_MODEL env default. URL + key stay server-side.
+  const backupModel = (backupModelOverride && backupModelOverride.trim()) || process.env.AI_BACKUP_MODEL
+  if (process.env.AI_BACKUP_URL && process.env.AI_BACKUP_KEY && backupModel) {
+    const backupUrl = process.env.AI_BACKUP_URL
+    list.push({
+      url: backupUrl,
+      key: process.env.AI_BACKUP_KEY,
+      model: backupModel,
+      label: "backup",
+      kind: backupUrl.includes("openai.com") ? "openai" : "litellm",
+      reasoningEffort: process.env.AI_BACKUP_REASONING_EFFORT || "medium",
+    })
+  }
+  return list
+}
+
+// Call the provider chain with a per-provider timeout (so a slow/cold local model
+// can't hang forever). Returns the reply text, or "" if every provider fails/times
+// out — the caller then sends a canned fallback so the user is never left silent.
+async function callLLM(messages: any[], opts?: { maxTokens?: number; primaryModel?: string; backupModel?: string }): Promise<string> {
+  const timeoutMs = Number(process.env.AI_TIMEOUT_MS) || 18000
+  for (const p of llmProviders(opts?.primaryModel, opts?.backupModel)) {
+    try {
+      const controller = new AbortController()
+      const timer = setTimeout(() => controller.abort(), timeoutMs)
+      // Shape the body per provider: OpenAI reasoning models reject temperature/think
+      // and use max_completion_tokens + reasoning_effort; litellm/ollama use the old shape.
+      const body: any = { model: p.model, messages }
+      if (p.kind === "openai") {
+        body.max_completion_tokens = 800 // room for reasoning tokens + a short reply
+        if (p.reasoningEffort) body.reasoning_effort = p.reasoningEffort
+      } else {
+        body.max_tokens = opts?.maxTokens ?? 150
+        body.temperature = 0.8
+        body.think = false
+      }
+      const res = await fetch(p.url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${p.key}` },
+        body: JSON.stringify(body),
+        signal: controller.signal,
+      }).finally(() => clearTimeout(timer))
+      if (!res.ok) { console.log(`[v0] ⚠️ LLM ${p.label}(${p.model}) http ${res.status}`); continue }
+      const data = await res.json()
+      const content = (data?.choices?.[0]?.message?.content || data?.choices?.[0]?.text || data?.content || "")
+        .toString().trim().replace(/^["']|["']$/g, "")
+      if (content) { console.log(`[v0] 🤖 LLM reply via ${p.label}(${p.model})`); return content }
+      console.log(`[v0] ⚠️ LLM ${p.label}(${p.model}) returned empty`)
+    } catch (e: any) {
+      console.log(`[v0] ⚠️ LLM ${p.label} failed: ${e?.name === "AbortError" ? "timeout" : (e?.message || e)}`)
+    }
+  }
+  return ""
+}
+
+// Generate a short reply via the provider chain. Returns "" on total failure so
+// callers can fall back to a canned message.
+async function aiGenerate(params: {
+  userText: string
+  goal: string
+  username: string
+  aiContext?: string | null
+  maxTokens?: number
+  primaryModel?: string
+  backupModel?: string
+}): Promise<string> {
+  const accountContext = params.aiContext
+    ? `\n\nAbout FECO (@${params.username}): ${params.aiContext}`
+    : `\n\nYou represent FECO (@${params.username}).`
+  const system = `You are FECO's assistant on Instagram.${accountContext}
+
+${params.goal}
+
+RULES:
+- You are FECO's assistant. Do NOT claim to be a human or a specific person.
+- NEVER give prices, quotes or cost estimates — say the team will put together a quote.
+- Keep it SHORT. Warm, casual, professional. Reply in English.
+- No hashtags, no bullet points, no formal formatting. No quotation marks around your reply.`
+  return callLLM(
+    [
+      { role: "system", content: system },
+      { role: "user", content: params.userText },
+    ],
+    { maxTokens: params.maxTokens ?? 100, primaryModel: params.primaryModel, backupModel: params.backupModel },
+  )
+}
+
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams
   const mode = searchParams.get("hub.mode")
@@ -163,9 +267,13 @@ export async function POST(request: NextRequest) {
             // Filter to comment-only automations first
             const commentAutomations = automations.filter((a: any) => a.trigger_source === 'comment')
 
-            // Priority 1: Reply-All (Specific post, ALL comments)
+            // Priority 1: Reply-All (Specific post, ALL comments).
+            // Accept trigger_type "reply_all" OR the all_comments sentinel value —
+            // the create flow has stored this both ways.
             let match = commentAutomations.find(
-              (a: any) => a.specific_media_id === mediaId && a.trigger_type === "reply_all",
+              (a: any) =>
+                a.specific_media_id === mediaId &&
+                (a.trigger_type === "reply_all" || String(a.trigger_value).toLowerCase() === "all_comments"),
             )
 
             // Priority 2: Specific Post + Keyword Match
@@ -180,10 +288,12 @@ export async function POST(request: NextRequest) {
               )
             }
 
-            // Priority 3: Global Keyword Match (Only if no specific match found)
+            // Priority 3: Global Keyword Match (Only if no specific match found).
+            // MUST stay within comment automations — otherwise DM keyword rules
+            // (e.g. "hi") leak in and fire on comments.
             if (!match) {
-              match = automations.find(
-                (a) =>
+              match = commentAutomations.find(
+                (a: any) =>
                   !a.specific_media_id && // Must be global
                   a.trigger_type === "keyword" &&
                   a.trigger_value
@@ -196,7 +306,22 @@ export async function POST(request: NextRequest) {
               console.log(`[v0] ✅ Comment Match: "${match.name}" (ID: ${match.id})`)
               const content = match.response_content
               const replies = ["Check your DMs! 📥", "Sent! 🔥", "Check inbox! ✨"]
-              const randomReply = replies[Math.floor(Math.random() * replies.length)]
+              let publicReply = replies[Math.floor(Math.random() * replies.length)]
+
+              // AI-personalised public reply (reacts to their actual comment). Falls back to a canned line.
+              if (user.groq_auto_reply_enabled) {
+                const aiPub = await aiGenerate({
+                  userText: `Someone left this public comment on our Instagram post: "${change.value.text}". Reply publicly in one very short friendly line (max ~8 words) that reacts to their comment and tells them to check their DMs.`,
+                  goal: "Write ONE very short PUBLIC comment reply that reacts to them and nudges them to check their DMs.",
+                  username: user.username,
+                  aiContext: (user as any).ai_context,
+                  maxTokens: 40,
+                  primaryModel: (user as any).primary_model,
+                  backupModel: (user as any).backup_model,
+                })
+                if (aiPub) publicReply = aiPub
+                console.log(`[v0] 💬 Public comment reply: "${publicReply}"`)
+              }
 
               // Public Reply
               try {
@@ -205,7 +330,7 @@ export async function POST(request: NextRequest) {
                   {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ message: randomReply }),
+                    body: JSON.stringify({ message: publicReply }),
                   },
                 )
                 const pubJson = await pubRes.json()
@@ -218,9 +343,25 @@ export async function POST(request: NextRequest) {
               // Private Reply (DM)
               const apiBody: any = { recipient: { comment_id: commentId } }
 
+              // AI-personalised opening DM: reacts to their actual comment and asks for contact. Falls back to the canned message.
+              let dmText = content.message
+              if (user.groq_auto_reply_enabled && content.message) {
+                const aiDm = await aiGenerate({
+                  userText: `Someone commented "${change.value.text}" on our Instagram post, so we're opening a DM with them. Write a short friendly opening DM that reacts to their comment and asks for the best email or phone number so the FECO team can follow up.`,
+                  goal: "Write ONE short opening DM to a commenter. TOP PRIORITY: naturally ask for their email or phone number so the team can follow up.",
+                  username: user.username,
+                  aiContext: (user as any).ai_context,
+                  maxTokens: 90,
+                  primaryModel: (user as any).primary_model,
+                  backupModel: (user as any).backup_model,
+                })
+                if (aiDm) dmText = aiDm
+                console.log(`[v0] 💬 Comment→DM opener: "${dmText}"`)
+              }
+
               if (content.message) {
                 // Plain Text
-                apiBody.message = { text: content.message }
+                apiBody.message = { text: dmText }
               } else if (content.card) {
                 // Rich Card / Generic Template
                 const card = content.card
@@ -320,7 +461,7 @@ export async function POST(request: NextRequest) {
                         user_id: user.id,
                         sender_id: user.business_account_id,
                         sender_username: user.username,
-                        content: content.message || `[Sent rich card: "${content.card?.title || 'Card'}"]`,
+                        content: dmText || content.message || `[Sent rich card: "${content.card?.title || 'Card'}"]`,
                         is_from_instagram: false,
                       })
                     }
@@ -593,8 +734,15 @@ export async function POST(request: NextRequest) {
                   continue
                 }
 
-                // Fetch recent conversation history to match tone
-                let chatHistory: { role: string; content: string }[] = []
+                // ---- Conversation sessions ----
+                // Messages more than SESSION_GAP_MS apart belong to different sessions.
+                // The AI's context, the reply cap and the handoff all reset per session,
+                // so a lead who comes back a day later gets a fresh conversation instead
+                // of instant silence/handoff from an old thread.
+                const SESSION_GAP_MS = 24 * 60 * 60 * 1000 // 24h
+                const MAX_AI_REPLIES = 4 // AI replies per session (welcomes/handoff don't count)
+                const HANDOFF_TEXT = "Perfect — that's everything I need for now! 🙌 I've passed your details to the FECO team and a real person will follow up with you right here soon. I'll step back so you're chatting with the team from here. 💬"
+
                 const { data: convData } = await supabase
                   .from("conversations")
                   .select("id")
@@ -602,22 +750,70 @@ export async function POST(request: NextRequest) {
                   .eq("recipient_id", senderId)
                   .single()
 
+                // Pull recent messages WITH timestamps, newest first, then walk back
+                // until we hit a >24h gap — everything after that gap is this session.
+                let sessionMsgs: { role: string; content: string }[] = []
                 if (convData?.id) {
                   const { data: recentMsgs } = await supabase
                     .from("messages")
-                    .select("content, sender_id, is_from_instagram")
+                    .select("content, is_from_instagram, created_at")
                     .eq("conversation_id", convData.id)
                     .order("created_at", { ascending: false })
-                    .limit(10)
+                    .limit(30)
 
                   if (recentMsgs && recentMsgs.length > 0) {
-                    chatHistory = recentMsgs
+                    const session: any[] = []
+                    let prevTs = Date.now() // the message that triggered us just arrived
+                    for (const m of recentMsgs) {
+                      const ts = new Date(m.created_at).getTime()
+                      if (Number.isFinite(ts) && prevTs - ts > SESSION_GAP_MS) break // session boundary
+                      session.push(m)
+                      if (Number.isFinite(ts)) prevTs = ts
+                    }
+                    sessionMsgs = session
                       .reverse()
                       .map((m: any) => ({
                         role: m.is_from_instagram ? "user" : "assistant",
                         content: m.content,
                       }))
                   }
+                }
+                const chatHistory = sessionMsgs.slice(-10)
+
+                // Welcome texts (keyword automation replies) don't count toward the cap —
+                // only real AI back-and-forth does. Neither does the handoff itself.
+                const welcomeTexts = new Set(
+                  automations
+                    .map((a: any) => a?.response_content?.message)
+                    .filter((t: any) => typeof t === "string" && t.length > 0),
+                )
+                const aiReplyCount = sessionMsgs.filter(
+                  m => m.role === "assistant" && m.content !== HANDOFF_TEXT && !welcomeTexts.has(m.content),
+                ).length
+                const handoffAlreadySent = sessionMsgs.some(
+                  m => m.role === "assistant" && m.content === HANDOFF_TEXT,
+                )
+
+                if (aiReplyCount >= MAX_AI_REPLIES || handoffAlreadySent) {
+                  if (!handoffAlreadySent && convData?.id) {
+                    await fetch(
+                      `https://graph.instagram.com/v24.0/me/messages?access_token=${encodeURIComponent(user.access_token)}`,
+                      { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ recipient: { id: senderId }, message: { text: HANDOFF_TEXT } }) },
+                    ).catch(() => {})
+                    await supabase.from("messages").insert({
+                      id: `mid_ai_${Date.now()}_${Math.random()}`,
+                      conversation_id: convData.id,
+                      user_id: user.id,
+                      sender_id: user.business_account_id,
+                      sender_username: user.username,
+                      content: HANDOFF_TEXT,
+                      is_from_instagram: false,
+                    })
+                    console.log(`[v0] 🛑 Session AI-limit (${aiReplyCount}/${MAX_AI_REPLIES}) reached — sent handoff, silent until next session`)
+                  } else {
+                    console.log(`[v0] 🤫 Handoff already sent this session — staying silent`)
+                  }
+                  continue
                 }
 
                 // Build dynamic system prompt based on history
@@ -628,30 +824,20 @@ export async function POST(request: NextRequest) {
                   ? `\n\nAbout this account (@${user.username}): ${(user as any).ai_context}`
                   : `\n\nYou manage the Instagram account @${user.username}.`
 
-                const systemPrompt = hasHistory
-                  ? `You are ${user.username} — a real person replying to your own Instagram DMs.${accountContext}
+                const systemPrompt = `You are the assistant for FECO's Instagram DMs (@${user.username}).${accountContext}
 
-STRICT RULES — follow every single one:
-- You ARE the account owner. Never say "I'm an AI" or "I can't" or "as an AI".
-- Study the conversation history carefully. Match EXACTLY how this person talks — their language (Hindi/English/Hinglish), their energy level, punctuation style, whether they use emojis or not, how long their messages are.
-- If they write casually with typos, you reply casually too. If they write formally, match that.
-- Keep replies SHORT — max 1-2 sentences unless they asked something that needs more.
-- Never be overly enthusiastic or use cringe phrases like "Absolutely!", "Great question!", "Of course!".
-- Sound like a real busy person who replies quickly — not a customer service bot.
-- If you don't know something, say "hmm let me check" or "kal bata deta hoon" — whatever fits the vibe.
-- DO NOT use hashtags, bullet points, or formal formatting in DMs.
-- Detect language from user's messages: ${userMsgs.slice(0, 100)}`
-                  : `You are ${user.username} — a real person replying to your own Instagram DMs.${accountContext}
+YOUR GOAL — this is the ONLY thing that matters:
+- TOP PRIORITY: get their EMAIL or PHONE NUMBER as early as possible — ideally in your very first or second reply. Ask for it naturally, e.g. "What's the best email or number for the team to reach you on?". Once you have their contact, you've done the most important part.
+- Then learn a bit about what they need: their name, their business, and what they're looking to build. You are qualifying a lead, NOT helping them.
+- Ask ONE short question at a time. Do NOT interrogate — you only have a few messages, so keep it light and don't drag it out.
+- Do NOT try to solve their problem, give advice, or explain things in depth. Gently steer back to getting their contact + what they need.
 
-STRICT RULES — follow every single one:
-- You ARE the account owner. Never say "I'm an AI" or "I can't".
-- No prior chat history exists, so use a confident, natural tone — professional but not stiff. Think: smart Gen-Z founder who's friendly but busy.
-- Keep it SHORT — 1-2 sentences max.
-- Reply in the SAME language the person used (Hindi/English/Hinglish). If mixed, match the mix.
-- NO cringe openers like "Absolutely!", "Sure thing!", "Great to hear!". Just reply normally.
-- NO hashtags, NO bullet points, NO robotic formatting.
-- If you don't know something, say something like "let me check and get back to you" — casual, real.
-- Vary your style slightly — don't always start with "Hey" or the same word.`
+RULES:
+- You are FECO's assistant. You may say you're the assistant for FECO. Do NOT pretend to be a specific person and do NOT claim to be human.
+- NEVER give prices, quotes, or cost estimates. If they ask about pricing/cost/quotes, tell them the team will put together a quote and that you just need a few details so someone can follow up — then get their contact.
+- Keep replies SHORT — 1-2 warm, casual-but-professional sentences. Reply in English.
+- No hashtags, no bullet points, no formal formatting. Never make promises or commitments on FECO's behalf.
+${hasHistory ? `- Continue naturally and don't repeat questions already asked. Recent messages from them: ${userMsgs.slice(0, 120)}` : `- This is the start of the conversation — open warmly and start learning who they are and what they need.`}`
 
                 const aiMessages = [
                   { role: "system", content: systemPrompt },
@@ -679,20 +865,8 @@ STRICT RULES — follow every single one:
                   { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(typingBody) },
                 ).catch(() => {})
 
-                const aiProxyUrl = process.env.AI_PROXY_URL || "https://triderai.vercel.app/api/chat"
-                const aiRes = await fetch(aiProxyUrl, {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${gatewaySecret}`,
-                  },
-                  body: JSON.stringify({
-                    model: "meta-llama/llama-4-maverick-17b-128e-instruct",
-                    messages: aiMessages,
-                    max_tokens: 120,
-                    temperature: 0.85,
-                  }),
-                })
+                // Timeout-guarded call across the provider chain (local gemma4 → optional backup).
+                const aiReply0 = await callLLM(aiMessages, { maxTokens: 150, primaryModel: (user as any).primary_model, backupModel: (user as any).backup_model })
 
                 // Turn off typing indicator after AI responds
                 fetch(
@@ -700,85 +874,17 @@ STRICT RULES — follow every single one:
                   { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ recipient: { id: senderId }, sender_action: "typing_off" }) },
                 ).catch(() => {})
 
-                if (!aiRes.ok) {
-                  console.log(`[v0] ❌ AI proxy error: ${aiRes.status}`)
-                  continue
-                }
-
-                // Parse SSE stream from proxy
-                let aiReply = ""
-                let aiData: any = null
-                const contentType = aiRes.headers.get("content-type") || ""
-                console.log(`[v0] 🤖 AI response content-type: ${contentType}`)
-
-                if (contentType.includes("text/event-stream")) {
-                  const reader = aiRes.body?.getReader()
-                  if (reader) {
-                    const decoder = new TextDecoder()
-                    let buf = ""
-                    let chunkCount = 0
-                    while (true) {
-                      const { done, value } = await reader.read()
-                      if (done) break
-                      buf += decoder.decode(value, { stream: true })
-                      const lines = buf.split("\n")
-                      buf = lines.pop() || ""
-                      for (const line of lines) {
-                        if (!line.startsWith("data: ")) continue
-                        const dataStr = line.slice(6).trim()
-                        if (dataStr === "[DONE]") {
-                          console.log(`[v0] 🤖 AI stream [DONE] received, chunks: ${chunkCount}`)
-                          continue
-                        }
-                        try {
-                          const parsed = JSON.parse(dataStr)
-                          chunkCount++
-                          // Try multiple possible content locations
-                          const chunk = parsed.choices?.[0]?.delta?.content ||
-                                        parsed.choices?.[0]?.text ||
-                                        parsed.choices?.[0]?.delta?.text ||
-                                        parsed.content ||
-                                        parsed.delta?.content
-                          if (chunk) aiReply += chunk
-                          // Also handle non-streaming format
-                          const full = parsed.choices?.[0]?.message?.content ||
-                                       parsed.message?.content ||
-                                       parsed.content
-                          if (full && !aiReply) aiReply = full
-                        } catch (e) {
-                          console.log(`[v0] ⚠️ AI SSE parse error: ${e}, data: ${dataStr.slice(0, 100)}`)
-                        }
-                      }
-                    }
-                    console.log(`[v0] 🤖 AI SSE stream complete, total chunks: ${chunkCount}, reply length: ${aiReply.length}`)
-                  }
-                } else {
-                  // Plain JSON fallback
-                  aiData = await aiRes.json()
-                  console.log(`[v0] 🤖 AI JSON response keys: ${Object.keys(aiData).join(", ")}`)
-                  console.log(`[v0] 🔍 choices[0]: ${JSON.stringify(aiData.choices?.[0])}`)
-                  // Try multiple possible response formats
-                  aiReply = aiData.choices?.[0]?.message?.content?.trim() ||
-                            aiData.choices?.[0]?.text?.trim() ||
-                            aiData.message?.content?.trim() ||
-                            aiData.content?.trim() ||
-                            aiData.response?.trim() ||
-                            aiData.text?.trim() ||
-                            ""
-                }
-
-                aiReply = aiReply.trim()
+                const aiData: any = null
+                let aiReply = (aiReply0 || "").trim()
 
                 if (!aiReply) {
                   console.log(`[v0] ❌ AI returned empty reply. finish_reason: ${aiData?.choices?.[0]?.finish_reason}`)
                   // Fallback: send a generic reply instead of nothing
                   const fallbackReplies = [
-                    "hanji batao",
-                    "bolo",
-                    "haan bhai",
-                    "ji",
-                    "sunao",
-                    "kya haal hai",
+                    "Hey! Thanks for the message — mind telling me a bit about what you're after?",
+                    "Hi! Who am I chatting with, and what are you looking to build?",
+                    "Thanks for reaching out! What's your name, and what kind of project do you have in mind?",
+                    "Hey there! Tell me a little about what you need and I'll get the right person onto it.",
                   ]
                   aiReply = fallbackReplies[Math.floor(Math.random() * fallbackReplies.length)]
                   console.log(`[v0] 🔄 Using fallback reply: "${aiReply}"`)
@@ -824,6 +930,11 @@ STRICT RULES — follow every single one:
                 }
               } catch (groqErr) {
                 console.error("[v0] 🔴 Groq AI Error:", groqErr)
+                // Never leave the user hanging on an unexpected error
+                await fetch(
+                  `https://graph.instagram.com/v24.0/me/messages?access_token=${encodeURIComponent(user.access_token)}`,
+                  { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ recipient: { id: senderId }, message: { text: "Thanks for your message! 🙌 One of the FECO team will get back to you shortly." } }) },
+                ).catch(() => {})
               }
               continue
             }

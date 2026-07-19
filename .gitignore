@@ -30,3 +30,7 @@ next-env.d.ts
 # video files (test/generated)
 *.mp4
 /washed_videos/
+
+# InstaAuto runtime logs (contain live access tokens — never commit)
+.instaauto-server.log
+.instaauto-tunnel.log
