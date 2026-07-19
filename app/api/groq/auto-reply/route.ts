@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
     const supabase = await getSupabaseServerClient();
     const { data: user, error } = await supabase
       .from("users")
-      .select("groq_auto_reply_enabled, ai_context")
+      .select("groq_auto_reply_enabled, ai_context, backup_model, primary_model")
       .eq("id", userId)
       .single();
 
@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ enabled: false });
     }
 
-    return NextResponse.json({ enabled: user.groq_auto_reply_enabled ?? false, ai_context: user.ai_context ?? "" });
+    return NextResponse.json({ enabled: user.groq_auto_reply_enabled ?? false, ai_context: user.ai_context ?? "", backup_model: user.backup_model ?? "", primary_model: user.primary_model ?? "" });
   } catch (error) {
     console.error("[Groq Auto-Reply] GET error:", error);
     return NextResponse.json({ error: "Failed to fetch" }, { status: 500 });
@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
 
 export async function PUT(request: NextRequest) {
   try {
-    const { userId, enabled, ai_context } = await request.json();
+    const { userId, enabled, ai_context, backup_model, primary_model } = await request.json();
     if (!userId || typeof enabled !== "boolean") {
       return NextResponse.json({ error: "Missing userId or enabled" }, { status: 400 });
     }
@@ -34,6 +34,8 @@ export async function PUT(request: NextRequest) {
     const supabase = await getSupabaseServerClient();
     const updatePayload: any = { groq_auto_reply_enabled: enabled };
     if (typeof ai_context === "string") updatePayload.ai_context = ai_context;
+    if (typeof backup_model === "string") updatePayload.backup_model = backup_model;
+    if (typeof primary_model === "string") updatePayload.primary_model = primary_model;
 
     const { error } = await supabase
       .from("users")
@@ -42,7 +44,7 @@ export async function PUT(request: NextRequest) {
 
     if (error) throw error;
 
-    return NextResponse.json({ enabled, ai_context });
+    return NextResponse.json({ enabled, ai_context, backup_model, primary_model });
   } catch (error) {
     console.error("[Groq Auto-Reply] PUT error:", error);
     return NextResponse.json({ error: "Failed to update" }, { status: 500 });

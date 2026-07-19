@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Switch } from "@/components/ui/switch"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { 
   Instagram, 
   Settings, 
@@ -29,6 +30,10 @@ export default function SettingsPage() {
   // Groq AI states
   const [aiEnabled, setAiEnabled] = useState(false)
   const [aiContext, setAiContext] = useState("")
+  const [primaryModel, setPrimaryModel] = useState("")
+  const [backupModel, setBackupModel] = useState("")
+  const [litellmModels, setLitellmModels] = useState<string[]>([])
+  const [openaiModels, setOpenaiModels] = useState<string[]>([])
   
   // Loading & Saving states
   const [loading, setLoading] = useState(true)
@@ -63,7 +68,17 @@ export default function SettingsPage() {
         if (aiData && !aiData.error) {
           setAiEnabled(aiData.enabled)
           setAiContext(aiData.ai_context || "")
+          setBackupModel(aiData.backup_model || "")
+          setPrimaryModel(aiData.primary_model || "")
         }
+
+        // 3. Fetch available models for each provider (from their official endpoints)
+        try {
+          const modelsRes = await fetch("/api/ai/models")
+          const modelsData = await modelsRes.json()
+          if (Array.isArray(modelsData.litellm)) setLitellmModels(modelsData.litellm)
+          if (Array.isArray(modelsData.openai)) setOpenaiModels(modelsData.openai)
+        } catch { /* non-fatal */ }
       } catch (err) {
         console.error("Failed to load settings data:", err)
       } finally {
@@ -86,7 +101,9 @@ export default function SettingsPage() {
         body: JSON.stringify({
           userId,
           enabled: aiEnabled,
-          ai_context: aiContext
+          ai_context: aiContext,
+          backup_model: backupModel,
+          primary_model: primaryModel
         })
       })
       const data = await res.json()
@@ -248,6 +265,52 @@ export default function SettingsPage() {
                 <p className="text-[10px] text-muted-foreground font-medium">
                   Provide instructions regarding your brand identity, product prices, event services, or dynamic answers.
                 </p>
+              </div>
+
+              {/* AI model selection: primary (local litellm) + backup (OpenAI) */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-foreground block">Primary Model · Local (litellm)</label>
+                  <Select
+                    value={primaryModel || "__default__"}
+                    onValueChange={(v) => setPrimaryModel(v === "__default__" ? "" : v)}
+                    disabled={!aiEnabled}
+                  >
+                    <SelectTrigger className="bg-background border-border text-xs text-foreground h-9">
+                      <SelectValue placeholder="Server default" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="__default__">Server default (gemma4)</SelectItem>
+                      {(primaryModel && !litellmModels.includes(primaryModel) ? [primaryModel, ...litellmModels] : litellmModels).map((m) => (
+                        <SelectItem key={m} value={m} className="text-xs">{m}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <p className="text-[10px] text-muted-foreground font-medium">
+                    Runs on your GPU. {litellmModels.length === 0 ? "Loading models…" : `${litellmModels.length} available.`}
+                  </p>
+                </div>
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-foreground block">Backup Model · OpenAI</label>
+                  <Select
+                    value={backupModel || "__default__"}
+                    onValueChange={(v) => setBackupModel(v === "__default__" ? "" : v)}
+                    disabled={!aiEnabled}
+                  >
+                    <SelectTrigger className="bg-background border-border text-xs text-foreground h-9">
+                      <SelectValue placeholder="Server default" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="__default__">Server default</SelectItem>
+                      {(backupModel && !openaiModels.includes(backupModel) ? [backupModel, ...openaiModels] : openaiModels).map((m) => (
+                        <SelectItem key={m} value={m} className="text-xs">{m}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <p className="text-[10px] text-muted-foreground font-medium">
+                    Fails over here when local is slow/down. {openaiModels.length === 0 ? "Loading models…" : `${openaiModels.length} available.`}
+                  </p>
+                </div>
               </div>
 
               {/* Status information depending on switch */}
