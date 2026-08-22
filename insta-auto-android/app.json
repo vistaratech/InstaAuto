@@ -1,0 +1,60 @@
+{
+  "expo": {
+    "name": "DMSpark",
+    "slug": "insta-auto-android",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "scheme": "dmspark",
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "backgroundColor": "#0F1117",
+      "resizeMode": "contain"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.dmspark.app",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "package": "com.dmspark.app",
+      "versionCode": 1,
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundColor": "#0F1117"
+      },
+      "permissions": [
+        "INTERNET",
+        "VIBRATE"
+      ],
+      "navigationBar": {
+        "backgroundColor": "#0F1117",
+        "barStyle": "light-content"
+      }
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-secure-store",
+      [
+        "expo-web-browser",
+        {
+          "preferredBrowsers": [
+            "chrome"
+          ]
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "ec0f6918-18d8-48d7-92af-8a32610fdd26"
+      }
+    },
+    "owner": "yohesh2233"
+  }
+}

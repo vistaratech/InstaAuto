@@ -24,8 +24,10 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { code } = body
+    let { code } = body
     if (!code) return NextResponse.json({ error: "No code" }, { status: 400 })
+    // Strip trailing Instagram hash fragment if present
+    code = code.replace(/#_.*$/, "")
 
     // 1. Env Vars
     const clientId = process.env.INSTAGRAM_APP_ID
