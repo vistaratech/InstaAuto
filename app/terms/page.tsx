@@ -3,7 +3,7 @@ import { ArrowLeft, FileText, CheckCircle, AlertTriangle, HelpCircle, UserCheck,
 
 export default function TermsOfService() {
   return (
-    <div className="min-h-screen bg-[#030712] text-slate-100 p-6 md:p-16 relative">
+    <div className="min-h-screen bg-[#030712] text-slate-100 p-6 md:p-16 pb-32 relative overflow-y-auto w-full">
       {/* Decorative Blur Backgrounds */}
       <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] rounded-full bg-blue-500/10 blur-[120px] pointer-events-none" />
       <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] rounded-full bg-violet-500/10 blur-[120px] pointer-events-none" />
