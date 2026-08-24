@@ -62,13 +62,41 @@ function HomeContent() {
 }
 
 export default function Home() {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: "DMSpark",
+    applicationCategory: "BusinessApplication",
+    operatingSystem: "Web, Android",
+    url: "https://www.dmspark.in",
+    description:
+      "DMSpark is the #1 Instagram automation tool. Auto-reply to comments, DMs, and stories with smart keyword triggers. Grow your Instagram followers 24/7 on autopilot.",
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "INR",
+      description: "Free to start",
+    },
+    creator: {
+      "@type": "Organization",
+      name: "DMSpark",
+      url: "https://www.dmspark.in",
+    },
+  }
+
   return (
-    <Suspense fallback={
-      <div className="flex h-screen items-center justify-center bg-black">
-        <Loader2 className="h-8 w-8 animate-spin text-white" />
-      </div>
-    }>
-      <HomeContent />
-    </Suspense>
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <Suspense fallback={
+        <div className="flex h-screen items-center justify-center bg-black">
+          <Loader2 className="h-8 w-8 animate-spin text-white" />
+        </div>
+      }>
+        <HomeContent />
+      </Suspense>
+    </>
   )
 }

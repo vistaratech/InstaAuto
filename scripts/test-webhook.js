@@ -1,33 +1,28 @@
-const payload = {
-  "object": "instagram",
-  "entry": [
-    {
-      "id": "17841435476975400",
-      "time": 1610492985,
-      "changes": [
-        {
-          "field": "comments",
-          "value": {
-            "id": "17873440459141021",
-            "text": "ok",
-            "from": {
-              "id": "123456789",
-              "username": "testuser"
-            },
-            "media": {
-              "id": "17841435476975401"
-            }
-          }
-        }
-      ]
-    }
-  ]
-};
+const fs = require('fs');
+const https = require('https');
 
-fetch("https://insta-auto-ebon.vercel.app/api/instagram/webhook", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify(payload)
-})
-.then(res => res.text().then(t => console.log(res.status, t)))
-.catch(err => console.error(err));
+const env = fs.readFileSync('.env.local', 'utf8');
+const lines = env.split('\n');
+let token = '';
+for (const l of lines) {
+  if (l.startsWith('INSTAGRAM_WEBHOOK_VERIFY_TOKEN=')) {
+    token = l.split('=')[1].trim().replace(/^["']|["']$/g, '');
+    break;
+  }
+}
+
+console.log('Testing with token from .env.local (length:', token.length, ')');
+
+const url = `https://www.dmspark.in/api/instagram/webhook?hub.mode=subscribe&hub.verify_token=${encodeURIComponent(token)}&hub.challenge=test_12345`;
+
+https.get(url, (res) => {
+  console.log('Status Code:', res.statusCode);
+  let data = '';
+  res.on('data', chunk => data += chunk);
+  res.on('end', () => {
+    console.log('Response Body:', data);
+    if (data === 'test_12345') {
+      console.log('SUCCESS! The token in .env.local is accepted by live server!');
+    }
+  });
+});

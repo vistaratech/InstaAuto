@@ -192,7 +192,7 @@ export default function HowToUsePage() {
       {[
         { keyword: "coupon", reply: "50% discount code: DMSPARK50", status: "Active" },
         { keyword: "price", reply: "Check our latest catalog!", status: "Active" },
-        { keyword: "info", reply: "Visit dmspark.vercel.app", status: "Paused" },
+        { keyword: "info", reply: "Visit www.dmspark.in", status: "Paused" },
       ].map((rule, i) => (
         <div key={i} className="bg-white rounded-lg border border-slate-200/60 p-1.5 shadow-sm">
           <div className="flex items-center justify-between mb-0.5">
@@ -611,7 +611,7 @@ export default function HowToUsePage() {
                           <div className="w-1.5 h-1.5 rounded-full bg-[#34a853]" />
                         </div>
                         <div className="bg-white rounded border border-slate-200/60 px-2 py-0.5 text-[7px] text-slate-400 w-40 mx-auto text-center font-bold">
-                          dmspark.vercel.app/dashboard
+                          www.dmspark.in/dashboard
                         </div>
                       </div>
 

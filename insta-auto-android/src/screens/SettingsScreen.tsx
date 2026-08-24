@@ -166,7 +166,7 @@ export const SettingsScreen: React.FC = () => {
               setBackendUrl(val)
               apiClient.setBaseUrl(val)
             }}
-            placeholder="https://dmspark.vercel.app"
+            placeholder="https://www.dmspark.in"
             placeholderTextColor={colors.textMuted}
             autoCapitalize="none"
           />
