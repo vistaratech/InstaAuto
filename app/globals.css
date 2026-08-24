@@ -131,8 +131,8 @@
     padding: 0;
   }
   @media (min-width: 768px) {
-    html, body {
-      overflow: hidden !important;
+    html.dashboard-layout, html.dashboard-layout body {
+      overflow: hidden;
       height: 100vh;
     }
   }

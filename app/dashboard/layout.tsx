@@ -27,6 +27,12 @@ export default function DashboardLayout({
         setIsInAppBrowser(isInstagramWebView);
     }, [])
 
+    // Scope overflow:hidden to dashboard pages only
+    useEffect(() => {
+        document.documentElement.classList.add("dashboard-layout")
+        return () => { document.documentElement.classList.remove("dashboard-layout") }
+    }, [])
+
     const handleCopyLink = () => {
         navigator.clipboard.writeText(window.location.href)
         setCopied(true)
