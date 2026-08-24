@@ -47,6 +47,12 @@ function parseSignedRequest(signedRequest: string, appSecret: string): any | nul
   }
 }
 
+export async function GET(request: NextRequest) {
+  // If visited via browser (GET), redirect to the user-facing deletion instructions page
+  const redirectUrl = new URL("/delete-data", request.url)
+  return NextResponse.redirect(redirectUrl)
+}
+
 export async function POST(request: NextRequest) {
   try {
     const appSecret = process.env.INSTAGRAM_APP_SECRET

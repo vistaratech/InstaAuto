@@ -41,6 +41,14 @@ function parseSignedRequest(signedRequest: string, appSecret: string): any | nul
   }
 }
 
+export async function GET(request: NextRequest) {
+  return NextResponse.json({
+    status: "active",
+    endpoint: "Instagram Deauthorization Callback",
+    info: "This endpoint handles POST callbacks sent by Meta when a user removes the app."
+  })
+}
+
 export async function POST(request: NextRequest) {
   try {
     const appSecret = process.env.INSTAGRAM_APP_SECRET
