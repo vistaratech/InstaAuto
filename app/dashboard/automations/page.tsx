@@ -170,12 +170,7 @@ export default function AutomationsPage() {
                     </div>
                 )}
 
-                {/* Ice Breakers (DM only) */}
-                {activeTab === 'dm' && (
-                    <div className="rounded-2xl border border-border bg-card/40 p-4 md:p-6 shadow-sm">
-                        <IceBreakersManager />
-                    </div>
-                )}
+                {/* Standard Automation List for Comments, DMs, and Stories */}
 
                 {/* Automation List */}
                 {isLoading ? (
