@@ -199,7 +199,7 @@ export async function POST(request: NextRequest) {
             // Priority 3: Global Keyword Match (Only if no specific match found)
             if (!match) {
               match = automations.find(
-                (a) =>
+                (a: any) =>
                   !a.specific_media_id && // Must be global
                   a.trigger_type === "keyword" &&
                   a.trigger_value
@@ -563,7 +563,7 @@ export async function POST(request: NextRequest) {
           if (triggerType === "postback") {
             if (triggerValue.startsWith("UNLOCK_CONTENT_")) {
               const ruleId = triggerValue.replace("UNLOCK_CONTENT_", "")
-              match = automations.find((a) => a.id === ruleId)
+              match = automations.find((a: any) => a.id === ruleId)
             } else if (triggerValue.startsWith("ICE_BREAKER_")) {
               // Handle Ice Breaker
               const iceBreakerId = triggerValue.replace("ICE_BREAKER_", "")
@@ -582,7 +582,7 @@ export async function POST(request: NextRequest) {
                 }
               }
             } else {
-              match = automations.find((a) => a.trigger_type === "postback" && a.trigger_value === triggerValue)
+              match = automations.find((a: any) => a.trigger_type === "postback" && a.trigger_value === triggerValue)
             }
           } else {
             // Filter to DM-only automations (exclude comment/story triggers)

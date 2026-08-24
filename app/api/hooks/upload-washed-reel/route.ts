@@ -69,7 +69,7 @@ export async function POST(request: NextRequest) {
                 end_time: '23:00',
                 interval_minutes: 60,
                 current_sequence_index: 1
-            }, { onConflict: 'user_id', ignoreDuplicates: true })
+            }, { onConflict: 'user_id' })
 
         return NextResponse.json({
             success: true,

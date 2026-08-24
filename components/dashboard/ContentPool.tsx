@@ -279,12 +279,12 @@ export function ContentPool({ userId }: ContentPoolProps) {
 
                 for (let i = 0; i < toImport.length; i++) {
                     const item = toImport[i]
-                    let finalVideoUrl = item.media_url || item.thumbnail_url
+                    let finalVideoUrl = item.media_url || item.thumbnail_url || ""
                     // Use designated thumbnail, or fallback to media_url if it's an image/cover
                     const finalCoverUrl = item.thumbnail_url || item.media_url
 
                     // SAFE MODE LOGIC
-                    if (isSafeMode && (item.media_type === "VIDEO" || item.media_type === "REELS")) {
+                    if (isSafeMode && (item.media_type === "VIDEO" || item.media_type === "REELS") && finalVideoUrl) {
                         try {
                             addLog(`Processing Item ${i + 1}/${toImport.length}...`)
                             const safeBlob = await processVideoSafe(finalVideoUrl)

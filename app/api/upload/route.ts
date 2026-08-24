@@ -4,7 +4,7 @@ import path from "path"
 
 export async function POST(request: NextRequest) {
   try {
-    const formData = await request.formData()
+    const formData: any = await request.formData()
     const file = formData.get("file") as File | null
     const userId = formData.get("userId") as string | null
 

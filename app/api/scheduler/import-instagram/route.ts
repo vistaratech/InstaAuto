@@ -1,5 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { getSupabaseServerClient } from "@/lib/supabase-server"
+import fs from "fs"
+import path from "path"
 
 export async function POST(request: NextRequest) {
     try {
@@ -21,34 +23,25 @@ export async function POST(request: NextRequest) {
         const arrayBuffer = await videoBlob.arrayBuffer()
         const buffer = Buffer.from(arrayBuffer)
 
-        // 2. Upload to Supabase Storage
-        // Generate unique filename
+        // 2. Save locally into public/uploads (consistent with local upload API)
         const contentType = vidRes.headers.get("content-type") || "video/mp4"
         let fileExt = "mp4"
         if (contentType.includes("image/jpeg")) fileExt = "jpg"
         else if (contentType.includes("image/png")) fileExt = "png"
         else if (contentType.includes("image/webp")) fileExt = "webp"
 
-        const fileName = `${userId}/${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`
-
-        const { error: uploadError } = await supabase.storage
-            .from('reels')
-            .upload(fileName, buffer, {
-                contentType: contentType,
-                upsert: false
-            })
-
-        if (uploadError) {
-            console.error("[Import] Storage Upload Error:", uploadError)
-            throw uploadError
+        const uploadDir = path.join(process.cwd(), "public", "uploads", userId)
+        if (!fs.existsSync(uploadDir)) {
+            fs.mkdirSync(uploadDir, { recursive: true })
         }
 
-        const { data: { publicUrl } } = supabase.storage
-            .from('reels')
-            .getPublicUrl(fileName)
+        const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`
+        const filePath = path.join(uploadDir, fileName)
+        fs.writeFileSync(filePath, buffer)
+
+        const publicUrl = `${request.nextUrl.origin}/uploads/${userId}/${fileName}`
 
         // 3. Insert into Content Pool
-        // Get current max sequence
         const { data: maxContent } = await supabase
             .from("content_pool")
             .select("sequence_index")
@@ -63,7 +56,7 @@ export async function POST(request: NextRequest) {
             .from("content_pool")
             .insert({
                 user_id: userId,
-                video_url: publicUrl, // The permanent Supabase URL
+                video_url: publicUrl,
                 caption: caption || "",
                 sequence_index: nextSeq,
                 is_active: true,

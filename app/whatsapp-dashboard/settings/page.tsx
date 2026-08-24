@@ -21,7 +21,8 @@ import {
   Eye,
   EyeOff,
   Copy,
-  Check
+  Check,
+  Settings
 } from "lucide-react"
 import Link from "next/link"
 

@@ -61,7 +61,7 @@ export default function WhatsAppAnalyticsPage() {
     const [loading, setLoading] = useState(true)
     const [isVisible, setIsVisible] = useState(false)
     const [timeframe, setTimeframe] = useState<"24h" | "7d" | "30d" | "all">("7d")
-    const [feedFilter, setFeedFilter] = useState<"all" | "incoming" | "replies">("all")
+    const [feedFilter, setFeedFilter] = useState<"all" | "incoming" | "reply">("all")
     const [chartTimeframe, setChartTimeframe] = useState<"1d" | "3d" | "5d">("1d")
 
     useEffect(() => {
