@@ -34,6 +34,16 @@ export async function POST(request: NextRequest) {
     if (!body.entry) return NextResponse.json({ ok: true })
     const supabase = await getSupabaseServerClient()
 
+    // Log webhook event for debugging
+    try {
+      await supabase.from("webhook_events").insert({
+        event_type: body.object || "unknown",
+        data: body,
+      })
+    } catch (logErr) {
+      // Non-critical: don't block webhook processing if logging fails
+    }
+
     for (const entry of body.entry) {
       // ============================================================
       // 🔇 ECHO SILENCER (The Fix for "ID Not Found" logs)
@@ -131,6 +141,12 @@ export async function POST(request: NextRequest) {
 
       if (!user) {
         console.log(`[v0] ❌ Could not resolve User for ID ${webhookId}`)
+        continue
+      }
+
+      // Skip if user's token has been revoked (deauthorized)
+      if (user.access_token === "REVOKED") {
+        console.log(`[v0] 🔌 Skipping revoked user: ${user.username}`)
         continue
       }
 
