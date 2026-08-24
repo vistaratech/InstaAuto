@@ -1,16 +1,14 @@
 import Link from "next/link"
-import { ArrowLeft, Trash2, Mail, Info } from "lucide-react"
+import { ArrowLeft, Trash2, ShieldAlert, Mail, Info, RefreshCw, Key } from "lucide-react"
 
 export default function DataDeletionInstructions() {
   return (
-    <div className="min-h-screen w-full bg-[#030712] text-slate-100 relative">
-      {/* Fixed Ambient Glows (never interferes with scrolling) */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none -z-10" aria-hidden="true">
-        <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] rounded-full bg-blue-500/10 blur-[120px]" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] rounded-full bg-rose-500/10 blur-[120px]" />
-      </div>
+    <div className="min-h-screen bg-[#030712] text-slate-100 p-6 md:p-16 pb-32 relative overflow-y-auto w-full">
+      {/* Decorative Blur Backgrounds */}
+      <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] rounded-full bg-blue-500/10 blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] rounded-full bg-rose-500/10 blur-[120px] pointer-events-none" />
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-12 pb-36 space-y-10 relative z-10 animate-in fade-in duration-500">
+      <div className="max-w-4xl mx-auto space-y-10 relative z-10 animate-in fade-in duration-700">
         
         {/* Back Navigation */}
         <div>
@@ -56,7 +54,7 @@ export default function DataDeletionInstructions() {
                 <div className="w-5 h-5 rounded-full bg-slate-800 flex items-center justify-center font-bold text-white shrink-0 mt-0.5">1</div>
                 <div className="space-y-1">
                   <h4 className="text-white font-bold">Disconnect via Dashboard:</h4>
-                  <p>Log in to your DMSpark dashboard, navigate to **Settings**, and click the red **&quot;Disconnect Account&quot;** button next to your Instagram profile. This will instantly invalidate your tokens and stop all active automations.</p>
+                  <p>Log in to your DMSpark dashboard, navigate to **Settings**, and click the red **"Disconnect Account"** button next to your Instagram profile. This will instantly invalidate your tokens and stop all active automations.</p>
                 </div>
               </div>
 
@@ -65,7 +63,7 @@ export default function DataDeletionInstructions() {
                 <div className="w-5 h-5 rounded-full bg-slate-800 flex items-center justify-center font-bold text-white shrink-0 mt-0.5">2</div>
                 <div className="space-y-1">
                   <h4 className="text-white font-bold">Remove DMSpark App from Instagram:</h4>
-                  <p>To fully deauthorize the app, go to your Instagram mobile app settings, select **&quot;Apps and Websites&quot;**, find **&quot;DMSpark&quot;**, and click **&quot;Remove&quot;**.</p>
+                  <p>To fully deauthorize the app, go to your Instagram mobile app settings, select **"Apps and Websites"**, find **"DMSpark"**, and click **"Remove"**.</p>
                 </div>
               </div>
 
@@ -100,14 +98,14 @@ export default function DataDeletionInstructions() {
           </div>
 
           {/* Contact Card */}
-          <div className="p-6 rounded-2xl border border-slate-800/80 bg-gradient-to-br from-slate-900/80 to-slate-950/80 backdrop-blur-md flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="p-6 rounded-2xl border border-slate-850 bg-gradient-to-br from-slate-900/80 to-slate-950/80 backdrop-blur-md flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="space-y-1">
               <h3 className="text-sm font-bold text-white">Need help with your data deletion?</h3>
               <p className="text-xs text-slate-400">Send us a direct request and we will purge your data within 24 hours.</p>
             </div>
             <a 
               href="mailto:virtualrevolution02@gmail.com" 
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white text-black font-bold text-xs hover:bg-slate-200 hover:scale-105 transition-all duration-200 shrink-0"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white text-black font-bold text-xs hover:bg-slate-200 hover:scale-105 transition-all duration-200"
             >
               <Mail className="w-4 h-4" /> Request Purge via Email
             </a>
@@ -115,12 +113,7 @@ export default function DataDeletionInstructions() {
 
         </div>
 
-        {/* Footer */}
-        <footer className="pt-8 border-t border-slate-900 text-center text-xs text-slate-500">
-          © {new Date().getFullYear()} DMSpark. All rights reserved.
-        </footer>
-
-      </main>
+      </div>
     </div>
   )
 }

@@ -1,16 +1,14 @@
 import Link from "next/link"
-import { ArrowLeft, Eye, Database, Trash2, Globe, Mail, Lock, AlertTriangle } from "lucide-react"
+import { ArrowLeft, Shield, Eye, Database, Trash2, Globe, Mail, Lock, AlertTriangle } from "lucide-react"
 
 export default function PrivacyPolicy() {
   return (
-    <div className="min-h-screen w-full bg-[#030712] text-slate-100 relative">
-      {/* Fixed Ambient Glows (never interferes with scrolling) */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none -z-10" aria-hidden="true">
-        <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] rounded-full bg-blue-500/10 blur-[120px]" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] rounded-full bg-violet-500/10 blur-[120px]" />
-      </div>
+    <div className="min-h-screen bg-[#030712] text-slate-100 p-6 md:p-16 pb-32 relative overflow-y-auto w-full">
+      {/* Decorative Blur Backgrounds */}
+      <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] rounded-full bg-blue-500/10 blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] rounded-full bg-violet-500/10 blur-[120px] pointer-events-none" />
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-12 pb-36 space-y-10 relative z-10 animate-in fade-in duration-500">
+      <div className="max-w-4xl mx-auto space-y-10 relative z-10 animate-in fade-in duration-700">
         
         {/* Back Navigation */}
         <div>
@@ -50,7 +48,7 @@ export default function PrivacyPolicy() {
               <h2 className="text-lg font-bold text-white tracking-tight">1. Information We Collect</h2>
             </div>
             <p className="text-xs text-slate-400 leading-relaxed">
-              When you authenticate with Instagram, we obtain necessary credentials through Meta&apos;s secure OAuth consent window:
+              When you authenticate with Instagram, we obtain necessary credentials through Meta's secure OAuth consent window:
             </p>
             <ul className="list-disc list-inside space-y-2 text-xs text-slate-400 pl-2">
               <li><span className="text-slate-200 font-semibold">Profile Identity:</span> Your unique Instagram ID, username, profile picture, and business account link.</li>
@@ -113,10 +111,10 @@ export default function PrivacyPolicy() {
               <h2 className="text-lg font-bold text-white tracking-tight">4. Meta API Compliance & Data Transfer</h2>
             </div>
             <p className="text-xs text-slate-400 leading-relaxed">
-              DMSpark interacts directly with the secure, official Instagram Graph API. All data transfers between our application servers and Meta&apos;s platform are encrypted in transit using industry-standard SSL/TLS protocols.
+              DMSpark interacts directly with the secure, official Instagram Graph API. All data transfers between our application servers and Meta's platform are encrypted in transit using industry-standard SSL/TLS protocols.
             </p>
             <p className="text-xs text-slate-400">
-              By connecting your Instagram account, you agree to Meta&apos;s own terms and data guidelines, which can be found in the{" "}
+              By connecting your Instagram account, you agree to Meta's own terms and data guidelines, which can be found in the{" "}
               <a href="https://www.facebook.com/policy.php" target="_blank" rel="noreferrer" className="text-blue-400 hover:underline font-semibold">
                 Meta Privacy Policy
               </a>.
@@ -124,14 +122,14 @@ export default function PrivacyPolicy() {
           </div>
 
           {/* Contact Card */}
-          <div className="p-6 rounded-2xl border border-slate-800/80 bg-gradient-to-br from-slate-900/80 to-slate-950/80 backdrop-blur-md flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="p-6 rounded-2xl border border-slate-850 bg-gradient-to-br from-slate-900/80 to-slate-950/80 backdrop-blur-md flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="space-y-1">
               <h3 className="text-sm font-bold text-white">Have privacy-related questions?</h3>
               <p className="text-xs text-slate-400">Our security compliance team is here to assist you.</p>
             </div>
             <a 
               href="mailto:virtualrevolution02@gmail.com" 
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white text-black font-bold text-xs hover:bg-slate-200 hover:scale-105 transition-all duration-200 shrink-0"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white text-black font-bold text-xs hover:bg-slate-200 hover:scale-105 transition-all duration-200"
             >
               <Mail className="w-4 h-4" /> Contact Support
             </a>
@@ -139,12 +137,7 @@ export default function PrivacyPolicy() {
 
         </div>
 
-        {/* Footer */}
-        <footer className="pt-8 border-t border-slate-900 text-center text-xs text-slate-500">
-          © {new Date().getFullYear()} DMSpark. All rights reserved.
-        </footer>
-
-      </main>
+      </div>
     </div>
   )
 }
