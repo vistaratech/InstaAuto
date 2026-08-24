@@ -107,24 +107,7 @@ export function Sidebar({ className, username = "Demo User", profilePictureUrl, 
           onClick={onNavigate}
           isCollapsed={isCollapsed}
         />
-        <NavItem
-          href="/dashboard/publisher"
-          icon={<Clapperboard className="w-4 h-4" />}
-          label="Publisher"
-          badge="Soon"
-          active={isActive("/dashboard/publisher")}
-          onClick={onNavigate}
-          isCollapsed={isCollapsed}
-        />
-        <NavItem
-          href="/dashboard/ice-breakers"
-          icon={<Snowflake className="w-4 h-4" />}
-          label="Ice Breakers"
-          badge="Soon"
-          active={isActive("/dashboard/ice-breakers")}
-          onClick={onNavigate}
-          isCollapsed={isCollapsed}
-        />
+        {/* Publisher & Ice Breakers hidden during App Review — restore after approval */}
         <NavItem
           href="/dashboard/analytics"
           icon={<BarChart3 className="w-4 h-4" />}
