@@ -216,11 +216,21 @@ export default function SettingsPage() {
           <Card className={`border-border bg-card/65 shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`} style={{ transitionDelay: isVisible ? '200ms' : '0ms', transitionDuration: '700ms' }}>
             <CardHeader className="border-b border-border/50 pb-5">
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <div className="p-1.5 rounded-lg bg-gradient-to-br from-indigo-500/10 to-purple-500/10">
+                <div className="flex items-center gap-2.5">
+                  <div className="p-2 rounded-xl bg-gradient-to-br from-indigo-500/15 to-purple-500/15 border border-indigo-500/20">
                     <BrainCircuit className="w-5 h-5 text-indigo-500" />
                   </div>
-                  <CardTitle className="text-base text-foreground font-bold">Dynamic AI Responses (Groq LLaMA 3)</CardTitle>
+                  <div>
+                    <CardTitle className="text-base text-foreground font-bold flex items-center gap-2">
+                      Smart AI Auto-Reply Assistant
+                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-500 border border-indigo-500/20">
+                        Context-Aware
+                      </span>
+                    </CardTitle>
+                    <p className="text-[11px] text-muted-foreground mt-0.5">
+                      Intelligent customer service assistant powered by secure real-time inference
+                    </p>
+                  </div>
                 </div>
                 
                 {/* Switch for AI Enabled status */}
@@ -230,60 +240,70 @@ export default function SettingsPage() {
                   className="cursor-pointer"
                 />
               </div>
-              <CardDescription className="text-xs mt-2.5">
-                When enabled, incoming DMs and comments will be automatically answered by our context-aware AI engine using Groq's high-speed intelligence.
-              </CardDescription>
             </CardHeader>
-            <CardContent className="pt-6 space-y-6">
+            <CardContent className="pt-6 space-y-5">
               
               <div className="space-y-2.5">
-                <label className="text-xs font-bold text-foreground block">AI Assistant Instructions & Context</label>
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-bold text-foreground block">
+                    AI Knowledge Base & Business Context
+                  </label>
+                  <span className="text-[10px] text-muted-foreground font-semibold">
+                    {aiEnabled ? "🟢 Active Engine" : "⚪ Standby Mode"}
+                  </span>
+                </div>
                 <Textarea
                   value={aiContext}
                   onChange={(e) => setAiContext(e.target.value)}
                   disabled={!aiEnabled}
-                  placeholder="Example: You are a friendly customer helper for Sun Rockers Events. Answer questions in Tamil and English. We offer event planning, decor, and DJ services. Always end with a call to action..."
-                  className="min-h-[180px] bg-background border-border text-xs focus:ring-primary/20 text-foreground resize-none leading-relaxed placeholder:opacity-60"
+                  placeholder="Example: You are a friendly customer helper for our brand. You answer questions politely and accurately. You provide pricing, business hours, service details, and guide users to our website..."
+                  className="min-h-[160px] bg-background border-border text-xs focus:ring-primary/20 text-foreground resize-none leading-relaxed placeholder:opacity-60 font-sans"
                 />
                 <p className="text-[10px] text-muted-foreground font-medium">
-                  Provide instructions regarding your brand identity, product prices, event services, or dynamic answers.
+                  Define your brand identity, FAQs, product pricing, and business guidelines for automatic customer assistance.
                 </p>
+              </div>
+
+              {/* Data Privacy & Compliance Disclosure for Meta App Review */}
+              <div className="p-3.5 rounded-xl bg-secondary/50 border border-border/70 flex items-start gap-2.5 text-[11px] text-muted-foreground">
+                <ShieldCheck className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+                <div className="leading-relaxed">
+                  <span className="font-bold text-foreground">Meta Platform Data Compliance:</span> AI processing only operates in real-time to generate instant replies for customer inquiries. No follower messages or personal data are stored for model training or shared with unauthorized third parties.
+                </div>
               </div>
 
               {/* Status information depending on switch */}
               {aiEnabled ? (
-                <div className="flex items-start gap-3 p-4 rounded-xl bg-indigo-500/5 border border-indigo-500/10 text-xs text-indigo-400">
+                <div className="flex items-start gap-3 p-3.5 rounded-xl bg-indigo-500/5 border border-indigo-500/20 text-xs text-indigo-400">
                   <Sparkles className="w-4 h-4 shrink-0 mt-0.5 text-indigo-400 animate-pulse" />
                   <p className="leading-relaxed font-medium">
-                    <strong>AI Responses Active:</strong> All incoming messages not caught by specific keyword trigger templates will automatically fall back to Groq dynamic AI processing using the instructions provided above.
+                    <strong>AI Responses Active:</strong> Messages that do not match exact trigger keywords will receive smart, contextual answers based on your business instructions above.
                   </p>
                 </div>
               ) : (
-                <div className="flex items-start gap-3 p-4 rounded-xl bg-amber-500/5 border border-amber-500/10 text-xs text-amber-500">
+                <div className="flex items-start gap-3 p-3.5 rounded-xl bg-amber-500/5 border border-amber-500/20 text-xs text-amber-500">
                   <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-amber-500" />
                   <p className="leading-relaxed font-medium">
-                    <strong>AI Responses Disabled:</strong> Only exact keyword matches defined in your trigger templates will trigger auto-replies. Standard casual questions will be ignored.
+                    <strong>Keyword Mode Only:</strong> Only explicit trigger keywords defined in your Automations tab will trigger auto-replies.
                   </p>
                 </div>
               )}
 
-              <div className="border-t border-border/50 pt-5 flex items-center justify-between gap-4">
-                
-                {/* Success Feedback message */}
+              <div className="border-t border-border/50 pt-4 flex items-center justify-between gap-4">
                 {saveSuccess ? (
                   <span className="flex items-center gap-1.5 text-emerald-500 text-xs font-bold animate-in fade-in duration-300">
                     <CheckCircle className="w-4 h-4" /> Preferences Saved Successfully!
                   </span>
                 ) : (
                   <span className="text-[11px] text-muted-foreground font-medium">
-                    Ensure AI instructions are comprehensive to get maximum conversion.
+                    Changes take effect immediately on incoming messages.
                   </span>
                 )}
 
                 <Button
                   onClick={handleSaveAISettings}
                   disabled={saving}
-                  className="px-6 py-4.5 rounded-xl bg-primary text-primary-foreground font-bold text-xs shadow-md shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all cursor-pointer shrink-0"
+                  className="px-6 py-2 rounded-xl bg-primary text-primary-foreground font-bold text-xs shadow-md shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all cursor-pointer shrink-0"
                 >
                   {saving ? (
                     <>
@@ -298,23 +318,41 @@ export default function SettingsPage() {
             </CardContent>
           </Card>
 
-          {/* Additional settings placeholder */}
+          {/* Meta Platform Compliance & Official Documentation Card */}
           <Card className={`border-border bg-card/65 shadow-sm p-6 space-y-4 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`} style={{ transitionDelay: isVisible ? '400ms' : '0ms', transitionDuration: '700ms' }}>
             <div className="flex items-center gap-2">
-              <div className="w-1 h-5 rounded-full bg-gradient-to-b from-indigo-500 to-purple-500" />
-              <h3 className="font-bold text-foreground text-sm">Meta Developer & Webhook Settings</h3>
+              <div className="w-1 h-5 rounded-full bg-gradient-to-b from-blue-500 to-indigo-500" />
+              <h3 className="font-bold text-foreground text-sm">Meta Developer & Platform Compliance</h3>
             </div>
             <p className="text-xs text-muted-foreground font-medium leading-relaxed">
-              If you are integrating a custom Meta App with our system, make sure the App Token matches the database environment. For developer support, refer to Meta's guides.
+              DMSpark operates strictly in compliance with Meta Platform Terms, Instagram Messaging Policies, and user data privacy standards.
             </p>
-            <div className="flex flex-col sm:flex-row gap-3 pt-2">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-1">
+              <Link 
+                href="/privacy" 
+                className="flex items-center justify-center gap-1.5 border border-border hover:bg-secondary/60 font-bold text-[11px] px-3 py-2.5 rounded-xl text-foreground transition-all"
+              >
+                Privacy Policy <ArrowRight className="w-3 h-3 text-muted-foreground" />
+              </Link>
+              <Link 
+                href="/terms" 
+                className="flex items-center justify-center gap-1.5 border border-border hover:bg-secondary/60 font-bold text-[11px] px-3 py-2.5 rounded-xl text-foreground transition-all"
+              >
+                Terms of Service <ArrowRight className="w-3 h-3 text-muted-foreground" />
+              </Link>
+              <Link 
+                href="/delete-data" 
+                className="flex items-center justify-center gap-1.5 border border-border hover:bg-secondary/60 font-bold text-[11px] px-3 py-2.5 rounded-xl text-foreground transition-all"
+              >
+                Data Deletion <ArrowRight className="w-3 h-3 text-muted-foreground" />
+              </Link>
               <a 
                 href="https://developers.facebook.com/" 
                 target="_blank" 
                 rel="noreferrer"
-                className="inline-flex items-center justify-center gap-2 border border-border hover:bg-secondary/40 font-bold text-xs px-4 py-2.5 rounded-xl text-foreground transition-all cursor-pointer"
+                className="flex items-center justify-center gap-1.5 border border-border hover:bg-secondary/60 font-bold text-[11px] px-3 py-2.5 rounded-xl text-foreground transition-all"
               >
-                Meta Developer Console <ExternalLink className="w-3.5 h-3.5" />
+                Meta Console <ExternalLink className="w-3 h-3 text-muted-foreground" />
               </a>
             </div>
           </Card>
