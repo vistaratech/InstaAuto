@@ -64,24 +64,43 @@ function HomeContent() {
 export default function Home() {
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    name: "DMSpark",
-    applicationCategory: "BusinessApplication",
-    operatingSystem: "Web, Android",
-    url: "https://www.dmspark.in",
-    description:
-      "DMSpark is the #1 Instagram automation tool. Auto-reply to comments, DMs, and stories with smart keyword triggers. Grow your Instagram followers 24/7 on autopilot.",
-    offers: {
-      "@type": "Offer",
-      price: "0",
-      priceCurrency: "INR",
-      description: "Free to start",
-    },
-    creator: {
-      "@type": "Organization",
-      name: "DMSpark",
-      url: "https://www.dmspark.in",
-    },
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://www.dmspark.in/#website",
+        url: "https://www.dmspark.in",
+        name: "DMSpark",
+        alternateName: ["dmspark", "dmspark.in", "DM Spark", "DMSPARK"],
+        description: "Official DMSpark Instagram Automation & Growth Tool",
+        publisher: {
+          "@type": "Organization",
+          name: "DMSpark",
+          url: "https://www.dmspark.in",
+          logo: "https://www.dmspark.in/logo.png",
+        },
+      },
+      {
+        "@type": "SoftwareApplication",
+        name: "DMSpark",
+        alternateName: "dmspark",
+        applicationCategory: "BusinessApplication",
+        operatingSystem: "Web, Android",
+        url: "https://www.dmspark.in",
+        description:
+          "DMSpark is the official Instagram automation platform. Auto-reply to comments, DMs, and stories with smart keyword triggers. Grow your Instagram followers 24/7 on autopilot.",
+        offers: {
+          "@type": "Offer",
+          price: "0",
+          priceCurrency: "INR",
+          description: "Free to start",
+        },
+        creator: {
+          "@type": "Organization",
+          name: "DMSpark",
+          url: "https://www.dmspark.in",
+        },
+      },
+    ],
   }
 
   return (
