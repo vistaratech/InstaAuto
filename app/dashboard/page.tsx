@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef, useCallback } from "react"
 import { useInstagramSession } from "@/hooks/use-instagram-session"
-import { Zap, Users, Send, Activity, Loader2, MessageCircle, ArrowUpRight, Search, TrendingUp, Trash2, Film, Image, Layers, X, Check, ExternalLink, Mic, Camera } from "lucide-react"
+import { Zap, Users, Send, Activity, Loader2, MessageCircle, ArrowUpRight, Search, TrendingUp, Trash2, Film, Image, Layers, X, Check, ExternalLink, Mic, Camera, Shield, Clock } from "lucide-react"
 import Link from "next/link"
 import { toast } from "sonner"
 import { DMSparkGoogleLogo } from "@/components/ui/dmspark-logo"
@@ -272,10 +272,15 @@ export default function DashboardPage() {
         },
     ]
 
+    const featurePills = [
+        { label: "Instant Comment Auto-Reply", icon: <Zap className="w-3.5 h-3.5 text-amber-500" /> },
+        { label: "Follower Growth Gate", icon: <Shield className="w-3.5 h-3.5 text-blue-500" /> },
+        { label: "24/7 Always On Autopilot", icon: <Clock className="w-3.5 h-3.5 text-emerald-500" /> },
+        { label: "Direct Message Funnels", icon: <MessageCircle className="w-3.5 h-3.5 text-indigo-500" /> },
+    ]
+
     return (
-        <div className={`min-h-[calc(100vh-4.5rem)] w-full flex flex-col items-center px-4 transition-all duration-500 ${
-            selectedMedia ? 'pt-8 md:pt-10 pb-20 justify-start' : 'justify-center py-10'
-        } ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
+        <div className={`min-h-[calc(100vh-3.5rem)] w-full flex flex-col justify-between transition-all duration-500 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
 
             {/* Full-Page Celebration Animation & Success Modal */}
             <CelebrationAnimation
@@ -285,7 +290,9 @@ export default function DashboardPage() {
             />
 
             {/* Google Search–style Clean Centered Hero Section */}
-            <div className="flex flex-col items-center justify-center px-4 w-full max-w-3xl mx-auto text-center">
+            <main className={`flex-1 flex flex-col items-center px-4 w-full max-w-3xl mx-auto text-center transition-all duration-500 ${
+                selectedMedia ? 'pt-8 md:pt-10 pb-12 justify-start' : 'justify-center py-10'
+            }`}>
 
                 {/* Google-Style DMSpark Brand Logo (Adapts size when automation panel is open so it NEVER clips) */}
                 <div className={`group cursor-pointer transition-all duration-300 hover:scale-105 active:scale-95 select-none ${
@@ -464,121 +471,155 @@ export default function DashboardPage() {
                         ))}
                     </div>
                 )}
-            </div>
 
-            {/* ── Quick Automation Setup Panel (shows when a reel is selected) ── */}
-            {selectedMedia && (
-                <div className="w-full max-w-2xl mx-auto px-4 pb-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
-                    <div className="border border-border rounded-2xl bg-background overflow-hidden">
-                        {/* Selected Media Header */}
-                        <div className="flex items-center gap-3 p-4 bg-secondary/30 border-b border-border">
-                            {selectedMedia.thumbnail_url || selectedMedia.media_url ? (
-                                <img
-                                    src={selectedMedia.thumbnail_url || selectedMedia.media_url}
-                                    alt=""
-                                    className="w-14 h-14 rounded-xl object-cover shrink-0"
-                                />
-                            ) : (
-                                <div className="w-14 h-14 rounded-xl bg-secondary flex items-center justify-center shrink-0">
-                                    <Film className="w-6 h-6 text-muted-foreground/40" />
-                                </div>
-                            )}
-                            <div className="flex-1 min-w-0">
-                                <p className="text-sm font-semibold text-foreground truncate">
-                                    {selectedMedia.caption || "Untitled Post"}
-                                </p>
-                                <div className="flex items-center gap-2 mt-0.5">
-                                    <span className="flex items-center gap-1 text-xs text-muted-foreground">
-                                        {getMediaIcon(selectedMedia)} {getMediaTypeLabel(selectedMedia)}
-                                    </span>
-                                    <a
-                                        href={selectedMedia.permalink}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="flex items-center gap-1 text-xs text-[#1a73e8] hover:underline"
-                                    >
-                                        View on Instagram <ExternalLink className="w-3 h-3" />
-                                    </a>
-                                </div>
-                            </div>
-                            <button
-                                onClick={() => { setSelectedMedia(null); setAutoKeywords(""); setAutoMessage(""); setAutoName("") }}
-                                className="w-8 h-8 rounded-full flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors cursor-pointer shrink-0"
+                {/* Feature Pills Row */}
+                {!selectedMedia && (
+                    <div className="flex flex-wrap items-center justify-center gap-2.5 mt-8 md:mt-10 max-w-2xl">
+                        {featurePills.map((pill, i) => (
+                            <span
+                                key={i}
+                                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-secondary/60 hover:bg-secondary border border-border/60 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors select-none"
                             >
-                                <X className="w-4 h-4" />
-                            </button>
-                        </div>
+                                {pill.icon}
+                                {pill.label}
+                            </span>
+                        ))}
+                    </div>
+                )}
 
-                        {/* Automation Setup Form */}
-                        <div className="p-4 space-y-4">
-                            <h3 className="text-base font-semibold text-foreground flex items-center gap-2">
-                                <Zap className="w-4 h-4 text-[#1a73e8]" />
-                                Set Up Automation
-                            </h3>
-
-                            {/* Automation Name */}
-                            <div>
-                                <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Automation Name</label>
-                                <input
-                                    type="text"
-                                    placeholder="e.g. Price inquiry auto-reply"
-                                    value={autoName}
-                                    onChange={(e) => setAutoName(e.target.value)}
-                                    className="w-full h-10 px-3 rounded-lg border border-border bg-background text-sm text-foreground outline-none focus:border-[#1a73e8] focus:ring-1 focus:ring-[#1a73e8]/20 transition-all"
-                                />
-                            </div>
-
-                            {/* Keywords */}
-                            <div>
-                                <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Trigger Keywords</label>
-                                <input
-                                    type="text"
-                                    placeholder="price, how much, cost, rate (comma-separated)"
-                                    value={autoKeywords}
-                                    onChange={(e) => setAutoKeywords(e.target.value)}
-                                    className="w-full h-10 px-3 rounded-lg border border-border bg-background text-sm text-foreground outline-none focus:border-[#1a73e8] focus:ring-1 focus:ring-[#1a73e8]/20 transition-all"
-                                />
-                                {autoKeywords && (
-                                    <div className="flex flex-wrap gap-1.5 mt-2">
-                                        {autoKeywords.split(",").filter(k => k.trim()).map((k, i) => (
-                                            <span key={i} className="px-2 py-0.5 rounded-md bg-[#1a73e8]/8 text-[#1a73e8] text-xs font-medium">
-                                                {k.trim()}
-                                            </span>
-                                        ))}
+                {/* ── Quick Automation Setup Panel (shows when a reel is selected) ── */}
+                {selectedMedia && (
+                    <div className="w-full max-w-2xl mx-auto mt-6 pb-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
+                        <div className="border border-border rounded-2xl bg-background overflow-hidden">
+                            {/* Selected Media Header */}
+                            <div className="flex items-center gap-3 p-4 bg-secondary/30 border-b border-border">
+                                {selectedMedia.thumbnail_url || selectedMedia.media_url ? (
+                                    <img
+                                        src={selectedMedia.thumbnail_url || selectedMedia.media_url}
+                                        alt=""
+                                        className="w-14 h-14 rounded-xl object-cover shrink-0"
+                                    />
+                                ) : (
+                                    <div className="w-14 h-14 rounded-xl bg-secondary flex items-center justify-center shrink-0">
+                                        <Film className="w-6 h-6 text-muted-foreground/40" />
                                     </div>
                                 )}
+                                <div className="flex-1 min-w-0 text-left">
+                                    <p className="text-sm font-semibold text-foreground truncate">
+                                        {selectedMedia.caption || "Untitled Post"}
+                                    </p>
+                                    <div className="flex items-center gap-2 mt-0.5">
+                                        <span className="flex items-center gap-1 text-xs text-muted-foreground">
+                                            {getMediaIcon(selectedMedia)} {getMediaTypeLabel(selectedMedia)}
+                                        </span>
+                                        <a
+                                            href={selectedMedia.permalink}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="flex items-center gap-1 text-xs text-[#1a73e8] hover:underline"
+                                        >
+                                            View on Instagram <ExternalLink className="w-3 h-3" />
+                                        </a>
+                                    </div>
+                                </div>
+                                <button
+                                    onClick={() => { setSelectedMedia(null); setAutoKeywords(""); setAutoMessage(""); setAutoName("") }}
+                                    className="w-8 h-8 rounded-full flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors cursor-pointer shrink-0"
+                                >
+                                    <X className="w-4 h-4" />
+                                </button>
                             </div>
 
-                            {/* Reply Message */}
-                            <div>
-                                <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Auto-Reply DM Message</label>
-                                <textarea
-                                    placeholder="Hi! Thanks for your interest. The price is ₹999. DM us for more details!"
-                                    value={autoMessage}
-                                    onChange={(e) => setAutoMessage(e.target.value)}
-                                    rows={3}
-                                    className="w-full px-3 py-2.5 rounded-lg border border-border bg-background text-sm text-foreground outline-none focus:border-[#1a73e8] focus:ring-1 focus:ring-[#1a73e8]/20 transition-all resize-none"
-                                />
-                                <p className="text-[11px] text-muted-foreground mt-1 text-right">{autoMessage.length}/500</p>
-                            </div>
+                            {/* Automation Setup Form */}
+                            <div className="p-4 space-y-4 text-left">
+                                <h3 className="text-base font-semibold text-foreground flex items-center gap-2">
+                                    <Zap className="w-4 h-4 text-[#1a73e8]" />
+                                    Set Up Automation
+                                </h3>
 
-                            {/* Create Button */}
-                            <button
-                                onClick={handleCreateAutomation}
-                                disabled={creating || !autoKeywords.trim() || !autoMessage.trim()}
-                                className="w-full h-11 rounded-full bg-[#1a73e8] hover:bg-[#1557b0] text-white text-sm font-semibold transition-all disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center gap-2"
-                            >
-                                {creating ? (
-                                    <Loader2 className="w-4 h-4 animate-spin" />
-                                ) : (
-                                    <><Zap className="w-4 h-4" /> Create Automation</>
-                                )}
-                            </button>
+                                {/* Automation Name */}
+                                <div>
+                                    <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Rule Name</label>
+                                    <input
+                                        type="text"
+                                        placeholder="e.g. Price Query Auto-Reply"
+                                        value={autoName}
+                                        onChange={(e) => setAutoName(e.target.value)}
+                                        className="w-full h-10 px-3 rounded-lg border border-border bg-background text-sm text-foreground outline-none focus:border-[#1a73e8] focus:ring-1 focus:ring-[#1a73e8]/20 transition-all"
+                                    />
+                                </div>
+
+                                {/* Keywords */}
+                                <div>
+                                    <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Trigger Keywords</label>
+                                    <input
+                                        type="text"
+                                        placeholder="price, how much, cost, rate (comma-separated)"
+                                        value={autoKeywords}
+                                        onChange={(e) => setAutoKeywords(e.target.value)}
+                                        className="w-full h-10 px-3 rounded-lg border border-border bg-background text-sm text-foreground outline-none focus:border-[#1a73e8] focus:ring-1 focus:ring-[#1a73e8]/20 transition-all"
+                                    />
+                                    {autoKeywords && (
+                                        <div className="flex flex-wrap gap-1.5 mt-2">
+                                            {autoKeywords.split(",").filter(k => k.trim()).map((k, i) => (
+                                                <span key={i} className="px-2 py-0.5 rounded-md bg-[#1a73e8]/8 text-[#1a73e8] text-xs font-medium">
+                                                    {k.trim()}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Reply Message */}
+                                <div>
+                                    <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Auto-Reply DM Message</label>
+                                    <textarea
+                                        placeholder="Hi! Thanks for your interest. The price is ₹999. DM us for more details!"
+                                        value={autoMessage}
+                                        onChange={(e) => setAutoMessage(e.target.value)}
+                                        rows={3}
+                                        className="w-full px-3 py-2.5 rounded-lg border border-border bg-background text-sm text-foreground outline-none focus:border-[#1a73e8] focus:ring-1 focus:ring-[#1a73e8]/20 transition-all resize-none"
+                                    />
+                                    <p className="text-[11px] text-muted-foreground mt-1 text-right">{autoMessage.length}/500</p>
+                                </div>
+
+                                {/* Create Button */}
+                                <button
+                                    onClick={handleCreateAutomation}
+                                    disabled={creating || !autoKeywords.trim() || !autoMessage.trim()}
+                                    className="w-full h-11 rounded-full bg-[#1a73e8] hover:bg-[#1557b0] text-white text-sm font-semibold transition-all disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center gap-2"
+                                >
+                                    {creating ? (
+                                        <Loader2 className="w-4 h-4 animate-spin" />
+                                    ) : (
+                                        <><Zap className="w-4 h-4" /> Create Automation</>
+                                    )}
+                                </button>
+                            </div>
                         </div>
                     </div>
-                </div>
-            )}
+                )}
+            </main>
 
+            {/* Clean Google-Style Footer with Meta Review Compliance */}
+            <footer className="w-full shrink-0 border-t border-border/60 py-3 px-4 md:px-8 text-xs text-muted-foreground flex flex-col sm:flex-row items-center justify-between gap-2.5 select-none">
+                <div className="flex items-center gap-2 text-center sm:text-left">
+                    <span>© 2026 DMSpark</span>
+                    <span>•</span>
+                    <span>Not affiliated with Meta Platforms Inc. or Instagram</span>
+                </div>
+                <div className="flex items-center gap-4 text-xs font-medium">
+                    <Link href="/privacy" className="hover:text-foreground transition-colors hover:underline">
+                        Privacy Policy
+                    </Link>
+                    <Link href="/terms" className="hover:text-foreground transition-colors hover:underline">
+                        Terms of Service
+                    </Link>
+                    <Link href="/data-deletion" className="hover:text-foreground transition-colors hover:underline">
+                        Data Deletion Instructions
+                    </Link>
+                </div>
+            </footer>
         </div>
     )
 }
