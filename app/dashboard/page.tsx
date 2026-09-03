@@ -55,6 +55,35 @@ export default function DashboardPage() {
     const [creating, setCreating] = useState(false)
 
     const searchRef = useRef<HTMLDivElement>(null)
+    const searchInputRef = useRef<HTMLInputElement>(null)
+
+    // Animated rotating search placeholders
+    const searchPlaceholders = [
+        "Search by Post ID, Reel ID, or caption...",
+        "Try: Search 'price' or 'link' to auto-reply...",
+        "Click to browse your latest Reels & Posts...",
+        "Paste any Post ID to create instant DM funnel...",
+    ]
+    const [placeholderIndex, setPlaceholderIndex] = useState(0)
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setPlaceholderIndex((prev) => (prev + 1) % searchPlaceholders.length)
+        }, 3200)
+        return () => clearInterval(interval)
+    }, [searchPlaceholders.length])
+
+    // Keyboard shortcut (⌘K or Ctrl+K) to focus search bar
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+                e.preventDefault()
+                searchInputRef.current?.focus()
+            }
+        }
+        window.addEventListener("keydown", handleKeyDown)
+        return () => window.removeEventListener("keydown", handleKeyDown)
+    }, [])
 
     // Fetch stats
     useEffect(() => {
@@ -203,9 +232,24 @@ export default function DashboardPage() {
     }
 
     const quickActions = [
-        { label: "New Automation", href: "/dashboard/automations?create=true", icon: <Zap className="w-4 h-4" /> },
-        { label: "Open Inbox", href: "/dashboard/inbox", icon: <MessageCircle className="w-4 h-4" /> },
-        { label: "View Analytics", href: "/dashboard/analytics", icon: <TrendingUp className="w-4 h-4" /> },
+        {
+            label: "New Automation",
+            href: "/dashboard/automations?create=true",
+            icon: <Zap className="w-4 h-4 text-amber-500 group-hover:scale-125 group-hover:rotate-12 transition-all duration-300" />,
+            hoverClass: "hover:border-amber-500/40 hover:bg-amber-500/5 hover:text-amber-600 dark:hover:text-amber-400",
+        },
+        {
+            label: "Open Inbox",
+            href: "/dashboard/inbox",
+            icon: <MessageCircle className="w-4 h-4 text-[#1a73e8] group-hover:scale-125 group-hover:-translate-y-0.5 transition-all duration-300" />,
+            hoverClass: "hover:border-[#1a73e8]/40 hover:bg-[#1a73e8]/5 hover:text-[#1a73e8]",
+        },
+        {
+            label: "View Analytics",
+            href: "/dashboard/analytics",
+            icon: <TrendingUp className="w-4 h-4 text-emerald-500 group-hover:scale-125 group-hover:translate-x-0.5 transition-all duration-300" />,
+            hoverClass: "hover:border-emerald-500/40 hover:bg-emerald-500/5 hover:text-emerald-600 dark:hover:text-emerald-400",
+        },
     ]
 
     const statChips = [
@@ -218,65 +262,104 @@ export default function DashboardPage() {
     return (
         <div className={`flex flex-col items-center transition-all duration-500 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
 
-            {/* Google Search–style Hero Section */}
-            <div className="flex flex-col items-center justify-center pt-12 md:pt-20 pb-6 md:pb-10 px-4 w-full max-w-2xl mx-auto">
+            {/* Google Search–style Hero Section with Animations */}
+            <div className="flex flex-col items-center justify-center pt-10 md:pt-16 pb-6 md:pb-10 px-4 w-full max-w-2xl mx-auto">
 
-                {/* Large Logo */}
-                <img
-                    src="/logo.png"
-                    alt="DMSpark"
-                    className="w-20 h-20 md:w-28 md:h-28 object-contain mb-4 md:mb-6"
-                />
+                {/* Animated Logo with Glow Halo */}
+                <div className="relative group cursor-pointer mb-3">
+                    <div className="absolute -inset-3 bg-gradient-to-r from-blue-500/20 via-indigo-500/15 to-violet-500/20 rounded-3xl blur-2xl opacity-60 group-hover:opacity-100 transition-all duration-700 group-hover:scale-125 animate-pulse pointer-events-none" />
+                    <img
+                        src="/logo.png"
+                        alt="DMSpark"
+                        className="relative w-20 h-20 md:w-24 md:h-24 object-contain transition-all duration-500 group-hover:scale-105 group-hover:-translate-y-1 drop-shadow-sm select-none"
+                    />
+                </div>
 
-                {/* Greeting */}
-                <h1 className="text-xl md:text-2xl font-normal text-foreground mb-1 text-center">
-                    {greeting}, <span className="font-semibold">{username}</span>
+                {/* Live Status Badge */}
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary/80 border border-border/70 text-muted-foreground text-[11px] font-medium tracking-wide mb-3 shadow-xs hover:border-[#1a73e8]/30 transition-colors select-none">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-xs shadow-emerald-500/50" />
+                    <span>Instagram Business Active</span>
+                </div>
+
+                {/* Greeting with Gradient Accent */}
+                <h1 className="text-2xl md:text-3xl font-extrabold text-foreground mb-1.5 text-center tracking-tight">
+                    {greeting}, <span className="bg-gradient-to-r from-[#1a73e8] via-blue-600 to-indigo-600 bg-clip-text text-transparent">{username}</span>
                 </h1>
-                <p className="text-sm text-muted-foreground mb-6 md:mb-8 text-center">
-                    Search your posts & reels to set up automations
+                <p className="text-xs md:text-sm text-muted-foreground mb-6 md:mb-8 text-center max-w-md font-medium">
+                    Search your posts & reels to set up instant DM automations
                 </p>
 
-                {/* Google-style Search Bar with Dropdown */}
+                {/* Google-style Search Bar with Dropdown & Animations */}
                 <div className="w-full max-w-xl relative" ref={searchRef}>
-                    <div className={`flex items-center w-full h-12 md:h-[52px] rounded-full border bg-background px-5 gap-3 transition-all duration-200 ${searchFocused ? 'border-[#1a73e8] shadow-md ring-1 ring-[#1a73e8]/20' : 'border-border shadow-sm hover:shadow-md'
-                        }`}>
-                        <Search className={`w-5 h-5 shrink-0 transition-colors ${searchFocused ? 'text-[#1a73e8]' : 'text-muted-foreground/50'}`} />
-                        <input
-                            type="text"
-                            placeholder="Search by Post ID, Reel ID, or caption..."
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            onFocus={() => setSearchFocused(true)}
-                            className="flex-1 bg-transparent border-none outline-none text-sm text-foreground placeholder:text-muted-foreground/50"
-                        />
-                        {searchQuery && (
-                            <button onClick={() => setSearchQuery("")} className="text-muted-foreground hover:text-foreground transition-colors cursor-pointer">
+                    <div className={`flex items-center w-full h-12 md:h-[52px] rounded-full border bg-background px-4 md:px-5 gap-3 transition-all duration-300 ${
+                        searchFocused 
+                            ? 'border-[#1a73e8] shadow-xl shadow-[#1a73e8]/10 ring-4 ring-[#1a73e8]/15 scale-[1.01]' 
+                            : 'border-border/90 shadow-sm hover:shadow-md hover:border-border'
+                    }`}>
+                        <Search className={`w-5 h-5 shrink-0 transition-all duration-300 ${searchFocused ? 'text-[#1a73e8] scale-110' : 'text-muted-foreground/50'}`} />
+                        <div className="relative flex-1 h-full flex items-center">
+                            <input
+                                ref={searchInputRef}
+                                type="text"
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                onFocus={() => setSearchFocused(true)}
+                                className="w-full h-full bg-transparent border-none outline-none text-sm text-foreground z-10"
+                            />
+                            {/* Animated Rotating Placeholder when empty */}
+                            {!searchQuery && (
+                                <span 
+                                    key={placeholderIndex} 
+                                    className="absolute inset-0 flex items-center text-sm text-muted-foreground/50 pointer-events-none select-none truncate animate-in fade-in slide-in-from-bottom-1 duration-500"
+                                >
+                                    {searchPlaceholders[placeholderIndex]}
+                                </span>
+                            )}
+                        </div>
+                        {searchQuery ? (
+                            <button 
+                                onClick={() => { setSearchQuery(""); searchInputRef.current?.focus() }} 
+                                className="w-6 h-6 rounded-full flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors cursor-pointer"
+                            >
                                 <X className="w-4 h-4" />
                             </button>
+                        ) : (
+                            <kbd className="hidden sm:inline-flex items-center gap-0.5 px-2 py-0.5 text-[10px] font-semibold text-muted-foreground/70 bg-secondary/80 border border-border/80 rounded-md select-none">
+                                ⌘K
+                            </kbd>
                         )}
                     </div>
 
-                    {/* Search Results Dropdown */}
+                    {/* Search Results Dropdown with Staggered Animations */}
                     {searchFocused && (
-                        <div className="absolute top-full left-0 right-0 mt-2 bg-background border border-border rounded-2xl shadow-lg z-50 overflow-hidden max-h-[400px] overflow-y-auto">
+                        <div className="absolute top-full left-0 right-0 mt-2 bg-background/98 backdrop-blur-md border border-border rounded-2xl shadow-2xl z-50 overflow-hidden max-h-[420px] overflow-y-auto animate-in fade-in slide-in-from-top-2 duration-200">
                             {mediaLoading ? (
-                                <div className="p-6 text-center">
-                                    <Loader2 className="w-5 h-5 text-muted-foreground animate-spin mx-auto mb-2" />
-                                    <p className="text-sm text-muted-foreground">Loading your posts & reels...</p>
+                                <div className="p-8 text-center">
+                                    <div className="relative w-8 h-8 mx-auto mb-3">
+                                        <div className="w-8 h-8 rounded-full border-2 border-primary/20 animate-ping absolute inset-0" />
+                                        <Loader2 className="w-8 h-8 text-[#1a73e8] animate-spin" />
+                                    </div>
+                                    <p className="text-xs text-muted-foreground font-medium animate-pulse">Loading your posts & reels...</p>
                                 </div>
                             ) : filteredMedia.length === 0 ? (
-                                <div className="p-6 text-center">
-                                    <Film className="w-8 h-8 text-muted-foreground/20 mx-auto mb-2" />
-                                    <p className="text-sm text-muted-foreground">
+                                <div className="p-8 text-center">
+                                    <Film className="w-10 h-10 text-muted-foreground/20 mx-auto mb-2.5" />
+                                    <p className="text-sm font-medium text-foreground">
                                         {searchQuery ? "No matching posts found" : "No posts found"}
+                                    </p>
+                                    <p className="text-xs text-muted-foreground mt-1">
+                                        {searchQuery ? "Try searching by Reel caption or different keywords" : "No media detected in connected account"}
                                     </p>
                                 </div>
                             ) : (
                                 <>
-                                    <div className="px-4 py-2.5 border-b border-border bg-secondary/30">
-                                        <p className="text-xs text-muted-foreground font-medium">
-                                            {searchQuery ? `${filteredMedia.length} results` : `Your Posts & Reels (${filteredMedia.length})`} — Click to set up automation
+                                    <div className="px-4 py-2.5 border-b border-border bg-secondary/40 flex items-center justify-between">
+                                        <p className="text-xs text-muted-foreground font-semibold">
+                                            {searchQuery ? `${filteredMedia.length} results found` : `Your Posts & Reels (${filteredMedia.length})`}
                                         </p>
+                                        <span className="text-[10px] text-[#1a73e8] font-medium bg-[#1a73e8]/10 px-2 py-0.5 rounded-full">
+                                            Click any post to automate
+                                        </span>
                                     </div>
                                     {filteredMedia.map((m) => (
                                         <button
@@ -287,23 +370,25 @@ export default function DashboardPage() {
                                                 setSearchQuery("")
                                                 setAutoName(`${(m.caption || "Post").slice(0, 25)} → Auto Reply`)
                                             }}
-                                            className="w-full flex items-center gap-3 px-4 py-3 hover:bg-secondary/40 transition-colors text-left border-b border-border/50 last:border-0 cursor-pointer"
+                                            className="w-full flex items-center gap-3.5 px-4 py-3 hover:bg-secondary/60 hover:pl-5 transition-all duration-200 text-left border-b border-border/50 last:border-0 cursor-pointer group/item"
                                         >
-                                            {/* Thumbnail */}
-                                            {m.thumbnail_url || m.media_url ? (
-                                                <img
-                                                    src={m.thumbnail_url || m.media_url}
-                                                    alt=""
-                                                    className="w-12 h-12 rounded-lg object-cover shrink-0 bg-secondary"
-                                                />
-                                            ) : (
-                                                <div className="w-12 h-12 rounded-lg bg-secondary flex items-center justify-center shrink-0">
-                                                    <Film className="w-5 h-5 text-muted-foreground/40" />
-                                                </div>
-                                            )}
+                                            {/* Thumbnail with hover scale */}
+                                            <div className="relative w-12 h-12 rounded-xl overflow-hidden shrink-0 bg-secondary border border-border/50 shadow-xs">
+                                                {m.thumbnail_url || m.media_url ? (
+                                                    <img
+                                                        src={m.thumbnail_url || m.media_url}
+                                                        alt=""
+                                                        className="w-full h-full object-cover group-hover/item:scale-110 transition-transform duration-300"
+                                                    />
+                                                ) : (
+                                                    <div className="w-full h-full flex items-center justify-center">
+                                                        <Film className="w-5 h-5 text-muted-foreground/40" />
+                                                    </div>
+                                                )}
+                                            </div>
                                             {/* Details */}
                                             <div className="flex-1 min-w-0">
-                                                <p className="text-sm text-foreground font-medium truncate">
+                                                <p className="text-sm text-foreground font-semibold truncate group-hover/item:text-[#1a73e8] transition-colors">
                                                     {m.caption || "Untitled Post"}
                                                 </p>
                                                 <div className="flex items-center gap-2 mt-0.5">
@@ -316,8 +401,10 @@ export default function DashboardPage() {
                                                     </span>
                                                 </div>
                                             </div>
-                                            {/* Arrow */}
-                                            <Zap className="w-4 h-4 text-muted-foreground/30 shrink-0" />
+                                            {/* Arrow pill */}
+                                            <span className="w-8 h-8 rounded-full bg-secondary/80 flex items-center justify-center text-muted-foreground group-hover/item:bg-[#1a73e8] group-hover/item:text-white transition-all duration-200 shrink-0">
+                                                <Zap className="w-4 h-4" />
+                                            </span>
                                         </button>
                                     ))}
                                 </>
@@ -326,17 +413,17 @@ export default function DashboardPage() {
                     )}
                 </div>
 
-                {/* Quick Action Buttons */}
+                {/* Quick Action Buttons with Micro-Animations */}
                 {!selectedMedia && (
                     <div className="flex items-center gap-2 md:gap-3 mt-6 md:mt-8 flex-wrap justify-center">
                         {quickActions.map((action) => (
                             <Link
                                 key={action.label}
                                 href={action.href}
-                                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-secondary/60 hover:bg-secondary border border-border/50 hover:border-border text-sm font-medium text-foreground transition-all duration-200 hover:shadow-sm"
+                                className={`group flex items-center gap-2 px-4 py-2 rounded-full bg-secondary/60 border border-border/60 text-xs md:text-sm font-medium text-foreground transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md ${action.hoverClass} cursor-pointer active:scale-95`}
                             >
                                 {action.icon}
-                                {action.label}
+                                <span>{action.label}</span>
                             </Link>
                         ))}
                     </div>
