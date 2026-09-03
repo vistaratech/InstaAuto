@@ -3,19 +3,22 @@
 import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Trash2, Globe, Instagram, Zap, ArrowRight, Lock, MessageCircle, Send, Compass, Eye } from "lucide-react"
+import { Trash2, Globe, Instagram, Zap, ArrowRight, Lock, MessageCircle, Send, Compass, Eye, Pencil } from "lucide-react"
 import { useRouter } from "next/navigation"
 import type { Automation } from "@/lib/types"
+import { EditRuleModal } from "@/components/dashboard/EditRuleModal"
 
 interface AutomationListProps {
   automations: Automation[]
   onDelete: (id: string) => void
+  onUpdate?: () => void
   userId: string
   onPreview?: (rule: Automation) => void
 }
 
-export function AutomationList({ automations, onDelete, userId, onPreview }: AutomationListProps) {
+export function AutomationList({ automations, onDelete, onUpdate, userId, onPreview }: AutomationListProps) {
   const [mediaMap, setMediaMap] = useState<Record<string, string>>({})
+  const [editingRule, setEditingRule] = useState<Automation | null>(null)
   const router = useRouter()
 
   const globalRules = automations.filter((rule) => !rule.specific_media_id)
@@ -68,7 +71,7 @@ export function AutomationList({ automations, onDelete, userId, onPreview }: Aut
               <Globe className="w-3 h-3" /> Global
             </div>
             {globalRules.map((rule, idx) => (
-              <RuleCard key={rule.id} rule={rule} onDelete={onDelete} index={idx} router={router} onPreview={onPreview} />
+              <RuleCard key={rule.id} rule={rule} onDelete={onDelete} onEdit={(r) => setEditingRule(r)} index={idx} router={router} onPreview={onPreview} />
             ))}
           </div>
         )}
@@ -80,18 +83,32 @@ export function AutomationList({ automations, onDelete, userId, onPreview }: Aut
               <Instagram className="w-3 h-3" /> Post Specific
             </div>
             {postSpecificRules.map((rule, idx) => (
-              <RuleCard key={rule.id} rule={rule} onDelete={onDelete} index={idx} mediaUrl={mediaMap[rule.specific_media_id || ""]} isSpecific router={router} onPreview={onPreview} />
+              <RuleCard key={rule.id} rule={rule} onDelete={onDelete} onEdit={(r) => setEditingRule(r)} index={idx} mediaUrl={mediaMap[rule.specific_media_id || ""]} isSpecific router={router} onPreview={onPreview} />
             ))}
           </div>
         )}
       </div>
+
+      {/* Quick Edit Automation Modal */}
+      {editingRule && (
+        <EditRuleModal
+          rule={editingRule}
+          userId={userId}
+          onClose={() => setEditingRule(null)}
+          onSuccess={() => {
+            setEditingRule(null)
+            onUpdate?.()
+          }}
+        />
+      )}
     </div>
   )
 }
 
-function RuleCard({ rule, onDelete, index, isSpecific, mediaUrl, router, onPreview }: {
+function RuleCard({ rule, onDelete, onEdit, index, isSpecific, mediaUrl, router, onPreview }: {
   rule: Automation
   onDelete: (id: string) => void
+  onEdit?: (rule: Automation) => void
   index: number
   isSpecific?: boolean
   mediaUrl?: string
@@ -138,7 +155,18 @@ function RuleCard({ rule, onDelete, index, isSpecific, mediaUrl, router, onPrevi
                 <Button size="sm" onClick={() => onDelete(rule.id)} className="h-7 text-xs bg-red-500/20 text-red-600 hover:bg-red-500/30 border border-red-500/20">Delete</Button>
               </div>
             ) : (
-              <div className="flex items-center gap-1.5 md:opacity-0 md:group-hover:opacity-100 transition-all duration-200">
+              <div className="flex items-center gap-1.5 opacity-90 group-hover:opacity-100 transition-all duration-200">
+                {onEdit && (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => onEdit(rule)}
+                    className="h-7 w-7 text-amber-500 hover:text-amber-600 hover:bg-amber-500/10 rounded-full transition-colors cursor-pointer"
+                    title="Edit Keywords & Message"
+                  >
+                    <Pencil className="w-3.5 h-3.5" />
+                  </Button>
+                )}
                 {onPreview && (
                   <Button
                     variant="ghost"

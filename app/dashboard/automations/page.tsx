@@ -215,6 +215,7 @@ export default function AutomationsPage() {
                     <AutomationList
                         automations={filteredAutomations}
                         onDelete={handleDeleteRule}
+                        onUpdate={fetchAutomations}
                         userId={userId}
                         onPreview={(rule) => setPreviewAutomation(rule)}
                     />
