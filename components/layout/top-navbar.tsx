@@ -126,10 +126,10 @@ export function TopNavbar({ username = "User", profilePictureUrl, onLogout, isCo
                 )}
               </div>
 
-              {/* Logout */}
+              {/* Logout (Desktop only — on mobile it is inside the hamburger drawer) */}
               <button
                 onClick={onLogout}
-                className="w-9 h-9 rounded-full flex items-center justify-center text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors cursor-pointer"
+                className="w-9 h-9 rounded-full hidden sm:flex items-center justify-center text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors cursor-pointer"
                 title="Logout"
               >
                 <LogOut className="w-[18px] h-[18px]" />
@@ -182,6 +182,17 @@ export function TopNavbar({ username = "User", profilePictureUrl, onLogout, isCo
               <Compass className="w-4 h-4" />
               Help
             </Link>
+            {/* Mobile Drawer Logout */}
+            <button
+              onClick={() => {
+                setMobileMenuOpen(false)
+                onLogout?.()
+              }}
+              className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-destructive hover:bg-destructive/10 transition-colors w-full text-left"
+            >
+              <LogOut className="w-4 h-4" />
+              Logout ({username})
+            </button>
           </div>
         </div>
       )}

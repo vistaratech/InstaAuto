@@ -69,12 +69,12 @@ export default function DashboardPage() {
     const searchRef = useRef<HTMLDivElement>(null)
     const searchInputRef = useRef<HTMLInputElement>(null)
 
-    // Animated rotating search placeholders
+    // Animated rotating search placeholders (compact on mobile)
     const searchPlaceholders = [
-        "Search by Post ID, Reel ID, or caption...",
-        "Try: Search 'price' or 'link' to auto-reply...",
-        "Click to browse your latest Reels & Posts...",
-        "Paste any Post ID to create instant DM funnel...",
+        "Search Reels or Posts...",
+        "Search 'price' or 'link'...",
+        "Paste Reel ID to automate...",
+        "Tap to browse recent Reels...",
     ]
     const [placeholderIndex, setPlaceholderIndex] = useState(0)
 
@@ -255,20 +255,23 @@ export default function DashboardPage() {
     const quickActions = [
         {
             label: "New Automation",
+            shortLabel: "Automate",
             href: "/dashboard/automations?create=true",
-            icon: <Zap className="w-4 h-4 text-amber-500 group-hover:scale-125 group-hover:rotate-12 transition-all duration-300" />,
+            icon: <Zap className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-500 group-hover:scale-125 group-hover:rotate-12 transition-all duration-300" />,
             hoverClass: "hover:border-amber-500/40 hover:bg-amber-500/5 hover:text-amber-600 dark:hover:text-amber-400",
         },
         {
             label: "Open Inbox",
+            shortLabel: "Inbox",
             href: "/dashboard/inbox",
-            icon: <MessageCircle className="w-4 h-4 text-[#1a73e8] group-hover:scale-125 group-hover:-translate-y-0.5 transition-all duration-300" />,
+            icon: <MessageCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#1a73e8] group-hover:scale-125 group-hover:-translate-y-0.5 transition-all duration-300" />,
             hoverClass: "hover:border-[#1a73e8]/40 hover:bg-[#1a73e8]/5 hover:text-[#1a73e8]",
         },
         {
             label: "View Analytics",
+            shortLabel: "Analytics",
             href: "/dashboard/analytics",
-            icon: <TrendingUp className="w-4 h-4 text-emerald-500 group-hover:scale-125 group-hover:translate-x-0.5 transition-all duration-300" />,
+            icon: <TrendingUp className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-500 group-hover:scale-125 group-hover:translate-x-0.5 transition-all duration-300" />,
             hoverClass: "hover:border-emerald-500/40 hover:bg-emerald-500/5 hover:text-emerald-600 dark:hover:text-emerald-400",
         },
     ]
@@ -295,12 +298,12 @@ export default function DashboardPage() {
                     <DMSparkGoogleLogo size={selectedMedia ? "lg" : "xl"} showIcon={true} layout="vertical" />
                 </div>
 
-                {/* Clean, Elegant Single Line Greeting & Status */}
-                <div className="flex items-center justify-center gap-2 mb-6 md:mb-8 text-xs md:text-sm text-muted-foreground font-medium select-none">
+                {/* Clean, Elegant Single Line Greeting & Status (Mobile Responsive) */}
+                <div className="flex items-center justify-center gap-1.5 sm:gap-2 mb-5 md:mb-8 text-xs md:text-sm text-muted-foreground font-medium select-none max-w-full px-2">
                     <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
-                    <span>{greeting}, <strong className="text-foreground font-semibold">{username}</strong></span>
-                    <span className="text-muted-foreground/40">•</span>
-                    <span className="text-muted-foreground/80">Search posts to automate</span>
+                    <span className="truncate max-w-[200px] sm:max-w-none">{greeting}, <strong className="text-foreground font-semibold">@{username}</strong></span>
+                    <span className="hidden sm:inline text-muted-foreground/40">•</span>
+                    <span className="hidden sm:inline text-muted-foreground/80">Search posts to automate</span>
                 </div>
 
                 {/* Google-style Search Bar with Dropdown & Animations */}
@@ -438,17 +441,18 @@ export default function DashboardPage() {
                     )}
                 </div>
 
-                {/* Quick Action Buttons with Micro-Animations */}
+                {/* Quick Action Buttons with Mobile-Responsive Layout */}
                 {!selectedMedia && (
-                    <div className="flex items-center gap-3 mt-7 md:mt-8 flex-wrap justify-center">
+                    <div className="grid grid-cols-3 gap-2 w-full max-w-sm sm:flex sm:items-center sm:justify-center sm:gap-3 sm:max-w-none mt-6 sm:mt-8">
                         {quickActions.map((action) => (
                             <Link
                                 key={action.label}
                                 href={action.href}
-                                className={`group flex items-center gap-2 h-11 md:h-12 px-6 md:px-7 rounded-full bg-secondary/80 border border-border/70 text-sm font-semibold text-foreground transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md ${action.hoverClass} cursor-pointer active:scale-95`}
+                                className={`group flex items-center justify-center gap-1.5 sm:gap-2 h-10 sm:h-12 px-2.5 sm:px-7 rounded-full bg-secondary/80 border border-border/70 text-xs sm:text-sm font-semibold text-foreground transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md ${action.hoverClass} cursor-pointer active:scale-95`}
                             >
                                 {action.icon}
-                                <span>{action.label}</span>
+                                <span className="hidden sm:inline">{action.label}</span>
+                                <span className="sm:hidden truncate">{action.shortLabel}</span>
                             </Link>
                         ))}
                     </div>
@@ -569,21 +573,23 @@ export default function DashboardPage() {
             </main>
 
             {/* Clean Google-Style Footer with Meta Review Compliance */}
-            <footer className="w-full shrink-0 border-t border-border/60 py-3 px-4 md:px-8 text-xs text-muted-foreground flex flex-col sm:flex-row items-center justify-between gap-2.5 select-none">
-                <div className="flex items-center gap-2 text-center sm:text-left">
+            <footer className="w-full shrink-0 border-t border-border/60 py-3 px-4 md:px-8 text-[11px] sm:text-xs text-muted-foreground flex flex-col sm:flex-row items-center justify-between gap-2 select-none text-center sm:text-left">
+                <div className="flex flex-col sm:flex-row items-center gap-0.5 sm:gap-2">
                     <span>© 2026 DMSpark</span>
-                    <span>•</span>
-                    <span>Not affiliated with Meta Platforms Inc. or Instagram</span>
+                    <span className="hidden sm:inline">•</span>
+                    <span className="text-[10px] sm:text-xs text-muted-foreground/75">Not affiliated with Meta Platforms Inc. or Instagram</span>
                 </div>
-                <div className="flex items-center gap-4 text-xs font-medium">
+                <div className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-4 font-medium text-[11px] sm:text-xs">
                     <Link href="/privacy" className="hover:text-foreground transition-colors hover:underline">
                         Privacy Policy
                     </Link>
+                    <span className="text-muted-foreground/40">•</span>
                     <Link href="/terms" className="hover:text-foreground transition-colors hover:underline">
                         Terms of Service
                     </Link>
+                    <span className="text-muted-foreground/40">•</span>
                     <Link href="/data-deletion" className="hover:text-foreground transition-colors hover:underline">
-                        Data Deletion Instructions
+                        Data Deletion
                     </Link>
                 </div>
             </footer>

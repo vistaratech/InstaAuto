@@ -205,21 +205,23 @@ export function GoogleSearchHome() {
       </main>
 
       {/* Clean Google-Style Footer with Meta Review Compliance */}
-      <footer className="w-full shrink-0 border-t border-border/60 py-3 px-4 md:px-8 text-xs text-muted-foreground flex flex-col sm:flex-row items-center justify-between gap-2.5 select-none">
-        <div className="flex items-center gap-2 text-center sm:text-left">
+      <footer className="w-full shrink-0 border-t border-border/60 py-3 px-4 md:px-8 text-[11px] sm:text-xs text-muted-foreground flex flex-col sm:flex-row items-center justify-between gap-2 select-none text-center sm:text-left">
+        <div className="flex flex-col sm:flex-row items-center gap-0.5 sm:gap-2">
           <span>© 2026 DMSpark</span>
-          <span>•</span>
-          <span>Not affiliated with Meta Platforms Inc. or Instagram</span>
+          <span className="hidden sm:inline">•</span>
+          <span className="text-[10px] sm:text-xs text-muted-foreground/75">Not affiliated with Meta Platforms Inc. or Instagram</span>
         </div>
-        <div className="flex items-center gap-4 text-xs font-medium">
+        <div className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-4 font-medium text-[11px] sm:text-xs">
           <Link href="/privacy" className="hover:text-foreground transition-colors hover:underline">
             Privacy Policy
           </Link>
+          <span className="text-muted-foreground/40">•</span>
           <Link href="/terms" className="hover:text-foreground transition-colors hover:underline">
             Terms of Service
           </Link>
+          <span className="text-muted-foreground/40">•</span>
           <Link href="/data-deletion" className="hover:text-foreground transition-colors hover:underline">
-            Data Deletion Instructions
+            Data Deletion
           </Link>
         </div>
       </footer>
