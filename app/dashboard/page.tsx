@@ -5,6 +5,7 @@ import { useInstagramSession } from "@/hooks/use-instagram-session"
 import { Zap, Users, Send, Activity, Loader2, MessageCircle, ArrowUpRight, Search, TrendingUp, Trash2, Film, Image, Layers, X, Check, ExternalLink } from "lucide-react"
 import Link from "next/link"
 import { toast } from "sonner"
+import { DMSparkGoogleLogo } from "@/components/ui/dmspark-logo"
 
 interface DashboardStats {
     metrics: {
@@ -265,14 +266,9 @@ export default function DashboardPage() {
             {/* Google Search–style Hero Section with Animations */}
             <div className="flex flex-col items-center justify-center pt-10 md:pt-16 pb-6 md:pb-10 px-4 w-full max-w-2xl mx-auto">
 
-                {/* Animated Logo with Glow Halo */}
-                <div className="relative group cursor-pointer mb-3">
-                    <div className="absolute -inset-3 bg-gradient-to-r from-blue-500/20 via-indigo-500/15 to-violet-500/20 rounded-3xl blur-2xl opacity-60 group-hover:opacity-100 transition-all duration-700 group-hover:scale-125 animate-pulse pointer-events-none" />
-                    <img
-                        src="/logo.png"
-                        alt="DMSpark"
-                        className="relative w-20 h-20 md:w-24 md:h-24 object-contain transition-all duration-500 group-hover:scale-105 group-hover:-translate-y-1 drop-shadow-sm select-none"
-                    />
+                {/* Google-Style DMSpark Brand Logo (No Box / 100% Transparent) */}
+                <div className="mb-5 mt-1 group cursor-pointer transition-all duration-300 hover:scale-105 active:scale-95">
+                    <DMSparkGoogleLogo size="xl" showIcon={true} />
                 </div>
 
                 {/* Live Status Badge */}

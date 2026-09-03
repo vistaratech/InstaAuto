@@ -17,6 +17,7 @@ import {
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useTheme } from "next-themes"
+import { DMSparkGoogleLogo } from "@/components/ui/dmspark-logo"
 
 interface TopNavbarProps {
   username?: string
@@ -49,11 +50,8 @@ export function TopNavbar({ username = "User", profilePictureUrl, onLogout }: To
     <>
       <nav className="h-14 border-b border-border bg-background/95 backdrop-blur-sm sticky top-0 z-50 flex items-center px-4 md:px-6 gap-1 select-none">
         {/* Logo */}
-        <Link href="/dashboard" className="flex items-center gap-2.5 shrink-0 mr-4 md:mr-8">
-          <img src="/logo.png" alt="DMSpark" className="w-8 h-8 object-contain bg-white rounded-lg p-0.5" />
-          <span className="font-bold text-lg tracking-tight text-[#1a73e8] hidden sm:block">
-            DMSpark
-          </span>
+        <Link href="/dashboard" className="flex items-center shrink-0 mr-4 md:mr-8 hover:opacity-90 transition-opacity">
+          <DMSparkGoogleLogo size="sm" showIcon={true} />
         </Link>
 
         {/* Desktop Nav Tabs */}
