@@ -6,6 +6,7 @@ import { Zap, Users, Send, Activity, Loader2, MessageCircle, ArrowUpRight, Searc
 import Link from "next/link"
 import { toast } from "sonner"
 import { DMSparkGoogleLogo } from "@/components/ui/dmspark-logo"
+import { CelebrationAnimation } from "@/components/ui/celebration-animation"
 
 interface DashboardStats {
     metrics: {
@@ -42,6 +43,15 @@ export default function DashboardPage() {
     const [isVisible, setIsVisible] = useState(false)
     const [searchQuery, setSearchQuery] = useState("")
     const [searchFocused, setSearchFocused] = useState(false)
+
+    // Full-page celebration animation state
+    const [showCelebration, setShowCelebration] = useState(false)
+    const [celebrationData, setCelebrationData] = useState<{
+        postTitle?: string
+        thumbnail?: string
+        keywords?: string
+        message?: string
+    }>({})
 
     // Media/Reels search
     const [media, setMedia] = useState<MediaItem[]>([])
@@ -177,6 +187,15 @@ export default function DashboardPage() {
                 toast.success("Automation Created! 🎉", {
                     description: `Auto-reply set for "${selectedMedia.caption?.slice(0, 30) || 'this post'}"`
                 })
+                // Trigger full-page celebration animation & modal
+                setCelebrationData({
+                    postTitle: selectedMedia.caption?.slice(0, 45) || 'Instagram Post',
+                    thumbnail: selectedMedia.thumbnail_url || selectedMedia.media_url,
+                    keywords: autoKeywords.trim(),
+                    message: autoMessage.trim(),
+                })
+                setShowCelebration(true)
+
                 setSelectedMedia(null)
                 setAutoKeywords("")
                 setAutoMessage("")
@@ -254,14 +273,25 @@ export default function DashboardPage() {
     ]
 
     return (
-        <div className={`min-h-[calc(100vh-4rem)] flex flex-col items-center justify-center -mt-6 sm:-mt-10 px-4 w-full transition-all duration-500 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
+        <div className={`min-h-[calc(100vh-4.5rem)] w-full flex flex-col items-center px-4 transition-all duration-500 ${
+            selectedMedia ? 'pt-8 md:pt-10 pb-20 justify-start' : 'justify-center py-10'
+        } ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
+
+            {/* Full-Page Celebration Animation & Success Modal */}
+            <CelebrationAnimation
+                isOpen={showCelebration}
+                onClose={() => setShowCelebration(false)}
+                {...celebrationData}
+            />
 
             {/* Google Search–style Clean Centered Hero Section */}
             <div className="flex flex-col items-center justify-center px-4 w-full max-w-3xl mx-auto text-center">
 
-                {/* Google-Style DMSpark Brand Logo (100% Symmetrical & Centered) */}
-                <div className="mb-4 md:mb-5 group cursor-pointer transition-transform duration-300 hover:scale-105 active:scale-95 select-none">
-                    <DMSparkGoogleLogo size="xl" showIcon={true} layout="vertical" />
+                {/* Google-Style DMSpark Brand Logo (Adapts size when automation panel is open so it NEVER clips) */}
+                <div className={`group cursor-pointer transition-all duration-300 hover:scale-105 active:scale-95 select-none ${
+                    selectedMedia ? 'mb-2 md:mb-3' : 'mb-4 md:mb-5'
+                }`}>
+                    <DMSparkGoogleLogo size={selectedMedia ? "lg" : "xl"} showIcon={true} layout="vertical" />
                 </div>
 
                 {/* Clean, Elegant Single Line Greeting & Status */}
