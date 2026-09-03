@@ -4,13 +4,9 @@ import { useEffect, useState } from "react"
 import { useInstagramSession } from "@/hooks/use-instagram-session"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Textarea } from "@/components/ui/textarea"
-import { Switch } from "@/components/ui/switch"
 import { 
   Instagram, 
   Settings, 
-  Sparkles, 
-  BrainCircuit, 
   Trash2, 
   CheckCircle2, 
   AlertCircle, 
@@ -36,7 +32,6 @@ import {
   Clock,
   Shield,
   Activity,
-  Terminal,
   ChevronRight,
   FileText,
   UserCheck
@@ -48,21 +43,11 @@ export default function SettingsPage() {
   const { username, userId, logout, isLoading: sessionLoading } = useInstagramSession()
   const [profilePictureUrl, setProfilePictureUrl] = useState<string | null>(null)
   
-  // Groq AI states
-  const [aiEnabled, setAiEnabled] = useState(false)
-  const [aiContext, setAiContext] = useState("")
-  
   // UI states
   const [activeTab, setActiveTab] = useState<"general" | "scopes" | "compliance">("general")
   const [loading, setLoading] = useState(true)
-  const [saving, setSaving] = useState(false)
-  const [saveSuccess, setSaveSuccess] = useState(false)
   const [copiedId, setCopiedId] = useState(false)
   const [copiedUsername, setCopiedUsername] = useState(false)
-  const [showSimulator, setShowSimulator] = useState(true)
-  const [simQuery, setSimQuery] = useState("")
-  const [simResponse, setSimResponse] = useState<string | null>(null)
-  const [simLoading, setSimLoading] = useState(false)
   const [showDisconnectModal, setShowDisconnectModal] = useState(false)
 
   // Entrance animation state
@@ -74,25 +59,16 @@ export default function SettingsPage() {
     }
   }, [loading, sessionLoading])
 
-  // Fetch Instagram profile picture and Groq preferences on load
+  // Fetch Instagram profile picture on load
   useEffect(() => {
     if (!userId) return
 
     const fetchData = async () => {
       try {
-        // 1. Fetch Profile Picture
         const picRes = await fetch(`/api/instagram/profile-picture?userId=${userId}`)
         const picData = await picRes.json()
         if (picData.success && picData.profilePictureUrl) {
           setProfilePictureUrl(picData.profilePictureUrl)
-        }
-
-        // 2. Fetch Groq AI Settings
-        const aiRes = await fetch(`/api/groq/auto-reply?userId=${userId}`)
-        const aiData = await aiRes.json()
-        if (aiData && !aiData.error) {
-          setAiEnabled(aiData.enabled)
-          setAiContext(aiData.ai_context || "")
         }
       } catch (err) {
         console.error("Failed to load settings data:", err)
@@ -119,72 +95,6 @@ export default function SettingsPage() {
     setCopiedUsername(true)
     toast.success("Instagram handle copied!")
     setTimeout(() => setCopiedUsername(false), 2000)
-  }
-
-  // Preset Template Helper
-  const applyTemplate = (template: string) => {
-    setAiContext(template)
-    toast.info("Preset template loaded! Click 'Save Preferences' to apply.")
-  }
-
-  // Handle Groq AI Save
-  const handleSaveAISettings = async () => {
-    if (!userId) return
-    setSaving(true)
-    setSaveSuccess(false)
-    try {
-      const res = await fetch("/api/groq/auto-reply", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          userId,
-          enabled: aiEnabled,
-          ai_context: aiContext
-        })
-      })
-      const data = await res.json()
-      if (data && !data.error) {
-        setSaveSuccess(true)
-        toast.success("AI Preferences saved successfully!")
-        setTimeout(() => setSaveSuccess(false), 3000)
-      } else {
-        toast.error("Failed to save AI preferences.")
-      }
-    } catch (err) {
-      console.error("Failed to save Groq AI settings:", err)
-      toast.error("Network error while saving settings.")
-    } finally {
-      setSaving(false)
-    }
-  }
-
-  // Test AI Simulation
-  const handleSimulate = async (customPrompt?: string) => {
-    const textToSend = customPrompt || simQuery
-    if (!textToSend.trim()) return
-    setSimLoading(true)
-    setSimResponse(null)
-    try {
-      const res = await fetch("/api/groq/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          message: textToSend,
-          userId,
-          context: aiContext
-        })
-      })
-      const data = await res.json()
-      if (data && data.reply) {
-        setSimResponse(data.reply)
-      } else {
-        setSimResponse("Thank you for reaching out! We are happy to help you with your inquiry.")
-      }
-    } catch {
-      setSimResponse("Hello! Thanks for connecting with our brand. Our support team is online Monday through Friday, 9:00 AM – 6:00 PM EST.")
-    } finally {
-      setSimLoading(false)
-    }
   }
 
   if (sessionLoading || loading) {
@@ -282,7 +192,7 @@ export default function SettingsPage() {
             Account & Meta Platform Settings
           </h1>
           <p className="text-muted-foreground text-xs md:text-sm font-medium max-w-3xl leading-relaxed">
-            Manage your connected Instagram profile, configure real-time AI reply guidelines, and audit active Meta permissions & data handling compliance.
+            Manage your connected Instagram profile, audit active Meta permissions, and review data handling & legal compliance.
           </p>
         </div>
 
@@ -296,7 +206,7 @@ export default function SettingsPage() {
                 : "text-muted-foreground hover:text-foreground"
             }`}
           >
-            Overview & AI
+            Overview & Account
           </button>
           <button
             onClick={() => setActiveTab("scopes")}
@@ -327,8 +237,8 @@ export default function SettingsPage() {
       {activeTab === "general" && (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           
-          {/* Left Column: Account Profile & Security Info (lg:col-span-5) */}
-          <div className="lg:col-span-5 space-y-6">
+          {/* Left Column: Account Profile & Security Info (lg:col-span-6) */}
+          <div className="lg:col-span-6 space-y-6">
             
             {/* Instagram Account Identity Card */}
             <Card className={`border-border bg-card/90 backdrop-blur-md shadow-sm overflow-hidden hover:shadow-lg transition-all duration-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`} style={{ transitionDelay: isVisible ? '150ms' : '0ms', transitionDuration: '700ms' }}>
@@ -525,244 +435,11 @@ export default function SettingsPage() {
 
           </div>
 
-          {/* Right Column: AI Assistant Engine & Meta Compliance Hub (lg:col-span-7) */}
-          <div className="lg:col-span-7 space-y-6">
+          {/* Right Column: Meta Compliance & Capabilities (lg:col-span-6) */}
+          <div className="lg:col-span-6 space-y-6">
             
-            {/* Smart AI Auto-Reply Assistant Card */}
-            <Card className={`border-border bg-card/90 backdrop-blur-md shadow-sm hover:shadow-md transition-all duration-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`} style={{ transitionDelay: isVisible ? '200ms' : '0ms', transitionDuration: '700ms' }}>
-              
-              <CardHeader className="border-b border-border/70 pb-5">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3.5">
-                    <div className="p-2.5 rounded-2xl bg-gradient-to-br from-indigo-500/20 via-purple-500/20 to-pink-500/20 border border-indigo-500/30 text-indigo-500 shadow-xs">
-                      <BrainCircuit className="w-6 h-6" />
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <CardTitle className="text-lg text-foreground font-black tracking-tight">
-                          Smart AI Auto-Reply Assistant
-                        </CardTitle>
-                        <span className="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/25">
-                          Context-Aware
-                        </span>
-                      </div>
-                      <CardDescription className="text-xs text-muted-foreground mt-0.5 font-medium">
-                        Real-time intelligent customer support engine for unmapped incoming Instagram inquiries.
-                      </CardDescription>
-                    </div>
-                  </div>
-                  
-                  {/* Switch for AI Enabled status */}
-                  <div className="flex flex-col items-end gap-1 shrink-0">
-                    <Switch 
-                      checked={aiEnabled} 
-                      onCheckedChange={setAiEnabled}
-                      className="cursor-pointer data-[state=checked]:bg-indigo-600"
-                    />
-                    <span className="text-[10px] font-extrabold text-muted-foreground uppercase tracking-wider">
-                      {aiEnabled ? "🟢 Active" : "⚪ Standby"}
-                    </span>
-                  </div>
-                </div>
-              </CardHeader>
-
-              <CardContent className="pt-6 space-y-6">
-                
-                {/* Presets & Knowledge Base Context */}
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between flex-wrap gap-2">
-                    <label className="text-xs font-extrabold text-foreground flex items-center gap-1.5">
-                      <Sparkles className="w-3.5 h-3.5 text-indigo-500" /> Business Guidelines & AI Knowledge Base
-                    </label>
-                    <span className="text-[10px] font-semibold text-muted-foreground">
-                      {aiEnabled ? "⚡ Real-time Inference Enabled" : "🔒 Keyword Mode Only"}
-                    </span>
-                  </div>
-
-                  {/* Preset Starter Buttons */}
-                  <div className="flex flex-wrap gap-1.5 pt-1">
-                    <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider py-1 mr-1">
-                      Quick Templates:
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => applyTemplate("You are an official customer support representative for our brand. Greet politely, answer product questions accurately, provide standard pricing details ($49 starter, $99 pro), state our business hours (9am-6pm EST), and direct users to visit our website link for checkout.")}
-                      className="px-2.5 py-1 rounded-lg bg-secondary/80 hover:bg-secondary border border-border text-[11px] font-semibold text-foreground transition-all cursor-pointer hover:border-indigo-500/40 hover:scale-[1.02]"
-                    >
-                      🛍️ E-Commerce & Sales
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => applyTemplate("You are an automated booking assistant. Explain available service slots, summarize consultation offerings, ask the customer for their preferred date and email, and share our calendar booking link.")}
-                      className="px-2.5 py-1 rounded-lg bg-secondary/80 hover:bg-secondary border border-border text-[11px] font-semibold text-foreground transition-all cursor-pointer hover:border-indigo-500/40 hover:scale-[1.02]"
-                    >
-                      📅 Booking & Consultations
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => applyTemplate("You are a friendly creator community assistant. Thank the follower for reaching out, answer questions about recent video tutorials, share resources from our bio link, and maintain an engaging, positive tone.")}
-                      className="px-2.5 py-1 rounded-lg bg-secondary/80 hover:bg-secondary border border-border text-[11px] font-semibold text-foreground transition-all cursor-pointer hover:border-indigo-500/40 hover:scale-[1.02]"
-                    >
-                      💡 Creator / Brand FAQ
-                    </button>
-                  </div>
-
-                  <Textarea
-                    value={aiContext}
-                    onChange={(e) => setAiContext(e.target.value)}
-                    disabled={!aiEnabled}
-                    placeholder="Define your brand identity, FAQs, product pricing, and business guidelines for automatic customer assistance..."
-                    className="min-h-[160px] bg-background border-border text-xs focus:ring-primary/20 text-foreground resize-none leading-relaxed placeholder:opacity-60 font-sans mt-2 rounded-xl"
-                  />
-                  
-                  <div className="flex justify-between items-center text-[10px] text-muted-foreground font-medium pt-0.5">
-                    <span>Instruct the AI on tone, pricing, hours, and answers. Unmatched DMs will use this knowledge base.</span>
-                    <span className="font-mono">{aiContext.length} chars</span>
-                  </div>
-                </div>
-
-                {/* Compliance & Policy Guardrail Boxes */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  <div className="p-3.5 rounded-xl bg-emerald-500/5 border border-emerald-500/20 flex items-start gap-2.5 text-xs text-muted-foreground">
-                    <ShieldCheck className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
-                    <div className="leading-relaxed font-medium">
-                      <span className="font-bold text-foreground">Zero Model Training:</span> Follower messages are processed strictly via real-time inference. No DM logs are stored to train external AI models.
-                    </div>
-                  </div>
-
-                  <div className="p-3.5 rounded-xl bg-blue-500/5 border border-blue-500/20 flex items-start gap-2.5 text-xs text-muted-foreground">
-                    <Clock className="w-4 h-4 text-blue-500 shrink-0 mt-0.5" />
-                    <div className="leading-relaxed font-medium">
-                      <span className="font-bold text-foreground">24-Hour Policy Window:</span> Automated replies only execute within Meta's standard 24-hour messaging window initiated by customer contact.
-                    </div>
-                  </div>
-                </div>
-
-                {/* Status Alert Banner */}
-                {aiEnabled ? (
-                  <div className="flex items-start justify-between gap-3 p-3.5 rounded-xl bg-indigo-500/10 border border-indigo-500/25 text-xs text-indigo-600 dark:text-indigo-400">
-                    <div className="flex items-start gap-2.5">
-                      <Sparkles className="w-4 h-4 shrink-0 mt-0.5 text-indigo-500 animate-pulse" />
-                      <p className="leading-relaxed font-medium">
-                        <strong>AI Assistant is Live:</strong> Inquiries without explicit trigger keywords will receive instant contextual responses.
-                      </p>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => setShowSimulator(!showSimulator)}
-                      className="text-[11px] font-bold text-indigo-600 dark:text-indigo-400 hover:underline cursor-pointer shrink-0"
-                    >
-                      {showSimulator ? "Hide Simulator" : "Open Simulator"}
-                    </button>
-                  </div>
-                ) : (
-                  <div className="flex items-start gap-3 p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs text-amber-600 dark:text-amber-500">
-                    <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-amber-500" />
-                    <p className="leading-relaxed font-medium">
-                      <strong>Keyword Mode Only:</strong> Only explicit trigger keywords defined in your Automations tab will trigger auto-replies.
-                    </p>
-                  </div>
-                )}
-
-                {/* Interactive AI Test Simulator (Reviewer Goldmine) */}
-                {showSimulator && (
-                  <div className="p-4 rounded-2xl bg-secondary/40 border border-indigo-500/25 space-y-3.5 animate-in fade-in duration-300">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold text-foreground flex items-center gap-1.5">
-                        <Terminal className="w-3.5 h-3.5 text-indigo-500" /> Interactive Response Simulator (Reviewer Sandbox)
-                      </span>
-                      <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20">
-                        Meta Sandbox
-                      </span>
-                    </div>
-
-                    <p className="text-[11px] text-muted-foreground font-medium">
-                      Test how the AI assistant responds to customer inquiries in real-time before going live on Instagram:
-                    </p>
-
-                    {/* Quick test prompt chips */}
-                    <div className="flex flex-wrap gap-1.5">
-                      <button
-                        type="button"
-                        onClick={() => { setSimQuery("What are your business hours?"); handleSimulate("What are your business hours?"); }}
-                        className="text-[10px] font-semibold bg-background px-2.5 py-1 rounded-md border border-border hover:border-indigo-500/40 cursor-pointer text-muted-foreground hover:text-foreground"
-                      >
-                        "What are your business hours?"
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => { setSimQuery("How much does your service cost?"); handleSimulate("How much does your service cost?"); }}
-                        className="text-[10px] font-semibold bg-background px-2.5 py-1 rounded-md border border-border hover:border-indigo-500/40 cursor-pointer text-muted-foreground hover:text-foreground"
-                      >
-                        "How much does your service cost?"
-                      </button>
-                    </div>
-
-                    <div className="flex gap-2">
-                      <input
-                        type="text"
-                        value={simQuery}
-                        onChange={(e) => setSimQuery(e.target.value)}
-                        placeholder="Type a sample customer DM (e.g. 'Can I speak to someone?')..."
-                        className="flex-1 px-3.5 py-2 text-xs rounded-xl bg-background border border-border text-foreground focus:outline-none focus:border-indigo-500"
-                        onKeyDown={(e) => e.key === "Enter" && handleSimulate()}
-                      />
-                      <Button
-                        type="button"
-                        onClick={() => handleSimulate()}
-                        disabled={simLoading || !simQuery.trim()}
-                        className="px-4 py-2 text-xs font-extrabold rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white cursor-pointer shadow-xs shrink-0 flex items-center gap-1.5"
-                      >
-                        {simLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Send className="w-3.5 h-3.5" />}
-                        <span>Simulate</span>
-                      </Button>
-                    </div>
-
-                    {simResponse && (
-                      <div className="p-3.5 rounded-xl bg-background border border-indigo-500/30 space-y-1.5 animate-in fade-in">
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-indigo-500 flex items-center gap-1">
-                          <Sparkles className="w-3 h-3" /> Generated AI Instagram DM Response:
-                        </span>
-                        <p className="text-xs text-foreground font-medium leading-relaxed bg-secondary/30 p-2.5 rounded-lg border border-border/50 font-sans">
-                          {simResponse}
-                        </p>
-                      </div>
-                    )}
-                  </div>
-                )}
-
-                {/* Bottom Action Row */}
-                <div className="border-t border-border/70 pt-4 flex items-center justify-between gap-4 flex-wrap">
-                  {saveSuccess ? (
-                    <span className="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 text-xs font-bold animate-in fade-in duration-300">
-                      <CheckCircle2 className="w-4 h-4" /> Preferences Saved & Synced with Webhooks!
-                    </span>
-                  ) : (
-                    <span className="text-[11px] text-muted-foreground font-medium">
-                      Changes take effect immediately across incoming Instagram messages.
-                    </span>
-                  )}
-
-                  <Button
-                    onClick={handleSaveAISettings}
-                    disabled={saving}
-                    className="px-6 py-2.5 rounded-xl bg-primary text-primary-foreground font-extrabold text-xs shadow-md shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all cursor-pointer shrink-0"
-                  >
-                    {saving ? (
-                      <>
-                        <Loader2 className="w-4 h-4 mr-2 animate-spin" /> Saving Changes...
-                      </>
-                    ) : (
-                      "Save Preferences"
-                    )}
-                  </Button>
-                </div>
-
-              </CardContent>
-            </Card>
-
             {/* Meta Platform Compliance Hub & Official Documentation Card */}
-            <Card className={`border-border bg-card/90 backdrop-blur-md shadow-sm p-6 space-y-4 hover:shadow-md transition-all duration-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`} style={{ transitionDelay: isVisible ? '400ms' : '0ms', transitionDuration: '700ms' }}>
+            <Card className={`border-border bg-card/90 backdrop-blur-md shadow-sm p-6 space-y-4 hover:shadow-md transition-all duration-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`} style={{ transitionDelay: isVisible ? '200ms' : '0ms', transitionDuration: '700ms' }}>
               <div className="flex items-center justify-between border-b border-border/70 pb-3 flex-wrap gap-2">
                 <div className="flex items-center gap-2.5">
                   <div className="p-2 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-500">
@@ -820,6 +497,46 @@ export default function SettingsPage() {
                   <span className="text-xs font-extrabold text-foreground">Meta Console</span>
                   <span className="text-[9px] text-muted-foreground font-medium mt-0.5">Developer Portal</span>
                 </a>
+              </div>
+            </Card>
+
+            {/* Platform Capabilities & Permissions Summary Card */}
+            <Card className={`border-border bg-card/90 backdrop-blur-md shadow-sm p-6 space-y-4 hover:shadow-md transition-all duration-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`} style={{ transitionDelay: isVisible ? '300ms' : '0ms', transitionDuration: '700ms' }}>
+              <div className="flex items-center justify-between border-b border-border/70 pb-3 flex-wrap gap-2">
+                <div className="flex items-center gap-2.5">
+                  <div className="p-2 rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-500">
+                    <Layers className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h3 className="font-extrabold text-foreground text-sm">Active Meta Capabilities</h3>
+                    <p className="text-xs text-muted-foreground font-medium">Configured permissions for your Instagram Business account</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setActiveTab("scopes")}
+                  className="text-xs font-bold text-primary hover:underline flex items-center gap-1 cursor-pointer"
+                >
+                  View All Scopes <ArrowRight className="w-3.5 h-3.5" />
+                </button>
+              </div>
+
+              <div className="space-y-2.5">
+                {metaScopes.map((scope) => (
+                  <div key={scope.name} className="flex items-center justify-between p-3 rounded-xl bg-secondary/40 border border-border/50 text-xs">
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <div className="p-1.5 rounded-lg bg-background border border-border">
+                        {scope.icon}
+                      </div>
+                      <div className="min-w-0">
+                        <div className="font-bold text-foreground text-xs truncate">{scope.label}</div>
+                        <div className="text-[10px] text-muted-foreground font-mono truncate">{scope.name}</div>
+                      </div>
+                    </div>
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 shrink-0">
+                      Configured
+                    </span>
+                  </div>
+                ))}
               </div>
             </Card>
 
