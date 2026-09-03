@@ -7,6 +7,7 @@ import Link from "next/link"
 import { toast } from "sonner"
 import { DMSparkGoogleLogo } from "@/components/ui/dmspark-logo"
 import { CelebrationAnimation } from "@/components/ui/celebration-animation"
+import { InstagramReelsIcon } from "@/components/ui/instagram-reels-icon"
 
 interface DashboardStats {
     metrics: {
@@ -329,7 +330,7 @@ export default function DashboardPage() {
                                 </span>
                             )}
                         </div>
-                        <div className="flex items-center gap-1.5 shrink-0">
+                        <div className="flex items-center gap-1 shrink-0">
                             {searchQuery && (
                                 <button 
                                     onClick={() => { setSearchQuery(""); searchInputRef.current?.focus() }} 
@@ -339,29 +340,17 @@ export default function DashboardPage() {
                                     <X className="w-4 h-4" />
                                 </button>
                             )}
-                            {/* Google Mic Icon */}
+                            {/* Official Instagram Reels Icon */}
                             <button
                                 type="button"
                                 onClick={() => {
                                     setSearchFocused(true)
                                     searchInputRef.current?.focus()
                                 }}
-                                className="w-7 h-7 rounded-full flex items-center justify-center text-[#4285F4] hover:bg-[#4285F4]/10 transition-colors cursor-pointer"
-                                title="Voice Search"
+                                className="group/reel p-1.5 rounded-full hover:bg-secondary/80 transition-all duration-300 cursor-pointer"
+                                title="Browse your Instagram Reels & Posts"
                             >
-                                <Mic className="w-4 h-4" />
-                            </button>
-                            {/* Google Lens / Instagram Reel Icon */}
-                            <button
-                                type="button"
-                                onClick={() => {
-                                    setSearchFocused(true)
-                                    searchInputRef.current?.focus()
-                                }}
-                                className="w-7 h-7 rounded-full flex items-center justify-center text-[#EA4335] hover:bg-[#EA4335]/10 transition-colors cursor-pointer"
-                                title="Search with Reels & Posts"
-                            >
-                                <Camera className="w-4 h-4" />
+                                <InstagramReelsIcon gradient={true} className="w-5 h-5 group-hover/reel:scale-115 transition-transform" />
                             </button>
                         </div>
                     </div>
