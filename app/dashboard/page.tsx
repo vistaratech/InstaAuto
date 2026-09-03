@@ -254,10 +254,34 @@ export default function DashboardPage() {
     ]
 
     const statChips = [
-        { label: "Automations", value: stats?.metrics.totalAutomations || 0, href: "/dashboard/automations" },
-        { label: "Messages Sent", value: stats?.metrics.messagesSent || 0, href: "/dashboard/inbox" },
-        { label: "Active Triggers", value: stats?.metrics.activeTriggers || 0, href: "/dashboard/automations" },
-        { label: "Audience Reached", value: stats?.metrics.audienceReached || 0, href: "/dashboard/analytics" },
+        {
+            label: "Automations",
+            value: stats?.metrics.totalAutomations || 0,
+            href: "/dashboard/automations",
+            icon: <Zap className="w-4 h-4 text-[#4285F4]" />,
+            iconBg: "bg-[#4285F4]/10",
+        },
+        {
+            label: "Messages Sent",
+            value: stats?.metrics.messagesSent || 0,
+            href: "/dashboard/inbox",
+            icon: <Send className="w-4 h-4 text-[#34A853]" />,
+            iconBg: "bg-[#34A853]/10",
+        },
+        {
+            label: "Active Triggers",
+            value: stats?.metrics.activeTriggers || 0,
+            href: "/dashboard/automations",
+            icon: <Activity className="w-4 h-4 text-[#FBBC05]" />,
+            iconBg: "bg-[#FBBC05]/10",
+        },
+        {
+            label: "Audience Reached",
+            value: stats?.metrics.audienceReached || 0,
+            href: "/dashboard/analytics",
+            icon: <Users className="w-4 h-4 text-[#EA4335]" />,
+            iconBg: "bg-[#EA4335]/10",
+        },
     ]
 
     return (
@@ -556,76 +580,87 @@ export default function DashboardPage() {
                 </div>
             )}
 
-            {/* Divider */}
-            <div className="w-full border-t border-border" />
+            {/* Google Material 3 Stats & Live Activity Section */}
+            <div className="w-full max-w-3xl mx-auto px-4 pt-4 pb-14 space-y-6">
 
-            {/* Stats + Activity Section */}
-            <div className="w-full max-w-3xl mx-auto px-4 py-6 md:py-8 space-y-6">
-
-                {/* Stat Chips Row */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                {/* Google Material 3 Horizontal Stat Capsules */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                     {statChips.map((chip) => (
                         <Link
                             key={chip.label}
                             href={chip.href}
-                            className="flex flex-col items-center p-4 rounded-xl border border-border bg-background hover:bg-secondary/30 hover:border-border transition-all duration-200 group"
+                            className="flex items-center gap-3 p-3.5 rounded-2xl border border-border/80 bg-card/60 hover:bg-secondary/40 hover:border-border transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xs group cursor-pointer"
                         >
-                            <span className="text-2xl md:text-3xl font-semibold text-foreground group-hover:text-[#1a73e8] transition-colors">
-                                {chip.value}
-                            </span>
-                            <span className="text-xs text-muted-foreground mt-1 font-medium">
-                                {chip.label}
-                            </span>
+                            <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${chip.iconBg} transition-transform group-hover:scale-110`}>
+                                {chip.icon}
+                            </div>
+                            <div className="min-w-0">
+                                <span className="text-xl md:text-2xl font-bold text-foreground leading-none tracking-tight block group-hover:text-[#1a73e8] transition-colors">
+                                    {chip.value}
+                                </span>
+                                <span className="text-[11px] text-muted-foreground mt-1 font-medium truncate block">
+                                    {chip.label}
+                                </span>
+                            </div>
                         </Link>
                     ))}
                 </div>
 
-                {/* Recent Activity */}
-                <div>
-                    <div className="flex items-center justify-between mb-3">
-                        <h2 className="text-base font-semibold text-foreground">Recent Activity</h2>
+                {/* Google Live Activity Hub Card */}
+                <div className="rounded-3xl border border-border/80 bg-card/40 p-5 md:p-6 shadow-xs">
+                    <div className="flex items-center justify-between mb-4 pb-3 border-b border-border/60">
+                        <div className="flex items-center gap-2">
+                            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shadow-xs shadow-emerald-500/50" />
+                            <h2 className="text-sm font-bold text-foreground tracking-tight">Recent Live Activity</h2>
+                        </div>
                         <div className="flex items-center gap-3">
                             {stats?.recentActivity && stats.recentActivity.length > 0 && (
                                 <button
                                     onClick={handleClearActivity}
-                                    className="text-xs text-destructive hover:text-destructive/80 flex items-center gap-1 transition-colors cursor-pointer font-medium"
+                                    className="text-xs text-destructive/80 hover:text-destructive flex items-center gap-1 transition-colors cursor-pointer font-medium"
                                 >
                                     <Trash2 className="w-3.5 h-3.5" /> Clear
                                 </button>
                             )}
-                            <Link href="/dashboard/inbox" className="text-xs text-[#1a73e8] font-medium hover:underline flex items-center gap-0.5">
-                                View All <ArrowUpRight className="w-3 h-3" />
+                            <Link href="/dashboard/inbox" className="text-xs text-[#1a73e8] font-semibold hover:underline flex items-center gap-1">
+                                Open Inbox <ArrowUpRight className="w-3.5 h-3.5" />
                             </Link>
                         </div>
                     </div>
 
-                    <div className="space-y-1">
+                    <div className="space-y-1.5">
                         {stats?.recentActivity && stats.recentActivity.length > 0 ? (
-                            stats.recentActivity.slice(0, 8).map((msg) => (
+                            stats.recentActivity.slice(0, 6).map((msg) => (
                                 <Link
                                     key={msg.id}
                                     href="/dashboard/inbox"
-                                    className="flex items-center gap-3 p-3 rounded-xl hover:bg-secondary/40 transition-colors group"
+                                    className="flex items-center gap-3.5 p-3 rounded-2xl hover:bg-secondary/60 border border-transparent hover:border-border/60 transition-all duration-200 group cursor-pointer"
                                 >
-                                    <div className="w-8 h-8 rounded-full bg-[#1a73e8]/8 flex items-center justify-center text-[#1a73e8] shrink-0">
-                                        <MessageCircle className="w-4 h-4" />
+                                    <div className="w-9 h-9 rounded-full bg-[#1a73e8]/10 text-[#1a73e8] flex items-center justify-center shrink-0 text-xs font-bold">
+                                        {(msg.recipient?.recipient_username || "U").charAt(0).toUpperCase()}
                                     </div>
                                     <div className="min-w-0 flex-1">
-                                        <p className="text-sm text-foreground font-medium truncate group-hover:text-[#1a73e8] transition-colors">
-                                            Auto-reply to @{msg.recipient?.recipient_username || "user"}
-                                        </p>
+                                        <div className="flex items-center gap-2">
+                                            <span className="text-xs font-bold text-foreground group-hover:text-[#1a73e8] transition-colors">
+                                                @{msg.recipient?.recipient_username || "user"}
+                                            </span>
+                                            <span className="text-[10px] text-muted-foreground/60">• Auto-Reply DM</span>
+                                        </div>
                                         <p className="text-xs text-muted-foreground truncate mt-0.5">{msg.content}</p>
                                     </div>
-                                    <span className="text-[11px] text-muted-foreground whitespace-nowrap font-medium">
-                                        {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                                    </span>
+                                    <div className="flex items-center gap-2 shrink-0">
+                                        <span className="text-[11px] text-muted-foreground whitespace-nowrap font-medium">
+                                            {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                        </span>
+                                        <ArrowUpRight className="w-3.5 h-3.5 text-muted-foreground/40 group-hover:text-[#1a73e8] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+                                    </div>
                                 </Link>
                             ))
                         ) : (
-                            <div className="py-12 text-center text-muted-foreground text-sm border border-dashed border-border rounded-xl flex flex-col items-center gap-2">
-                                <MessageCircle className="w-8 h-8 text-muted-foreground/20" />
-                                <span>No recent activity yet.</span>
-                                <Link href="/dashboard/automations?create=true" className="text-[#1a73e8] font-medium text-xs hover:underline">
+                            <div className="py-10 text-center text-muted-foreground text-sm flex flex-col items-center gap-2">
+                                <MessageCircle className="w-8 h-8 text-muted-foreground/30" />
+                                <span className="font-medium">No recent activity logged yet</span>
+                                <Link href="/dashboard/automations?create=true" className="text-[#1a73e8] font-semibold text-xs hover:underline mt-1">
                                     Create your first automation →
                                 </Link>
                             </div>
