@@ -286,9 +286,9 @@ export default function DashboardPage() {
                 {...celebrationData}
             />
 
-            {/* Google Search–style Clean Centered Hero Section */}
+            {/* Google Search–style Clean Centered Hero Section (Optically elevated slightly upwards) */}
             <main className={`flex-1 flex flex-col items-center px-4 w-full max-w-3xl mx-auto text-center transition-all duration-500 ${
-                selectedMedia ? 'pt-8 md:pt-10 pb-12 justify-start' : 'justify-center py-10'
+                selectedMedia ? 'pt-8 md:pt-10 pb-12 justify-start' : 'justify-center pb-20 sm:pb-28 pt-2 sm:-mt-6'
             }`}>
 
                 {/* Google-Style DMSpark Brand Logo (Adapts size when automation panel is open so it NEVER clips) */}
