@@ -263,27 +263,21 @@ export default function DashboardPage() {
     return (
         <div className={`flex flex-col items-center transition-all duration-500 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
 
-            {/* Google Search–style Hero Section with Animations */}
-            <div className="flex flex-col items-center justify-center pt-10 md:pt-16 pb-6 md:pb-10 px-4 w-full max-w-2xl mx-auto">
+            {/* Google Search–style Clean Centered Hero Section */}
+            <div className="flex flex-col items-center justify-center pt-14 md:pt-20 pb-6 md:pb-8 px-4 w-full max-w-2xl mx-auto text-center">
 
-                {/* Google-Style DMSpark Brand Logo (No Box / 100% Transparent) */}
-                <div className="mb-5 mt-1 group cursor-pointer transition-all duration-300 hover:scale-105 active:scale-95">
-                    <DMSparkGoogleLogo size="xl" showIcon={true} />
+                {/* Google-Style DMSpark Brand Logo (100% Symmetrical & Centered) */}
+                <div className="mb-4 group cursor-pointer transition-transform duration-300 hover:scale-105 active:scale-95 select-none">
+                    <DMSparkGoogleLogo size="xl" showIcon={true} layout="vertical" />
                 </div>
 
-                {/* Live Status Badge */}
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary/80 border border-border/70 text-muted-foreground text-[11px] font-medium tracking-wide mb-3 shadow-xs hover:border-[#1a73e8]/30 transition-colors select-none">
-                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-xs shadow-emerald-500/50" />
-                    <span>Instagram Business Active</span>
+                {/* Clean, Elegant Single Line Greeting & Status */}
+                <div className="flex items-center justify-center gap-2 mb-7 text-xs md:text-sm text-muted-foreground font-medium select-none">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
+                    <span>{greeting}, <strong className="text-foreground font-semibold">{username}</strong></span>
+                    <span className="text-muted-foreground/40">•</span>
+                    <span className="text-muted-foreground/80">Search posts to automate</span>
                 </div>
-
-                {/* Greeting with Gradient Accent */}
-                <h1 className="text-2xl md:text-3xl font-extrabold text-foreground mb-1.5 text-center tracking-tight">
-                    {greeting}, <span className="bg-gradient-to-r from-[#1a73e8] via-blue-600 to-indigo-600 bg-clip-text text-transparent">{username}</span>
-                </h1>
-                <p className="text-xs md:text-sm text-muted-foreground mb-6 md:mb-8 text-center max-w-md font-medium">
-                    Search your posts & reels to set up instant DM automations
-                </p>
 
                 {/* Google-style Search Bar with Dropdown & Animations */}
                 <div className="w-full max-w-xl relative" ref={searchRef}>

@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils"
 interface DMSparkLogoProps {
   size?: "sm" | "md" | "lg" | "xl"
   showIcon?: boolean
+  layout?: "horizontal" | "vertical" | "text-only"
   className?: string
 }
 
@@ -47,6 +48,7 @@ export function DMSparkIcon({ className = "w-6 h-6" }: { className?: string }) {
 export function DMSparkGoogleLogo({
   size = "lg",
   showIcon = true,
+  layout = "horizontal",
   className,
 }: DMSparkLogoProps) {
   const sizeClasses = {
@@ -63,16 +65,19 @@ export function DMSparkGoogleLogo({
     xl: "w-12 h-12 md:w-16 md:h-16",
   }
 
+  const isVertical = layout === "vertical"
+  const isTextOnly = layout === "text-only" || !showIcon
+
   return (
     <div
       className={cn(
         "flex items-center justify-center select-none font-bold tracking-tight cursor-default transition-all duration-300",
-        size === "xl" || size === "lg" ? "gap-2 md:gap-3" : "gap-1.5",
+        isVertical ? "flex-col gap-2 md:gap-2.5" : (size === "xl" || size === "lg" ? "gap-2.5 md:gap-3.5" : "gap-1.5"),
         className
       )}
     >
-      {showIcon && (
-        <DMSparkIcon className={cn(iconSizes[size], "hover:scale-110 hover:rotate-6")} />
+      {!isTextOnly && (
+        <DMSparkIcon className={cn(iconSizes[size], "hover:scale-110 hover:rotate-6 transition-transform duration-300")} />
       )}
 
       {/* Google-colored DMSpark typography */}
