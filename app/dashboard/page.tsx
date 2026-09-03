@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef, useCallback } from "react"
 import { useInstagramSession } from "@/hooks/use-instagram-session"
-import { Zap, Users, Send, Activity, Loader2, MessageCircle, ArrowUpRight, Search, TrendingUp, Trash2, Film, Image, Layers, X, Check, ExternalLink } from "lucide-react"
+import { Zap, Users, Send, Activity, Loader2, MessageCircle, ArrowUpRight, Search, TrendingUp, Trash2, Film, Image, Layers, X, Check, ExternalLink, Mic, Camera } from "lucide-react"
 import Link from "next/link"
 import { toast } from "sonner"
 import { DMSparkGoogleLogo } from "@/components/ui/dmspark-logo"
@@ -306,18 +306,41 @@ export default function DashboardPage() {
                                 </span>
                             )}
                         </div>
-                        {searchQuery ? (
-                            <button 
-                                onClick={() => { setSearchQuery(""); searchInputRef.current?.focus() }} 
-                                className="w-6 h-6 rounded-full flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors cursor-pointer"
+                        <div className="flex items-center gap-1.5 shrink-0">
+                            {searchQuery && (
+                                <button 
+                                    onClick={() => { setSearchQuery(""); searchInputRef.current?.focus() }} 
+                                    className="w-7 h-7 rounded-full flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors cursor-pointer mr-0.5"
+                                    title="Clear search"
+                                >
+                                    <X className="w-4 h-4" />
+                                </button>
+                            )}
+                            {/* Google Mic Icon */}
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setSearchFocused(true)
+                                    searchInputRef.current?.focus()
+                                }}
+                                className="w-7 h-7 rounded-full flex items-center justify-center text-[#4285F4] hover:bg-[#4285F4]/10 transition-colors cursor-pointer"
+                                title="Voice Search"
                             >
-                                <X className="w-4 h-4" />
+                                <Mic className="w-4 h-4" />
                             </button>
-                        ) : (
-                            <kbd className="hidden sm:inline-flex items-center gap-0.5 px-2 py-0.5 text-[10px] font-semibold text-muted-foreground/70 bg-secondary/80 border border-border/80 rounded-md select-none">
-                                ⌘K
-                            </kbd>
-                        )}
+                            {/* Google Lens / Instagram Reel Icon */}
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setSearchFocused(true)
+                                    searchInputRef.current?.focus()
+                                }}
+                                className="w-7 h-7 rounded-full flex items-center justify-center text-[#EA4335] hover:bg-[#EA4335]/10 transition-colors cursor-pointer"
+                                title="Search with Reels & Posts"
+                            >
+                                <Camera className="w-4 h-4" />
+                            </button>
+                        </div>
                     </div>
 
                     {/* Search Results Dropdown with Staggered Animations */}
