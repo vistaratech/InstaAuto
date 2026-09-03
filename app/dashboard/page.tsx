@@ -280,8 +280,8 @@ export default function DashboardPage() {
                 </div>
 
                 {/* Google-style Search Bar with Dropdown & Animations */}
-                <div className="w-full max-w-xl relative" ref={searchRef}>
-                    <div className={`flex items-center w-full h-12 md:h-[52px] rounded-full border bg-background px-4 md:px-5 gap-3 transition-all duration-300 ${
+                <div className="w-full max-w-2xl relative" ref={searchRef}>
+                    <div className={`flex items-center w-full h-12 md:h-14 rounded-full border bg-background px-4 md:px-6 gap-3 transition-all duration-300 ${
                         searchFocused 
                             ? 'border-[#1a73e8] shadow-xl shadow-[#1a73e8]/10 ring-4 ring-[#1a73e8]/15 scale-[1.01]' 
                             : 'border-border/90 shadow-sm hover:shadow-md hover:border-border'

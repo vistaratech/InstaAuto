@@ -88,13 +88,7 @@ export function TopNavbar({ username = "User", profilePictureUrl, onLogout, isCo
                 Help
               </Link>
             </>
-          ) : (
-            <div className="flex items-center gap-2">
-              <span className="text-xs text-muted-foreground font-medium bg-secondary/70 px-3 py-1 rounded-full border border-border/60">
-                Instagram DM & Comment Automation Engine
-              </span>
-            </div>
-          )}
+          ) : null}
         </div>
 
         {/* Right Side — Theme + Auth / Connect */}

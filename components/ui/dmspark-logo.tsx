@@ -55,14 +55,14 @@ export function DMSparkGoogleLogo({
     sm: "text-xl",
     md: "text-2xl md:text-3xl",
     lg: "text-4xl md:text-5xl",
-    xl: "text-5xl md:text-6xl lg:text-7xl",
+    xl: "text-6xl md:text-7xl lg:text-8xl",
   }
 
   const iconSizes = {
     sm: "w-5 h-5",
     md: "w-7 h-7",
     lg: "w-10 h-10 md:w-12 md:h-12",
-    xl: "w-12 h-12 md:w-16 md:h-16",
+    xl: "w-14 h-14 md:w-16 md:h-16",
   }
 
   const isVertical = layout === "vertical"
