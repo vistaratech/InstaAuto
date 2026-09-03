@@ -1,443 +1,256 @@
 <p align="center">
-  <img src="https://img.shields.io/github/stars/ayuuxh2/insta-p8?style=for-the-badge&color=facc15" alt="GitHub stars" />
-  <img src="https://img.shields.io/badge/Next.js-16-black?style=for-the-badge&logo=next.js" alt="Next.js" />
+  <img src="https://img.shields.io/badge/Next.js-15-black?style=for-the-badge&logo=next.js" alt="Next.js" />
   <img src="https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react" alt="React" />
+  <img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
+  <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind CSS" />
   <img src="https://img.shields.io/badge/Supabase-Postgres-3ECF8E?style=for-the-badge&logo=supabase" alt="Supabase" />
-  <img src="https://img.shields.io/badge/Instagram-Automation-E4405F?style=for-the-badge&logo=instagram" alt="Instagram automation" />
+  <img src="https://img.shields.io/badge/Meta_Graph_API-v24.0-0081FB?style=for-the-badge&logo=meta" alt="Meta Graph API" />
+  <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="MIT License" />
 </p>
 
-<h1 align="center">⚡ InstaAuto</h1>
+<h1 align="center">⚡ DMSpark</h1>
 
 <p align="center">
-  <strong>Open-source Instagram automation for DMs, comments, stories, AI replies, inbox, and Reels scheduling.</strong>
-</p>
-
-<p align="center">
-  A self-hosted, AI-ready, developer-friendly alternative to paid Instagram automation tools like ManyChat.
-  <br />
-  No monthly SaaS fees. No vendor lock-in. Your data stays in your Supabase.
+  <strong>The Google-Simple, Open-Source Instagram & WhatsApp Automation Engine.</strong>
 </p>
 
 <p align="center">
-  <a href="#-live-web-app--testing-access"><strong>Join Web Testers</strong></a> ·
+  Zero-clutter DM funnels, comment-to-DM lead magnets, follower growth gates, AI auto-replies, and unified inbox — built for creators, growth marketers, and modern brands.
+</p>
+
+<p align="center">
+  <a href="https://dmspark.in"><strong>🌐 Live Web App (dmspark.in)</strong></a> ·
+  <a href="#-key-features"><strong>Features</strong></a> ·
   <a href="#-quick-start-self-host"><strong>Self Host</strong></a> ·
-  <a href="#-features"><strong>Features</strong></a> ·
   <a href="#-environment-variables"><strong>Env Setup</strong></a> ·
-  <a href="#-deploy-to-vercel"><strong>Deploy</strong></a>
+  <a href="#-meta-app-review-compliance"><strong>Meta Compliance</strong></a> ·
+  <a href="#-deploy-to-vercel"><strong>Deploy to Vercel</strong></a>
 </p>
 
 ---
 
-## 🚀 What is InstaAuto?
+## 💡 What is DMSpark?
 
-**InstaAuto** is an open-source Instagram automation platform built for creators, indie hackers, agencies, brands, and developers who want to automate Instagram workflows without paying recurring fees for closed SaaS tools.
+**DMSpark** is a high-performance, open-source social media automation platform. While legacy tools like ManyChat present complex, cluttered node trees and charge steep recurring SaaS subscriptions, DMSpark gives you:
 
-Use it to build:
-
-- **Instagram DM automation**
-- **Instagram comment auto-replies**
-- **Instagram story automation**
-- **AI Instagram auto-replies**
-- **Keyword-triggered message funnels**
-- **Live Instagram inbox dashboard**
-- **Instagram Ice Breakers**
-- **Reels publishing and scheduling workflows**
-- **Self-hosted ManyChat alternative**
-- **Open-source Instagram chatbot**
-
-If you are searching for a **free ManyChat alternative**, **open-source Instagram DM bot**, **self-hosted Instagram automation tool**, **Instagram AI chatbot**, or **Instagram comment-to-DM automation**, this project is built for that exact use case.
+1. **Google-Inspired Simplicity:** An ultra-clean, search-first interface. Just search any Reel, Post, or Keyword and activate automated DM funnels in seconds.
+2. **True Data Ownership:** Powered by Supabase (PostgreSQL). Your customer messages, trigger data, and automation funnels stay under your direct control.
+3. **Multi-Channel Autopilot:** Built for Instagram (Official Meta Graph API v24.0) with an integrated WhatsApp Business API pipeline.
+4. **Meta Review Ready:** Complete with official Privacy Policy, Terms of Service, and Data Deletion Callback handlers.
 
 ---
 
-## 🌐 Live Web App & Testing Access
+## ✨ Key Features
 
-You have two ways to use InstaAuto:
+### 🔍 Google Search–Style Dashboard
+- **Optically Centered Design:** Natural eye-level layout with zero visual clutter.
+- **Instagram Reels Search:** Instant post and reel lookup by caption, Post ID, or keyword.
+- **Official Gradient Reels Icon:** One-click access to your recent content library.
+- **Mobile First:** Responsive 3-column action pills (`⚡ Automate`, `💬 Inbox`, `📈 Analytics`) engineered to look stunning on every smartphone screen.
+- **Full-Page Celebration Confetti Engine:** Multi-stage physics confetti and fireworks celebration whenever an automation goes live.
 
-### Option 1: Join the released web app as a tester
+### 💬 Instagram DM & Comment Automation
+- **Instant Comment-to-DM Funnels:** Automatically send private DMs and public comment replies when users comment on your Reels or Posts (e.g., `"link"`, `"price"`, `"guide"`).
+- **Follower Growth Gate:** Verify follower status and incentivize account follows before unlocking lead magnets.
+- **Keyword Triggers:** Support for exact match, multi-keyword phrases, and comma-separated trigger rules.
+- **Story Mentions & Replies:** Auto-respond to story tags and interactive emojis.
+- **Ice Breakers:** Configure up to 4 native Messenger Ice Breaker quick prompts with automated follow-ups.
 
-If you do not want to deploy anything yourself, you can request access to the hosted web app and join as a tester.
+### 🤖 Smart AI Auto-Replies
+- **AI Fallback:** Intelligently handles unmatched user inquiries using custom brand context and personality.
+- **Human-Like Rhythm:** Realistic typing indicators, random natural delays, and contextual conversation memory.
+- **Multi-Lingual:** Seamlessly understands and responds in English, Hindi, Hinglish, and local dialects.
 
-- **Best for:** creators, small businesses, marketers, beta testers
-- **What you need:** an Instagram Business or Creator account
-- **How it works:** request access, connect Instagram, create automations, test DMs/comments/stories
+### 📥 Real-Time Unified Inbox
+- **Live Conversation Feed:** Monitor all incoming and outgoing DMs across your channels.
+- **Manual Takeover:** Human agents can jump in and reply manually directly from the web dashboard.
+- **Customer Metadata:** View recipient handles, timestamps, and interaction histories.
 
-> The hosted app may require manual approval because Instagram platform permissions and tester roles are controlled through Meta.
-
-### Option 2: Self-host it
-
-If you are a developer or agency, self-host InstaAuto on your own Vercel + Supabase account.
-
-- **Best for:** developers, agencies, privacy-focused teams, power users
-- **You control:** database, tokens, deployment, AI gateway, webhook URL
-- **Cost:** can run on free tiers for small usage
-
----
-
-## � Live Showcase
-
-Try a real Instagram automation demo before self-hosting.
-
-- **Instagram profile:** [@ayuuxh2](https://www.instagram.com/ayuuxh2/)
-- **Ice Breaker demo:** start a DM and tap/send `hello` → bot replies `heyyy`
-- **DM keyword demo:** send `hi` → bot replies `heyy`
-- **DM keyword demo:** send `link` → bot replies `hello`
-- **Comment-to-DM demo post:** [instagram.com/p/DTkUbO3EZqC](https://www.instagram.com/p/DTkUbO3EZqC/)
-- **Comment trigger:** comment `hiii` on the demo post to test comment-to-DM automation
-
-This showcase helps contributors and testers verify that the open-source Instagram DM automation, Ice Breakers, keyword replies, and comment-to-DM workflow are working in production.
-
-> Please use the demo responsibly. Do not spam the showcase profile or post.
+### 📲 WhatsApp Business API Integration
+- **Beta Waitlist & Sandbox:** Built-in sandbox testing demo for WhatsApp notification funnels.
+- **Multi-Account Architecture:** Designed to scale across multiple brand channels.
 
 ---
 
-## �💡 Why not just use ManyChat?
+## 🧱 Technology Stack
 
-ManyChat is great, but it is closed-source and paid. InstaAuto is for people who want ownership and flexibility.
-
-| Feature | ManyChat | InstaAuto |
-|---|---:|---:|
-| Open source | ❌ | ✅ |
-| Self-hosted | ❌ | ✅ |
-| Monthly SaaS fee | ✅ | ❌ |
-| Own your database | ❌ | ✅ |
-| Custom API routes | Limited | ✅ |
-| AI-native replies | Paid/add-on style | ✅ |
-| Developer extensibility | Limited | ✅ |
-| Supabase/Postgres backend | ❌ | ✅ |
-| Vercel deployable | ❌ | ✅ |
-| Full source code access | ❌ | ✅ |
-
-**Positioning:** InstaAuto is not a drop-in clone. It is an open-source, self-hosted automation base for builders who want to customize Instagram automation deeply.
+| Layer | Technology |
+|---|---|
+| **Frontend** | Next.js 15 (App Router), React 19, TypeScript |
+| **Styling** | Vanilla Tailwind CSS, Lucide Icons, Glassmorphism |
+| **Animation** | HTML5 Canvas Confetti Physics Engine |
+| **Database** | Supabase (PostgreSQL with Row Level Security) |
+| **Authentication** | Instagram OAuth 2.0 (Official Instagram Business Login) |
+| **APIs** | Meta Graph API v24.0, Instagram Webhooks |
+| **Deployment** | Vercel (Edge Functions & Serverless API Routes) |
 
 ---
 
-## ✨ Features
+## 🏗️ Architecture & Webhook Flow
 
-### 💬 Instagram DM Automation
-
-- Keyword-based DM auto-replies
-- Multi-keyword matching
-- Postback/button payload handling
-- Auto-save incoming DMs to inbox
-- Auto-save outgoing bot replies
-- Live conversation dashboard
-- Manual reply from inbox
-- Rich response cards with buttons
-- Follow-gated locked content flows
-
-### 💭 Instagram Comment Automation
-
-- Auto-reply to Instagram post comments
-- Send private DM after a comment trigger
-- Specific-post automations
-- Global keyword automations
-- Reply-all mode for selected posts
-- Public comment reply like “Check your DMs”
-- Comment-to-DM funnels for lead magnets, links, offers, downloads, coupons, courses, and products
-
-### 📖 Instagram Story Automation
-
-- Story mention automation
-- Story reply automation
-- Story reaction automation
-- Emoji reaction triggers
-- Specific story matching support
-- Automatic DM responses for story engagement
-
-### 🤖 AI Instagram Auto-Replies
-
-- AI fallback when no keyword automation matches
-- Custom AI personality context per account
-- Reads recent conversation history
-- Matches language and tone: English, Hindi, Hinglish, casual, formal
-- Short human-like replies
-- Typing indicators
-- Random delay before response for more natural behavior
-- Proxy-based AI gateway support via `/api/groq/chat`
-
-### 🧊 Instagram Ice Breakers
-
-- Add up to 4 Instagram Ice Breakers
-- Save question + auto-response
-- Sync Ice Breakers to Instagram Messenger profile
-- Handle Ice Breaker postback responses in webhook
-
-### 📥 Built-in Inbox
-
-- Conversation list
-- Message history
-- Manual DM replies
-- Store incoming and outgoing Instagram messages
-- Useful for creators who want automation plus manual support
-
-### 🎬 Reels Publishing & Scheduling
-
-- Create Instagram Reels containers
-- Poll publishing status
-- Publish ready containers
-- Content pool for scheduled posts
-- Upload/import video URLs into Supabase storage
-- Scheduler configuration API
-
-### 📊 Dashboard
-
-- Automation count
-- Active triggers
-- Audience reached
-- Messages sent
-- Recent activity
-- Quick view of account automation health
-
----
-
-## 🧱 Tech Stack
-
-- **Framework:** Next.js 16 App Router
-- **Frontend:** React 19, TypeScript
-- **Styling:** Tailwind CSS, shadcn/ui-style components
-- **Icons:** Lucide React
-- **Database:** Supabase Postgres
-- **Storage:** Supabase Storage
-- **Deployment:** Vercel
-- **Analytics:** Vercel Analytics
-- **Instagram API:** Instagram API with Instagram Login, Graph API v24.0
-- **AI Gateway:** Groq/OpenAI-compatible proxy pattern
-
----
-
-## 🏗️ Architecture
-
-```txt
-Instagram User
-     ↓
-Instagram Webhook
-     ↓
-Next.js API Routes
-     ↓
-Automation Matcher
-     ↓
-Supabase Database
-     ↓
-Instagram Graph API Reply
 ```
-
-Important modules:
-
-```txt
-app/api/instagram/callback       OAuth login + token exchange
-app/api/instagram/webhook        DM/comment/story webhook brain
-app/api/automations              Automation CRUD
-app/api/ice-breakers             Ice Breaker management + sync
-app/api/inbox                    Conversations, messages, manual send
-app/api/groq                     AI auto-reply settings + chat proxy
-app/api/hooks                    Reels publishing hooks
-app/api/scheduler                Reels/content scheduling
-components/dashboard             Dashboard, automations, content pool
-components/inbox                 Live inbox UI
-lib/supabase-server.ts           Supabase server client
-lib/instagram-publishing.ts      Reels container/publish helpers
+Instagram / WhatsApp User
+           │
+           ▼ (Comments / DMs / Story Mentions)
+   Meta Platform Servers
+           │
+           ▼ (HTTPS POST Webhook)
+┌────────────────────────────────────────────────────────┐
+│             DMSpark Serverless Engine                  │
+│                                                        │
+│  app/api/instagram/webhook/route.ts                    │
+│    ├── Signature Verification (X-Hub-Signature-256)    │
+│    ├── Trigger Matcher (Exact & Keyword Matching)      │
+│    ├── Follower Gate Verifier                          │
+│    └── Fallback AI Assistant (Groq / OpenAI Context)   │
+└───────────────────────────────────┬────────────────────┘
+                                    │
+       ┌────────────────────────────┴───────────────────────────┐
+       ▼                                                        ▼
+Supabase Database (PostgreSQL)                          Instagram Graph API
+ (Logs event, updates inbox,                              (Sends instant DM &
+  increments analytics metrics)                            posts public comment reply)
 ```
 
 ---
 
-## ⚡ Quick Start: Self Host
+## ⚡ Quick Start: Self-Hosting
 
-### 1. Clone the repo
+### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/ayuuxh2/insta-p8.git
-cd insta-p8
+git clone https://github.com/vistaratech/InstaAuto.git
+cd InstaAuto
 ```
 
-### 2. Install dependencies
+### 2. Install Dependencies
 
 ```bash
 npm install
 ```
 
-You can also use Bun or pnpm if that is your preferred package manager.
+### 3. Set Up Supabase
 
-### 3. Create a Supabase project
+1. Create a project at [supabase.com](https://supabase.com).
+2. Navigate to **SQL Editor** in your Supabase dashboard.
+3. Run the SQL schema files located in `db/` or `migrations/` to initialize tables:
+   - `users`
+   - `automations`
+   - `messages`
+   - `conversations`
+   - `analytics`
 
-- Create a new project on Supabase
-- Copy your project URL
-- Copy anon key
-- Copy service role key
-- Run the SQL schema from `db` and migration scripts from `scripts/` and `migrations/`
+### 4. Configure Meta Developer Console
 
-### 4. Create a Meta / Instagram app
+1. Create a Meta App at [developers.facebook.com](https://developers.facebook.com).
+2. Add the **Instagram** product (Instagram Login for Business).
+3. Set your OAuth Redirect URI:
+   - Local: `http://localhost:3000/api/instagram/callback`
+   - Production: `https://your-domain.com/api/instagram/callback`
+4. Configure Webhooks:
+   - Callback URL: `https://your-domain.com/api/instagram/webhook`
+   - Verify Token: A secure token you choose (e.g. `DMSPARK_SECURE_TOKEN_2026`)
+   - Subscriptions: `messages`, `messaging_postbacks`, `comments`, `story_insights`
 
-You need an Instagram Business or Creator account and a Meta Developer app configured for Instagram Login and webhooks.
+### 5. Configure Environment Variables
 
-Required Instagram scopes used by the app:
-
-```txt
-instagram_business_basic
-instagram_business_manage_messages
-instagram_business_manage_comments
-instagram_business_content_publish
-instagram_business_manage_insights
-```
-
-### 5. Configure environment variables
-
-Create `.env.local`:
+Create `.env.local` in the root directory:
 
 ```env
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
+# Supabase Configuration
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 
-NEXT_PUBLIC_INSTAGRAM_APP_ID=your_instagram_app_id
-INSTAGRAM_APP_ID=your_instagram_app_id
-INSTAGRAM_APP_SECRET=your_instagram_app_secret
+# Meta / Instagram OAuth & Webhooks
+NEXT_PUBLIC_INSTAGRAM_APP_ID=your-meta-app-id
+INSTAGRAM_APP_ID=your-meta-app-id
+INSTAGRAM_APP_SECRET=your-meta-app-secret
 NEXT_PUBLIC_INSTAGRAM_REDIRECT_URI=http://localhost:3000/api/instagram/callback
-INSTAGRAM_WEBHOOK_VERIFY_TOKEN=choose_a_strong_verify_token
+INSTAGRAM_WEBHOOK_VERIFY_TOKEN=your-custom-verify-token
 
-GATEWAY_SECRET=your_ai_gateway_secret
-API_SECRET_KEY=your_internal_hook_secret
+# AI Auto-Reply (Optional)
+GATEWAY_SECRET=your-internal-secret
+GROQ_API_KEY=your-groq-api-key
 ```
 
-### 6. Run locally
+### 6. Run the Development Server
 
 ```bash
 npm run dev
 ```
 
-Open:
-
-```txt
-http://localhost:3000
-```
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ---
 
-## 🔐 Environment Variables
+## 🔐 Environment Variables Reference
 
 | Variable | Required | Description |
-|---|---:|---|
-| `NEXT_PUBLIC_SUPABASE_URL` | ✅ | Supabase project URL |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | ✅ | Supabase anon/public key |
-| `SUPABASE_SERVICE_ROLE_KEY` | ✅ | Supabase service role key for API routes |
-| `NEXT_PUBLIC_INSTAGRAM_APP_ID` | ✅ | Public Instagram app/client ID |
-| `INSTAGRAM_APP_ID` | ✅ | Server-side Instagram app ID |
-| `INSTAGRAM_APP_SECRET` | ✅ | Instagram app secret for token exchange |
-| `NEXT_PUBLIC_INSTAGRAM_REDIRECT_URI` | ✅ | OAuth redirect URI |
-| `INSTAGRAM_WEBHOOK_VERIFY_TOKEN` | ✅ | Webhook verification token |
-| `GATEWAY_SECRET` | Optional | Secret used for AI gateway/proxy calls |
-| `API_SECRET_KEY` | Optional | Internal API secret for publishing hooks |
+|---|:---:|---|
+| `NEXT_PUBLIC_SUPABASE_URL` | ✅ | Your Supabase project URL |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | ✅ | Supabase anonymous public API key |
+| `SUPABASE_SERVICE_ROLE_KEY` | ✅ | Supabase service role secret (Server-only) |
+| `NEXT_PUBLIC_INSTAGRAM_APP_ID` | ✅ | Meta Developer Application Client ID |
+| `INSTAGRAM_APP_ID` | ✅ | Meta App ID for server-side token validation |
+| `INSTAGRAM_APP_SECRET` | ✅ | Meta App Secret for secure token exchange |
+| `NEXT_PUBLIC_INSTAGRAM_REDIRECT_URI` | ✅ | OAuth callback endpoint |
+| `INSTAGRAM_WEBHOOK_VERIFY_TOKEN` | ✅ | Custom secret string for webhook handshakes |
+| `GROQ_API_KEY` | Optional | API key for AI-powered contextual auto-replies |
 
-**Security note:** never expose `SUPABASE_SERVICE_ROLE_KEY`, `INSTAGRAM_APP_SECRET`, user access tokens, or `API_SECRET_KEY` in client-side code.
+> [!CAUTION]
+> Never commit `.env.local` or expose `SUPABASE_SERVICE_ROLE_KEY` or `INSTAGRAM_APP_SECRET` on client-facing components.
+
+---
+
+## 🛡️ Meta App Review & Compliance
+
+DMSpark includes production-ready, fully styled legal and data compliance endpoints required to pass Meta App Review:
+
+- **Privacy Policy:** [`/privacy`](https://dmspark.in/privacy) — Complete data handling and cookie terms.
+- **Terms of Service:** [`/terms`](https://dmspark.in/terms) — Usage guidelines, acceptable use, and platform compliance.
+- **Data Deletion Instructions & Callback:** [`/data-deletion`](https://dmspark.in/data-deletion) — Self-service data deletion request and automated Meta callback handler at `/api/data-deletion`.
 
 ---
 
 ## ▲ Deploy to Vercel
 
-1. Fork this repository
-2. Import it into Vercel
-3. Add all environment variables
-4. Set the production redirect URI in Meta Developer Console
-5. Set your webhook callback URL:
-
-```txt
-https://your-domain.com/api/instagram/webhook
-```
-
-6. Deploy
-7. Connect your Instagram Business/Creator account
-8. Create your first automation
+1. Push your code to your GitHub repository:
+   ```bash
+   git push origin main
+   ```
+2. Import the project into [Vercel](https://vercel.com).
+3. Populate the **Environment Variables** in the Vercel project settings.
+4. Update the **OAuth Redirect URI** and **Webhook URL** in the Meta Developer Console with your live domain:
+   ```txt
+   OAuth: https://dmspark.in/api/instagram/callback
+   Webhook: https://dmspark.in/api/instagram/webhook
+   ```
+5. Hit **Deploy** and your production automation suite is live!
 
 ---
 
 ## 🧪 Testing Checklist
 
-Before going live, test these flows:
+Before launching to audience traffic:
 
-- Login with Instagram Business/Creator account
-- Create a DM keyword automation
-- Send a test DM from another Instagram account
-- Create a comment keyword automation
-- Comment on a selected post
-- Confirm public comment reply + private DM
-- Add Ice Breakers and verify they sync
-- Toggle AI auto-reply and send an unmatched DM
-- Test inbox manual reply
-- Test Reels container creation if using publisher
+- [x] Connect your Instagram Business / Creator account.
+- [x] Create a test trigger on a specific Reel (e.g. `Trigger: "price"` -> `Reply: "Check your DMs!"`).
+- [x] Comment `"price"` on that Reel from a separate account.
+- [x] Verify the celebratory confetti animation fires upon creation.
+- [x] Confirm the public comment reply and direct message deliver instantly.
+- [x] Check that the message appears inside the **Live Inbox** (`/dashboard/inbox`).
 
 ---
 
-## 📈 SEO Use Cases
+## 🤝 Contributing & License
 
-InstaAuto can be used as:
+Contributions, feature requests, and bug reports are welcome! Feel free to open issues or submit PRs to [github.com/vistaratech/InstaAuto](https://github.com/vistaratech/InstaAuto).
 
-- Free ManyChat alternative
-- Open-source ManyChat alternative
-- Instagram DM automation tool
-- Instagram comment automation tool
-- Instagram chatbot platform
-- Instagram AI auto-reply bot
-- Instagram lead generation bot
-- Comment-to-DM automation tool
-- Instagram story automation software
-- Self-hosted social media automation
-- Instagram marketing automation dashboard
-- Creator automation CRM
-- Instagram inbox automation
-- Instagram Reels scheduler
-- Open-source Instagram API starter
+Distributed under the **MIT License**. Free to use, self-host, and customize.
 
 ---
 
-## ⚠️ Important Notes
-
-- Instagram APIs require correct Meta app permissions and review for production use.
-- Some features may require your Instagram account to be Business or Creator type.
-- Webhooks must be reachable from the public internet.
-- Hosted tester access may require approval depending on Meta app tester roles.
-- Respect Instagram Platform Terms and anti-spam policies.
-- Do not use automation to spam, deceive, scrape, or abuse users.
-
----
-
-## 🗺️ Roadmap
-
-- [ ] One-click Vercel deploy button
-- [ ] Docker setup
-- [ ] Better onboarding wizard
-- [ ] Automation templates
-- [ ] Multi-account workspace support
-- [ ] AI model selector
-- [ ] Better analytics charts
-- [ ] Webhook event debugger
-- [ ] Export/import automations
-- [ ] Public demo video
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome.
-
-Good first issues:
-
-- Improve setup docs
-- Add Docker support
-- Add more automation templates
-- Improve dashboard analytics
-- Add tests for API routes
-- Improve webhook logging
-- Add provider-agnostic AI configuration
-
----
-
-## ⭐ Support
-
-If this project helps you avoid paying for expensive Instagram automation tools, please star the repo.
-
-Stars help more developers discover open-source Instagram automation, self-hosted creator tools, and AI-powered social media workflows.
-
----
-
-## 📄 License
-
-MIT License. Use it, fork it, self-host it, customize it, and build on top of it.
+<p align="center">
+  Built with ❤️ by <a href="https://github.com/vistaratech"><strong>Vistara Tech</strong></a>
+</p>
