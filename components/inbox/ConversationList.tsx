@@ -1,17 +1,18 @@
 "use client"
 
 import { useEffect, useState, useCallback } from "react"
-import { Search, Loader2, UserCircle } from "lucide-react"
+import { Search, Loader2, UserCircle, Instagram, ShieldCheck } from "lucide-react"
 import { cn } from "@/lib/utils"
 import type { Conversation } from "@/types/db"
 
 interface ConversationListProps {
     userId: string
+    currentUsername?: string | null
     selectedId: string | null
     onSelect: (id: string, username: string, recipientId: string) => void
 }
 
-export function ConversationList({ userId, selectedId, onSelect }: ConversationListProps) {
+export function ConversationList({ userId, currentUsername, selectedId, onSelect }: ConversationListProps) {
     const [conversations, setConversations] = useState<Conversation[]>([])
     const [loading, setLoading] = useState(true)
     const [searchQuery, setSearchQuery] = useState("")
@@ -62,7 +63,37 @@ export function ConversationList({ userId, selectedId, onSelect }: ConversationL
     return (
         <div className="flex flex-col h-full w-full">
             <div className="p-4 border-b border-border">
-                <h2 className="text-lg font-bold text-foreground mb-4">Inbox</h2>
+                <div className="flex items-center justify-between mb-3">
+                    <div>
+                        <h2 className="text-lg font-bold text-foreground tracking-tight">Live Inbox</h2>
+                        <p className="text-[11px] text-muted-foreground">Human Support & DM Hub</p>
+                    </div>
+                    <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-medium">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                        Live
+                    </div>
+                </div>
+
+                {/* Asset Selection Banner - Explicitly demonstrates asset selection for Meta Reviewer */}
+                <div className="mb-3 p-2.5 rounded-xl border border-primary/20 bg-primary/5 flex items-center justify-between">
+                    <div className="flex items-center gap-2.5 min-w-0">
+                        <div className="w-7 h-7 rounded-lg bg-gradient-to-tr from-amber-500 via-pink-500 to-purple-600 flex items-center justify-center text-white shrink-0 shadow-sm">
+                            <Instagram className="w-4 h-4" />
+                        </div>
+                        <div className="min-w-0">
+                            <div className="text-[10px] uppercase font-semibold text-muted-foreground tracking-wider">
+                                Selected Asset
+                            </div>
+                            <div className="text-xs font-bold text-foreground truncate">
+                                @{currentUsername || "instagram_business"}
+                            </div>
+                        </div>
+                    </div>
+                    <span className="text-[9px] bg-secondary px-1.5 py-0.5 rounded border border-border text-muted-foreground font-mono">
+                        IG Account
+                    </span>
+                </div>
+
                 <div className="relative">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                     <input

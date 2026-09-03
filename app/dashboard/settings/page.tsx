@@ -38,7 +38,8 @@ import {
   Activity,
   Terminal,
   ChevronRight,
-  FileText
+  FileText,
+  UserCheck
 } from "lucide-react"
 import Link from "next/link"
 import { toast } from "sonner"
@@ -225,6 +226,14 @@ export default function SettingsPage() {
       icon: <MessagesSquare className="w-4 h-4 text-purple-500" />,
       color: "border-purple-500/30 bg-purple-500/5",
       badge: "Public Triggers"
+    },
+    {
+      name: "Human Agent (Feature Tag)",
+      label: "Live Human Support & 7-Day Messaging",
+      desc: "Allows live customer support agents to manually resolve customer issues within an extended 7-day window using the official human_agent tag.",
+      icon: <UserCheck className="w-4 h-4 text-cyan-500" />,
+      color: "border-cyan-500/30 bg-cyan-500/5",
+      badge: "Customer Support"
     },
     {
       name: "instagram_business_content_publish",

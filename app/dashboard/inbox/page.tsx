@@ -8,7 +8,7 @@ import { Loader2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 export default function InboxPage() {
-    const { userId, isLoading } = useInstagramSession()
+    const { userId, username, isLoading } = useInstagramSession()
     const [selectedConversationId, setSelectedConversationId] = useState<string | null>(null)
     const [selectedRecipientName, setSelectedRecipientName] = useState<string | null>(null)
     const [selectedRecipientId, setSelectedRecipientId] = useState<string | null>(null)
@@ -82,6 +82,7 @@ export default function InboxPage() {
                 )}>
                     <ConversationList
                         userId={userId}
+                        currentUsername={username}
                         selectedId={selectedConversationId}
                         onSelect={handleSelect}
                     />
@@ -97,6 +98,7 @@ export default function InboxPage() {
                         recipientName={selectedRecipientName}
                         recipientId={selectedRecipientId || undefined}
                         userId={userId}
+                        currentUsername={username}
                         onBack={() => setSelectedConversationId(null)}
                     />
                 </div>

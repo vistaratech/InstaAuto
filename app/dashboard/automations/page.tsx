@@ -156,6 +156,40 @@ export default function AutomationsPage() {
                     ))}
                 </div>
 
+                {/* Permission Context Banners for Meta Review & Clarity */}
+                {activeTab === 'comment' && (
+                    <div className="p-3.5 rounded-xl border border-purple-500/25 bg-purple-500/5 flex items-start gap-3 text-xs">
+                        <MessageCircle className="w-4 h-4 text-purple-400 mt-0.5 shrink-0" />
+                        <div>
+                            <div className="font-semibold text-foreground flex items-center gap-2 flex-wrap">
+                                <span>Comment Automation & Moderation</span>
+                                <span className="text-[10px] font-mono bg-purple-500/15 text-purple-400 px-1.5 py-0.5 rounded border border-purple-500/20">
+                                    instagram_business_manage_comments
+                                </span>
+                            </div>
+                            <p className="text-muted-foreground text-[11px] mt-0.5">
+                                Detects user comments on published Posts & Reels, posts automated public replies, and triggers private DM funnels.
+                            </p>
+                        </div>
+                    </div>
+                )}
+                {activeTab === 'dm' && (
+                    <div className="p-3.5 rounded-xl border border-blue-500/25 bg-blue-500/5 flex items-start gap-3 text-xs">
+                        <Send className="w-4 h-4 text-blue-400 mt-0.5 shrink-0" />
+                        <div>
+                            <div className="font-semibold text-foreground flex items-center gap-2 flex-wrap">
+                                <span>Direct Message Keyword Funnels</span>
+                                <span className="text-[10px] font-mono bg-blue-500/15 text-blue-400 px-1.5 py-0.5 rounded border border-blue-500/20">
+                                    instagram_business_manage_messages
+                                </span>
+                            </div>
+                            <p className="text-muted-foreground text-[11px] mt-0.5">
+                                Listens for incoming keywords in DMs and sends instant automated responses with rich media & links.
+                            </p>
+                        </div>
+                    </div>
+                )}
+
                 {/* Create Form (Collapsible) */}
                 {showCreateForm && (
                     <div className="rounded-2xl border border-border bg-card/40 p-4 md:p-6 animate-in fade-in slide-in-from-top-2 duration-300 shadow-sm">

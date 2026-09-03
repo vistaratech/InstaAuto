@@ -4,7 +4,7 @@ import { getSupabaseServerClient } from "@/lib/supabase-server"
 export async function POST(request: NextRequest) {
     try {
         const body = await request.json()
-        const { userId, recipientId, message, attachment } = body
+        const { userId, recipientId, message, attachment, tag } = body
 
         if (!userId || !recipientId || (!message && !attachment)) {
             return NextResponse.json({ error: "Missing required fields" }, { status: 400 })
@@ -32,8 +32,13 @@ export async function POST(request: NextRequest) {
             apiBody.message = { attachment }
         }
 
+        // Include Human Agent tag if provided (defaulting to HUMAN_AGENT for support desk)
+        if (tag) {
+            apiBody.tag = tag
+        }
+
         // 3. Send to Instagram
-        const res = await fetch(
+        let res = await fetch(
             `https://graph.instagram.com/v24.0/me/messages?access_token=${user.access_token}`,
             {
                 method: "POST",
@@ -42,7 +47,22 @@ export async function POST(request: NextRequest) {
             }
         )
 
-        const data = await res.json()
+        let data = await res.json()
+
+        // If tag was rejected because the permission is pending Meta App Review, retry cleanly without the tag
+        if (data.error && apiBody.tag) {
+            console.warn("[Inbox Send] Tag rejected, retrying without tag:", data.error.message)
+            delete apiBody.tag
+            res = await fetch(
+                `https://graph.instagram.com/v24.0/me/messages?access_token=${user.access_token}`,
+                {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(apiBody)
+                }
+            )
+            data = await res.json()
+        }
 
         if (data.error) {
             console.error("[Inbox Send] Instagram API Error:", data.error)

@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState, useRef, useCallback } from "react"
-import { Send, Loader2, MoreVertical, Zap, ChevronLeft } from "lucide-react"
+import { Send, Loader2, MoreVertical, Zap, ChevronLeft, UserCheck } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import type { Message } from "@/types/db"
@@ -11,10 +11,11 @@ interface ChatWindowProps {
     recipientId?: string
     recipientName: string | null
     userId: string
+    currentUsername?: string | null
     onBack?: () => void
 }
 
-export function ChatWindow({ conversationId, recipientId, recipientName, userId, onBack }: ChatWindowProps) {
+export function ChatWindow({ conversationId, recipientId, recipientName, userId, currentUsername, onBack }: ChatWindowProps) {
     const [messages, setMessages] = useState<Message[]>([])
     const [loading, setLoading] = useState(false)
     const [inputText, setInputText] = useState("")
@@ -82,7 +83,8 @@ export function ChatWindow({ conversationId, recipientId, recipientName, userId,
                 body: JSON.stringify({
                     userId,
                     recipientId,
-                    message: text
+                    message: text,
+                    tag: "HUMAN_AGENT"
                 })
             })
 
@@ -94,7 +96,7 @@ export function ChatWindow({ conversationId, recipientId, recipientName, userId,
                     conversation_id: conversationId!,
                     user_id: userId,
                     sender_id: "me",
-                    sender_username: "Me",
+                    sender_username: currentUsername || "Me",
                     content: text,
                     is_from_instagram: false,
                     created_at: new Date().toISOString()
@@ -139,9 +141,15 @@ export function ChatWindow({ conversationId, recipientId, recipientName, userId,
                         {recipientName?.charAt(0)}
                     </div>
                     <div className="min-w-0">
-                        <h3 className="font-bold text-foreground text-sm truncate">@{recipientName}</h3>
+                        <div className="flex items-center gap-2">
+                            <h3 className="font-bold text-foreground text-sm truncate">@{recipientName}</h3>
+                            <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium bg-sky-500/10 border border-sky-500/20 text-sky-400">
+                                <UserCheck className="w-2.5 h-2.5" />
+                                Human Agent
+                            </span>
+                        </div>
                         <span className="hidden md:flex items-center gap-1.5 text-[10px] text-muted-foreground font-medium">
-                            via Instagram
+                            Instagram Direct • Replying as @{currentUsername || "business"}
                         </span>
                     </div>
                 </div>
@@ -169,10 +177,17 @@ export function ChatWindow({ conversationId, recipientId, recipientName, userId,
                                 )}>
                                     {msg.content}
                                     <div className={cn(
-                                        "text-[10px] mt-1 opacity-70",
-                                        isMe ? "text-primary-foreground/80 text-right" : "text-muted-foreground"
+                                        "text-[10px] mt-1.5 flex items-center justify-between gap-3 opacity-80",
+                                        isMe ? "text-primary-foreground/90" : "text-muted-foreground"
                                     )}>
-                                        {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                        {isMe && (
+                                            <span className="text-[9px] font-semibold uppercase tracking-wider bg-black/20 px-1 py-0.5 rounded text-white/90">
+                                                Human Agent
+                                            </span>
+                                        )}
+                                        <span className={cn(!isMe && "w-full text-right")}>
+                                            {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                        </span>
                                     </div>
                                 </div>
                             </div>
@@ -184,7 +199,7 @@ export function ChatWindow({ conversationId, recipientId, recipientName, userId,
 
             {/* Automation Popup */}
             {isAutomationOpen && (
-                <div className="absolute bottom-20 left-4 right-4 md:left-auto md:right-4 md:w-80 bg-popover border border-border rounded-xl shadow-2xl backdrop-blur-xl p-2 z-50">
+                <div className="absolute bottom-24 left-4 right-4 md:left-auto md:right-4 md:w-80 bg-popover border border-border rounded-xl shadow-2xl backdrop-blur-xl p-2 z-50">
                     <div className="px-2 py-1.5 text-xs font-bold text-muted-foreground uppercase tracking-wider mb-1">Quick Responses</div>
                     <div className="max-h-60 overflow-y-auto space-y-1 scrollbar-hide">
                         {automations.map(auto => (
@@ -206,6 +221,19 @@ export function ChatWindow({ conversationId, recipientId, recipientName, userId,
 
             {/* Input Area */}
             <div className="p-3 md:p-4 border-t border-border bg-card/30 shrink-0">
+                {/* Human Support Desk Status Bar */}
+                <div className="flex items-center justify-between px-1 pb-2 text-[11px]">
+                    <div className="flex items-center gap-1.5 text-muted-foreground">
+                        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                        <span className="font-semibold text-foreground">Live Human Support Desk</span>
+                        <span className="text-muted-foreground/70 hidden sm:inline">• Replying as @{currentUsername || "business"}</span>
+                    </div>
+                    <div className="flex items-center gap-1 text-[10px] text-sky-400 bg-sky-500/10 px-2 py-0.5 rounded-full border border-sky-500/20 font-medium">
+                        <UserCheck className="w-2.5 h-2.5" />
+                        <span>Tag: HUMAN_AGENT (Extended 7-Day Window)</span>
+                    </div>
+                </div>
+
                 <div className="flex items-center gap-2 bg-secondary/60 rounded-xl border border-border p-1.5 focus-within:border-primary/50 focus-within:ring-1 focus-within:ring-primary/20 transition-all">
                     <Button
                         size="icon"
@@ -217,7 +245,7 @@ export function ChatWindow({ conversationId, recipientId, recipientName, userId,
                     </Button>
                     <input
                         className="flex-1 bg-transparent px-3 py-2 text-sm text-foreground focus:outline-none placeholder:text-muted-foreground/50 min-w-0"
-                        placeholder="Type a message..."
+                        placeholder="Type a response as human agent..."
                         value={inputText}
                         onChange={(e) => setInputText(e.target.value)}
                         onKeyDown={(e) => {
