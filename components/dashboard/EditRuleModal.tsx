@@ -153,16 +153,16 @@ export function EditRuleModal({ rule, userId, onClose, onSuccess }: EditRuleModa
       {/* Click outside backdrop */}
       <div className="absolute inset-0" onClick={onClose} />
 
-      <div className="relative w-full max-w-lg bg-card border border-border rounded-2xl shadow-2xl overflow-hidden z-10 flex flex-col max-h-[90vh] animate-in zoom-in-95 duration-200">
+      <div className="relative w-full max-w-lg bg-card border border-border/80 rounded-3xl shadow-2xl overflow-hidden z-10 flex flex-col max-h-[90vh] animate-in zoom-in-95 duration-200">
         
         {/* Header */}
-        <div className="px-6 py-4 border-b border-border flex items-center justify-between bg-secondary/30">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-500 flex items-center justify-center shrink-0">
+        <div className="px-6 py-4.5 border-b border-border/70 flex items-center justify-between bg-secondary/20">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-500 flex items-center justify-center shrink-0">
               <Pencil className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-foreground">Edit Automation</h3>
+              <h3 className="text-base font-semibold text-foreground">Edit Automation</h3>
               <p className="text-xs text-muted-foreground">
                 Update keywords and automated message reply
               </p>
@@ -306,13 +306,13 @@ export function EditRuleModal({ rule, userId, onClose, onSuccess }: EditRuleModa
         </div>
 
         {/* Footer Actions */}
-        <div className="px-6 py-4 border-t border-border flex items-center justify-between bg-secondary/20">
+        <div className="px-6 py-4 border-t border-border/70 flex items-center justify-between bg-secondary/15">
           <Button
             type="button"
             variant="ghost"
             onClick={onClose}
             disabled={saving}
-            className="text-xs text-muted-foreground hover:text-foreground"
+            className="rounded-full text-xs font-medium text-muted-foreground hover:text-foreground"
           >
             Cancel
           </Button>
@@ -321,7 +321,7 @@ export function EditRuleModal({ rule, userId, onClose, onSuccess }: EditRuleModa
             type="button"
             onClick={handleSave}
             disabled={saving}
-            className="px-5 py-2 text-xs font-bold rounded-xl bg-primary text-primary-foreground shadow-md shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all cursor-pointer flex items-center gap-1.5"
+            className="px-6 py-2 rounded-full text-xs font-semibold bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 transition-all cursor-pointer flex items-center gap-1.5"
           >
             {saving ? (
               <>

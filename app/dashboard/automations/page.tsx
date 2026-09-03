@@ -106,23 +106,27 @@ export default function AutomationsPage() {
         <div className="min-h-screen bg-background p-4 md:p-8 text-foreground transition-colors duration-300 pb-20 md:pb-8">
             <div className="max-w-3xl mx-auto space-y-4 md:space-y-6">
                 {/* Header */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2">
                     <div>
-                        <h1 className="text-xl sm:text-2xl font-bold text-foreground tracking-tight flex items-center gap-2">
-                            <Zap className="w-5 h-5 text-yellow-500" />
-                            Automations
-                        </h1>
-                        <p className="text-muted-foreground text-sm mt-0.5">
-                            {automations.length} active rule{automations.length !== 1 ? 's' : ''}
+                        <div className="flex items-center gap-2.5">
+                            <h1 className="text-2xl font-bold text-foreground tracking-tight">
+                                Automations
+                            </h1>
+                            <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-secondary text-muted-foreground border border-border/60">
+                                {automations.length}
+                            </span>
+                        </div>
+                        <p className="text-muted-foreground text-xs sm:text-sm mt-1">
+                            Manage instant keyword triggers, auto-replies, and DM funnels.
                         </p>
                     </div>
                     <div className="flex items-center gap-2">
                         <button
                             onClick={() => setShowCreateForm(!showCreateForm)}
-                            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all active:scale-95 cursor-pointer w-full sm:w-auto justify-center ${
+                            className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all active:scale-95 cursor-pointer w-full sm:w-auto justify-center shadow-xs ${
                                 showCreateForm 
-                                    ? 'bg-secondary text-foreground border border-border' 
-                                    : 'bg-primary text-primary-foreground hover:bg-primary/90 shadow-md shadow-primary/15'
+                                    ? 'bg-secondary text-foreground hover:bg-muted border border-border' 
+                                    : 'bg-primary text-primary-foreground hover:bg-primary/90'
                             }`}
                         >
                             <Plus className={`w-4 h-4 transition-transform duration-200 ${showCreateForm ? 'rotate-45' : ''}`} />
@@ -131,23 +135,23 @@ export default function AutomationsPage() {
                     </div>
                 </div>
 
-                {/* Pill Tabs */}
-                <div className="flex gap-1 bg-secondary p-1 rounded-xl border border-border transition-colors duration-300">
+                {/* Google-style Clean Pill Tabs */}
+                <div className="flex gap-1.5 bg-secondary/50 p-1 rounded-full border border-border/60">
                     {tabs.map((tab) => (
                         <button
                             key={tab.key}
                             onClick={() => setActiveTab(tab.key)}
-                            className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 md:py-2.5 rounded-lg text-xs sm:text-sm font-medium transition-all cursor-pointer ${
+                            className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-full text-xs sm:text-sm font-medium transition-all cursor-pointer ${
                                 activeTab === tab.key
-                                    ? 'bg-background text-foreground shadow-sm border border-border/40'
-                                    : 'text-muted-foreground hover:text-foreground hover:bg-card/50'
+                                    ? 'bg-background text-foreground shadow-xs border border-border/50 font-semibold'
+                                    : 'text-muted-foreground hover:text-foreground hover:bg-secondary/70'
                             }`}
                         >
                             {tab.icon}
-                            <span className="hidden sm:inline">{tab.label}</span>
+                            <span>{tab.label}</span>
                             {tab.count > 0 && (
-                                <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold transition-all ${
-                                    activeTab === tab.key ? 'bg-primary/10 text-primary' : 'bg-card text-muted-foreground border border-border'
+                                <span className={`text-[11px] px-2 py-0.5 rounded-full font-bold transition-all ${
+                                    activeTab === tab.key ? 'bg-primary/10 text-primary' : 'bg-card text-muted-foreground border border-border/40'
                                 }`}>
                                     {tab.count}
                                 </span>
@@ -155,40 +159,6 @@ export default function AutomationsPage() {
                         </button>
                     ))}
                 </div>
-
-                {/* Permission Context Banners for Meta Review & Clarity */}
-                {activeTab === 'comment' && (
-                    <div className="p-3.5 rounded-xl border border-purple-500/25 bg-purple-500/5 flex items-start gap-3 text-xs">
-                        <MessageCircle className="w-4 h-4 text-purple-400 mt-0.5 shrink-0" />
-                        <div>
-                            <div className="font-semibold text-foreground flex items-center gap-2 flex-wrap">
-                                <span>Comment Automation & Moderation</span>
-                                <span className="text-[10px] font-mono bg-purple-500/15 text-purple-400 px-1.5 py-0.5 rounded border border-purple-500/20">
-                                    instagram_business_manage_comments
-                                </span>
-                            </div>
-                            <p className="text-muted-foreground text-[11px] mt-0.5">
-                                Detects user comments on published Posts & Reels, posts automated public replies, and triggers private DM funnels.
-                            </p>
-                        </div>
-                    </div>
-                )}
-                {activeTab === 'dm' && (
-                    <div className="p-3.5 rounded-xl border border-blue-500/25 bg-blue-500/5 flex items-start gap-3 text-xs">
-                        <Send className="w-4 h-4 text-blue-400 mt-0.5 shrink-0" />
-                        <div>
-                            <div className="font-semibold text-foreground flex items-center gap-2 flex-wrap">
-                                <span>Direct Message Keyword Funnels</span>
-                                <span className="text-[10px] font-mono bg-blue-500/15 text-blue-400 px-1.5 py-0.5 rounded border border-blue-500/20">
-                                    instagram_business_manage_messages
-                                </span>
-                            </div>
-                            <p className="text-muted-foreground text-[11px] mt-0.5">
-                                Listens for incoming keywords in DMs and sends instant automated responses with rich media & links.
-                            </p>
-                        </div>
-                    </div>
-                )}
 
                 {/* Create Form (Collapsible) */}
                 {showCreateForm && (

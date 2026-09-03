@@ -63,12 +63,14 @@ export function AutomationList({ automations, onDelete, onUpdate, userId, onPrev
         </h2>
       </div>
 
-      <div className="space-y-3">
+      <div className="space-y-4">
         {/* Global rules */}
         {globalRules.length > 0 && (
-          <div className="space-y-2">
-            <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-blue-500 dark:text-blue-400 ml-1">
-              <Globe className="w-3 h-3" /> Global
+          <div className="space-y-2.5">
+            <div className="flex items-center gap-2 text-xs font-semibold text-muted-foreground ml-1">
+              <Globe className="w-3.5 h-3.5 text-blue-500" />
+              <span>Global Keyword Rules</span>
+              <span className="text-[11px] font-normal text-muted-foreground">({globalRules.length})</span>
             </div>
             {globalRules.map((rule, idx) => (
               <RuleCard key={rule.id} rule={rule} onDelete={onDelete} onEdit={(r) => setEditingRule(r)} index={idx} router={router} onPreview={onPreview} />
@@ -78,9 +80,11 @@ export function AutomationList({ automations, onDelete, onUpdate, userId, onPrev
 
         {/* Post-specific rules */}
         {postSpecificRules.length > 0 && (
-          <div className="space-y-2">
-            <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-pink-500 dark:text-pink-400 ml-1">
-              <Instagram className="w-3 h-3" /> Post Specific
+          <div className="space-y-2.5">
+            <div className="flex items-center gap-2 text-xs font-semibold text-muted-foreground ml-1">
+              <Instagram className="w-3.5 h-3.5 text-pink-500" />
+              <span>Post-Specific Automations</span>
+              <span className="text-[11px] font-normal text-muted-foreground">({postSpecificRules.length})</span>
             </div>
             {postSpecificRules.map((rule, idx) => (
               <RuleCard key={rule.id} rule={rule} onDelete={onDelete} onEdit={(r) => setEditingRule(r)} index={idx} mediaUrl={mediaMap[rule.specific_media_id || ""]} isSpecific router={router} onPreview={onPreview} />
@@ -124,13 +128,13 @@ function RuleCard({ rule, onDelete, onEdit, index, isSpecific, mediaUrl, router,
 
   return (
     <div
-      className="group p-4 rounded-xl border border-border bg-card hover:bg-secondary/40 hover:border-primary/20 transition-all duration-200 shadow-sm"
+      className="group p-4 rounded-2xl border border-border/70 bg-card hover:bg-card/90 hover:border-border hover:shadow-xs transition-all duration-200"
       style={{ animationDelay: `${index * 60}ms` }}
     >
-      <div className="flex items-start gap-3">
+      <div className="flex items-start gap-3.5">
         {/* Left icon */}
         {isSpecific ? (
-          <div className="w-10 h-10 rounded-lg overflow-hidden bg-secondary shrink-0 border border-border">
+          <div className="w-10 h-10 rounded-xl overflow-hidden bg-secondary shrink-0 border border-border/60">
             {mediaUrl ? (
               <img src={mediaUrl} alt="" className="w-full h-full object-cover" />
             ) : (
@@ -140,7 +144,7 @@ function RuleCard({ rule, onDelete, onEdit, index, isSpecific, mediaUrl, router,
             )}
           </div>
         ) : (
-          <div className="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center border border-blue-500/20 shrink-0">
+          <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center border border-blue-500/20 shrink-0">
             <Globe className="w-4 h-4 text-blue-500" />
           </div>
         )}
@@ -148,20 +152,20 @@ function RuleCard({ rule, onDelete, onEdit, index, isSpecific, mediaUrl, router,
         {/* Content */}
         <div className="flex-1 min-w-0 space-y-2">
           <div className="flex items-center justify-between">
-            <h4 className="text-sm font-bold text-foreground truncate">{rule.name}</h4>
+            <h4 className="text-sm font-semibold text-foreground truncate">{rule.name}</h4>
             {confirming ? (
               <div className="flex items-center gap-1 animate-in fade-in">
                 <Button size="sm" variant="ghost" onClick={() => setConfirming(false)} className="h-7 text-xs text-muted-foreground hover:bg-secondary">Cancel</Button>
-                <Button size="sm" onClick={() => onDelete(rule.id)} className="h-7 text-xs bg-red-500/20 text-red-600 hover:bg-red-500/30 border border-red-500/20">Delete</Button>
+                <Button size="sm" onClick={() => onDelete(rule.id)} className="h-7 text-xs bg-red-500/15 text-red-600 hover:bg-red-500/25 border border-red-500/20">Delete</Button>
               </div>
             ) : (
-              <div className="flex items-center gap-1.5 opacity-90 group-hover:opacity-100 transition-all duration-200">
+              <div className="flex items-center gap-1 opacity-90 group-hover:opacity-100 transition-all duration-200">
                 {onEdit && (
                   <Button
                     variant="ghost"
                     size="icon"
                     onClick={() => onEdit(rule)}
-                    className="h-7 w-7 text-amber-500 hover:text-amber-600 hover:bg-amber-500/10 rounded-full transition-colors cursor-pointer"
+                    className="h-8 w-8 text-muted-foreground hover:text-amber-500 hover:bg-secondary rounded-full transition-colors cursor-pointer"
                     title="Edit Keywords & Message"
                   >
                     <Pencil className="w-3.5 h-3.5" />
@@ -172,26 +176,26 @@ function RuleCard({ rule, onDelete, onEdit, index, isSpecific, mediaUrl, router,
                     variant="ghost"
                     size="icon"
                     onClick={() => onPreview(rule)}
-                    className="h-7 w-7 text-muted-foreground hover:text-green-500 hover:bg-green-500/10 rounded-full transition-colors cursor-pointer"
+                    className="h-8 w-8 text-muted-foreground hover:text-emerald-500 hover:bg-secondary rounded-full transition-colors cursor-pointer"
                     title="Live Preview Flow"
                   >
-                    <Eye className="w-3.5 h-3.5 text-green-500" />
+                    <Eye className="w-3.5 h-3.5" />
                   </Button>
                 )}
                 <Button
                   variant="ghost"
                   size="icon"
                   onClick={() => router.push(`/dashboard/flow-builder?id=${rule.id}`)}
-                  className="h-7 w-7 text-muted-foreground hover:text-primary hover:bg-primary/10 rounded-full transition-colors cursor-pointer"
+                  className="h-8 w-8 text-muted-foreground hover:text-primary hover:bg-secondary rounded-full transition-colors cursor-pointer"
                   title="Edit Flow in Builder"
                 >
-                  <Compass className="w-3.5 h-3.5 text-primary" />
+                  <Compass className="w-3.5 h-3.5" />
                 </Button>
                 <Button
                   variant="ghost"
                   size="icon"
                   onClick={() => setConfirming(true)}
-                  className="h-7 w-7 text-muted-foreground hover:text-red-500 hover:bg-red-500/10 rounded-full transition-colors cursor-pointer"
+                  className="h-8 w-8 text-muted-foreground hover:text-red-500 hover:bg-secondary rounded-full transition-colors cursor-pointer"
                   title="Delete"
                 >
                   <Trash2 className="w-3.5 h-3.5" />
@@ -203,11 +207,11 @@ function RuleCard({ rule, onDelete, onEdit, index, isSpecific, mediaUrl, router,
           {/* Trigger → Response flow */}
           <div className="flex items-center gap-2 flex-wrap">
             {/* Keywords */}
-            <div className="flex items-center gap-1 flex-wrap">
+            <div className="flex items-center gap-1.5 flex-wrap">
               {keywords.slice(0, 3).map((kw, i) => (
-                <Badge key={i} variant="secondary" className="bg-secondary text-muted-foreground border border-border text-[10px] font-mono px-1.5 py-0">
+                <span key={i} className="bg-secondary text-foreground border border-border/50 text-[11px] font-mono px-2 py-0.5 rounded-md">
                   {kw}
-                </Badge>
+                </span>
               ))}
               {keywords.length > 3 && (
                 <span className="text-[10px] text-muted-foreground">+{keywords.length - 3}</span>
@@ -223,7 +227,7 @@ function RuleCard({ rule, onDelete, onEdit, index, isSpecific, mediaUrl, router,
               ) : (
                 <MessageCircle className="w-3 h-3 text-emerald-500" />
               )}
-              <span className="text-[11px] text-muted-foreground truncate max-w-[120px]">{responsePreview}</span>
+              <span className="text-[11px] text-muted-foreground truncate max-w-[150px]">{responsePreview}</span>
             </div>
 
             {rule.response_content?.check_follow && (
