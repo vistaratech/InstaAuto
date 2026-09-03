@@ -1,12 +1,10 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Sidebar } from "@/components/layout/sidebar"
-import { MobileNav } from "@/components/layout/mobile-nav"
+import { TopNavbar } from "@/components/layout/top-navbar"
 import { useInstagramSession } from "@/hooks/use-instagram-session"
-import { Loader2, ChevronLeft, ChevronRight, Compass, Copy, Check, ExternalLink, MoreVertical, AlertTriangle } from "lucide-react"
+import { Loader2, Compass, Copy, Check, MoreVertical, AlertTriangle } from "lucide-react"
 import { useRouter } from "next/navigation"
-import { cn } from "@/lib/utils"
 
 export default function DashboardLayout({
     children,
@@ -15,7 +13,6 @@ export default function DashboardLayout({
 }) {
     const { username, userId, logout, isLoading, error } = useInstagramSession()
     const router = useRouter()
-    const [isCollapsed, setIsCollapsed] = useState(false)
     const [profilePictureUrl, setProfilePictureUrl] = useState<string | undefined>(undefined)
     const [isInAppBrowser, setIsInAppBrowser] = useState(false)
     const [copied, setCopied] = useState(false)
@@ -25,12 +22,6 @@ export default function DashboardLayout({
         const ua = navigator.userAgent || navigator.vendor || (window as any).opera;
         const isInstagramWebView = ua.indexOf("Instagram") > -1 || ua.indexOf("FBAN/Instagram") > -1 || ua.indexOf("FBAV") > -1;
         setIsInAppBrowser(isInstagramWebView);
-    }, [])
-
-    // Scope overflow:hidden to dashboard pages only
-    useEffect(() => {
-        document.documentElement.classList.add("dashboard-layout")
-        return () => { document.documentElement.classList.remove("dashboard-layout") }
     }, [])
 
     const handleCopyLink = () => {
@@ -58,43 +49,6 @@ export default function DashboardLayout({
         fetchProfilePicture()
     }, [userId])
 
-    // Load collapsed state preference from localStorage
-    useEffect(() => {
-        const saved = localStorage.getItem("sidebar-collapsed")
-        if (saved === "true") {
-            setIsCollapsed(true)
-        }
-    }, [])
-
-    // Lock html and body scrolling when dashboard layout is mounted
-    useEffect(() => {
-        const html = document.documentElement;
-        const body = document.body;
-        
-        const originalHtmlOverflow = html.style.overflow;
-        const originalBodyOverflow = body.style.overflow;
-        const originalHtmlHeight = html.style.height;
-        const originalBodyHeight = body.style.height;
-
-        html.style.overflow = "hidden";
-        html.style.height = "100dvh";
-        body.style.overflow = "hidden";
-        body.style.height = "100dvh";
-
-        return () => {
-            html.style.overflow = originalHtmlOverflow;
-            html.style.height = originalHtmlHeight;
-            body.style.overflow = originalBodyOverflow;
-            body.style.height = originalBodyHeight;
-        };
-    }, []);
-
-    const handleToggleCollapse = () => {
-        const nextState = !isCollapsed
-        setIsCollapsed(nextState)
-        localStorage.setItem("sidebar-collapsed", String(nextState))
-    }
-
     useEffect(() => {
         if (!isLoading && !userId) {
             router.replace("/")
@@ -110,69 +64,25 @@ export default function DashboardLayout({
     }
 
     return (
-        <div className="flex h-[100dvh] w-screen overflow-hidden bg-background text-foreground transition-colors duration-300 relative">
-            {/* Collapse Toggle Button (Desktop Only) */}
-            <button
-                onClick={handleToggleCollapse}
-                className={cn(
-                    "hidden md:inline-flex fixed top-[36px] z-[60] w-6 h-6 rounded-full border border-border bg-card text-muted-foreground hover:text-foreground shadow-md hover:shadow-lg items-center justify-center cursor-pointer transition-all duration-300 hover:scale-110 active:scale-95",
-                    isCollapsed ? "left-[52px]" : "left-[244px]"
-                )}
-                title={isCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
-            >
-                {isCollapsed ? (
-                    <ChevronRight className="w-3.5 h-3.5" />
-                ) : (
-                    <ChevronLeft className="w-3.5 h-3.5" />
-                )}
-            </button>
+        <div className="min-h-screen w-full bg-background text-foreground transition-colors duration-300 relative">
+            {/* Google-style Top Navigation Bar */}
+            <TopNavbar
+                username={username || "User"}
+                profilePictureUrl={profilePictureUrl}
+                onLogout={logout}
+            />
 
-            {/* Desktop Sidebar */}
-            <div className={cn(
-                "hidden md:flex md:flex-col md:fixed md:inset-y-0 z-40 transition-all duration-300",
-                isCollapsed ? "md:w-16" : "md:w-64"
-            )}>
-                <Sidebar
-                    className="h-full border-r border-sidebar-border bg-sidebar"
-                    username={username || "User"}
-                    profilePictureUrl={profilePictureUrl}
-                    onLogout={logout}
-                    isCollapsed={isCollapsed}
-                />
-            </div>
-
-            {/* Main Content Area */}
-            <div className={cn(
-                "flex-1 flex flex-col h-full overflow-hidden transition-all duration-300",
-                isCollapsed ? "md:pl-16" : "md:pl-64"
-            )}>
-                {/* Mobile Header (Visible only on small screens) */}
-                <header className="md:hidden h-16 border-b border-border bg-card flex items-center justify-start gap-2 px-4 shrink-0 transition-colors duration-300">
-                    <MobileNav username={username || "User"} profilePictureUrl={profilePictureUrl} onLogout={logout} />
-                    <span className="font-black text-xl tracking-tighter bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent ml-1">DMSpark</span>
-                </header>
-
-                <main className="flex-1 relative overflow-hidden min-h-0 flex flex-col">
-                    {error && (
-                        <div className="bg-destructive/10 border border-destructive/30 text-destructive px-4 py-3 text-sm m-4 rounded-lg shrink-0 flex items-center gap-2">
-                            <AlertTriangle className="w-4 h-4 shrink-0 text-destructive" />
-                            <span>Login Error: {error}</span>
-                        </div>
-                    )}
-                    <div className="flex-1 overflow-y-auto hover-scrollbar w-full h-full flex flex-col relative">
-                        {/* Premium Global Fixed Ambient Background Glows */}
-                        <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-                            <div className="pointer-events-none absolute -top-32 -left-32 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '6s' }} />
-                            <div className="pointer-events-none absolute -top-20 right-0 w-80 h-80 bg-violet-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '8s' }} />
-                            <div className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-blue-500/[0.05] rounded-full blur-[100px] animate-pulse animate-duration-10000" />
-                        </div>
-                        
-                        <div className="relative z-10 flex-1 flex flex-col">
-                            {children}
-                        </div>
+            {/* Main Content Area — full width, scrollable, centered */}
+            <main className="w-full min-h-[calc(100vh-3.5rem)]">
+                {error && (
+                    <div className="bg-destructive/10 border border-destructive/30 text-destructive px-4 py-3 text-sm mx-4 mt-4 rounded-lg flex items-center gap-2 max-w-4xl lg:mx-auto">
+                        <AlertTriangle className="w-4 h-4 shrink-0 text-destructive" />
+                        <span>Login Error: {error}</span>
                     </div>
-                </main>
-            </div>
+                )}
+                {children}
+            </main>
+
             {/* Instagram Webview Browser Breakout Overlay */}
             {isInAppBrowser && (
                 <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-950/98 backdrop-blur-xl p-4 sm:p-6 text-white select-none font-sans">
@@ -240,5 +150,3 @@ export default function DashboardLayout({
         </div>
     )
 }
-
-

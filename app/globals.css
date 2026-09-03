@@ -130,32 +130,13 @@
     margin: 0;
     padding: 0;
   }
-  @media (min-width: 768px) {
-    html.dashboard-layout, html.dashboard-layout body {
-      overflow: hidden;
-      height: 100vh;
-    }
-  }
+
   body {
     @apply bg-background text-foreground antialiased selection:bg-dmspark-blue/20;
   }
 }
 
-/* Minimal Utilities */
-.glass-panel {
-  @apply bg-card/80 backdrop-blur-md border border-border;
-}
 
-.text-minimal-gradient {
-  @apply text-foreground font-bold;
-}
-
-.hover-glow {
-  @apply transition-colors duration-200;
-}
-.hover-glow:hover {
-  @apply bg-black/5 dark:bg-white/5;
-}
 
 .vercel-row-hover {
   @apply transition-colors cursor-pointer;
@@ -168,15 +149,7 @@
 /* PREMIUM GLOBAL SCROLLBAR DESIGN SYSTEM               */
 /* ---------------------------------------------------- */
 
-/* Lock root HTML and body viewport on DESKTOP ONLY to eliminate double scrollbars */
-/* Mobile needs normal scrolling to display pages properly */
-@media (min-width: 768px) {
-  html, body, #__next, [data-nextjs-scroll-focus-boundary] {
-    overflow: hidden !important;
-    height: 100vh !important;
-    max-height: 100vh !important;
-  }
-}
+
 
 /* Force ALL scrollbars in the app to be super thin (4px), rounded, and extremely light */
 ::-webkit-scrollbar {
