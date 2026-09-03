@@ -2,7 +2,7 @@
 
 import { Suspense, useEffect, useState } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
-import { LandingPage } from "@/components/layout/landing-page"
+import { GoogleSearchHome } from "@/components/layout/google-home"
 import { Loader2, AlertCircle } from "lucide-react"
 
 function HomeContent() {
@@ -36,21 +36,21 @@ function HomeContent() {
 
   if (processing) {
     return (
-      <div className="flex flex-col h-screen items-center justify-center bg-black text-white gap-4">
-        <Loader2 className="h-8 w-8 animate-spin text-white" />
-        <p className="text-sm text-neutral-400">Connecting your Instagram account...</p>
+      <div className="flex flex-col h-screen items-center justify-center bg-background text-foreground gap-4">
+        <Loader2 className="h-8 w-8 animate-spin text-[#1a73e8]" />
+        <p className="text-sm text-muted-foreground">Connecting your Instagram account...</p>
       </div>
     )
   }
 
   if (error) {
     return (
-      <div className="flex flex-col h-screen items-center justify-center bg-black text-white gap-4">
-        <AlertCircle className="h-8 w-8 text-red-500" />
-        <p className="text-sm text-red-400">{error}</p>
+      <div className="flex flex-col h-screen items-center justify-center bg-background text-foreground gap-4">
+        <AlertCircle className="h-8 w-8 text-destructive" />
+        <p className="text-sm text-destructive">{error}</p>
         <button 
           onClick={() => { setError(null); router.replace("/") }}
-          className="text-xs text-neutral-400 underline hover:text-white"
+          className="text-xs text-muted-foreground underline hover:text-foreground"
         >
           Try again
         </button>
@@ -58,7 +58,7 @@ function HomeContent() {
     )
   }
 
-  return <LandingPage />
+  return <GoogleSearchHome />
 }
 
 export default function Home() {
