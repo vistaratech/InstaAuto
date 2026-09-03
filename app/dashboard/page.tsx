@@ -264,15 +264,15 @@ export default function DashboardPage() {
         <div className={`flex flex-col items-center transition-all duration-500 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
 
             {/* Google Search–style Clean Centered Hero Section */}
-            <div className="flex flex-col items-center justify-center pt-14 md:pt-20 pb-6 md:pb-8 px-4 w-full max-w-2xl mx-auto text-center">
+            <div className="flex flex-col items-center justify-center pt-16 md:pt-24 pb-8 md:pb-10 px-4 w-full max-w-3xl mx-auto text-center">
 
                 {/* Google-Style DMSpark Brand Logo (100% Symmetrical & Centered) */}
-                <div className="mb-4 group cursor-pointer transition-transform duration-300 hover:scale-105 active:scale-95 select-none">
+                <div className="mb-4 md:mb-5 group cursor-pointer transition-transform duration-300 hover:scale-105 active:scale-95 select-none">
                     <DMSparkGoogleLogo size="xl" showIcon={true} layout="vertical" />
                 </div>
 
                 {/* Clean, Elegant Single Line Greeting & Status */}
-                <div className="flex items-center justify-center gap-2 mb-7 text-xs md:text-sm text-muted-foreground font-medium select-none">
+                <div className="flex items-center justify-center gap-2 mb-6 md:mb-8 text-xs md:text-sm text-muted-foreground font-medium select-none">
                     <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
                     <span>{greeting}, <strong className="text-foreground font-semibold">{username}</strong></span>
                     <span className="text-muted-foreground/40">•</span>
@@ -294,13 +294,13 @@ export default function DashboardPage() {
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 onFocus={() => setSearchFocused(true)}
-                                className="w-full h-full bg-transparent border-none outline-none text-sm text-foreground z-10"
+                                className="w-full h-full bg-transparent border-none outline-none text-sm md:text-base text-foreground z-10"
                             />
                             {/* Animated Rotating Placeholder when empty */}
                             {!searchQuery && (
                                 <span 
                                     key={placeholderIndex} 
-                                    className="absolute inset-0 flex items-center text-sm text-muted-foreground/50 pointer-events-none select-none truncate animate-in fade-in slide-in-from-bottom-1 duration-500"
+                                    className="absolute inset-0 flex items-center text-sm md:text-base text-muted-foreground/50 pointer-events-none select-none truncate animate-in fade-in slide-in-from-bottom-1 duration-500"
                                 >
                                     {searchPlaceholders[placeholderIndex]}
                                 </span>
@@ -405,12 +405,12 @@ export default function DashboardPage() {
 
                 {/* Quick Action Buttons with Micro-Animations */}
                 {!selectedMedia && (
-                    <div className="flex items-center gap-2 md:gap-3 mt-6 md:mt-8 flex-wrap justify-center">
+                    <div className="flex items-center gap-3 mt-7 md:mt-8 flex-wrap justify-center">
                         {quickActions.map((action) => (
                             <Link
                                 key={action.label}
                                 href={action.href}
-                                className={`group flex items-center gap-2 px-4 py-2 rounded-full bg-secondary/60 border border-border/60 text-xs md:text-sm font-medium text-foreground transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md ${action.hoverClass} cursor-pointer active:scale-95`}
+                                className={`group flex items-center gap-2 h-11 md:h-12 px-6 md:px-7 rounded-full bg-secondary/80 border border-border/70 text-sm font-semibold text-foreground transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md ${action.hoverClass} cursor-pointer active:scale-95`}
                             >
                                 {action.icon}
                                 <span>{action.label}</span>
