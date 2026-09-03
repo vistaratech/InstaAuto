@@ -272,13 +272,6 @@ export default function DashboardPage() {
         },
     ]
 
-    const featurePills = [
-        { label: "Instant Comment Auto-Reply", icon: <Zap className="w-3.5 h-3.5 text-amber-500" /> },
-        { label: "Follower Growth Gate", icon: <Shield className="w-3.5 h-3.5 text-blue-500" /> },
-        { label: "24/7 Always On Autopilot", icon: <Clock className="w-3.5 h-3.5 text-emerald-500" /> },
-        { label: "Direct Message Funnels", icon: <MessageCircle className="w-3.5 h-3.5 text-indigo-500" /> },
-    ]
-
     return (
         <div className={`min-h-[calc(100vh-3.5rem)] w-full flex flex-col justify-between transition-all duration-500 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
 
@@ -468,21 +461,6 @@ export default function DashboardPage() {
                                 {action.icon}
                                 <span>{action.label}</span>
                             </Link>
-                        ))}
-                    </div>
-                )}
-
-                {/* Feature Pills Row */}
-                {!selectedMedia && (
-                    <div className="flex flex-wrap items-center justify-center gap-2.5 mt-8 md:mt-10 max-w-2xl">
-                        {featurePills.map((pill, i) => (
-                            <span
-                                key={i}
-                                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-secondary/60 hover:bg-secondary border border-border/60 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors select-none"
-                            >
-                                {pill.icon}
-                                {pill.label}
-                            </span>
                         ))}
                     </div>
                 )}
