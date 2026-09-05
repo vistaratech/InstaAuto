@@ -1,26 +1,12 @@
-<svg width="180" height="180" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <style>
-    @media (prefers-color-scheme: light) {
-      .background { fill: black; }
-      .foreground { fill: white; }
-    }
-    @media (prefers-color-scheme: dark) {
-      .background { fill: white; }
-      .foreground { fill: black; }
-    }
-  </style>
-  <g clip-path="url(#clip0_7960_43945)">
-    <rect class="background" width="180" height="180" rx="37" />
-    <g style="transform: scale(95%); transform-origin: center">
-      <path class="foreground"
-        d="M101.141 53H136.632C151.023 53 162.689 64.6662 162.689 79.0573V112.904H148.112V79.0573C148.112 78.7105 148.098 78.3662 148.072 78.0251L112.581 112.898C112.701 112.902 112.821 112.904 112.941 112.904H148.112V126.672H112.941C98.5504 126.672 86.5638 114.891 86.5638 100.5V66.7434H101.141V100.5C101.141 101.15 101.191 101.792 101.289 102.422L137.56 66.7816C137.255 66.7563 136.945 66.7434 136.632 66.7434H101.141V53Z" />
-      <path class="foreground"
-        d="M65.2926 124.136L14 66.7372H34.6355L64.7495 100.436V66.7372H80.1365V118.47C80.1365 126.278 70.4953 129.958 65.2926 124.136Z" />
-    </g>
-  </g>
+<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="48" height="48" rx="10" fill="#090D16"/>
+  <path d="M24 6.5C13.8 6.5 6 13.5 6 22c0 4.3 2 8.2 5.3 11L9.5 41c-.3.6.4 1.2 1 .8l6.5-3.3c2.2.7 4.6 1 7 1 10.2 0 18-7 18-15.5S34.2 6.5 24 6.5Z" stroke="#4285F4" stroke-width="3.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M27 10L15.5 25.5H25.5L22 38L34 21H24.5L27 10Z" fill="url(#boltGrad)" stroke="#FBBC05" stroke-width="0.5" stroke-linejoin="round"/>
   <defs>
-    <clipPath id="clip0_7960_43945">
-      <rect width="180" height="180" fill="white" />
-    </clipPath>
+    <linearGradient id="boltGrad" x1="15.5" y1="10" x2="34" y2="38" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FF4336"/>
+      <stop offset="50%" stop-color="#FFBB00"/>
+      <stop offset="100%" stop-color="#34A853"/>
+    </linearGradient>
   </defs>
 </svg>

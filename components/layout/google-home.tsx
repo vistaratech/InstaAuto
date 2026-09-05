@@ -75,8 +75,9 @@ export function GoogleSearchHome() {
       {/* Main Google Search Body — Perfectly Optically Centered in Viewport */}
       <main className="flex-1 flex flex-col items-center justify-center -mt-6 sm:-mt-10 px-4 w-full max-w-3xl mx-auto text-center">
 
-        {/* Google-Style Centered Logo */}
+        {/* Google-Style Centered Logo with SEO h1 */}
         <div className="mb-4 md:mb-5 group cursor-pointer transition-transform duration-300 hover:scale-105 active:scale-95 select-none">
+          <h1 className="sr-only">DMSpark — #1 Instagram Automation Tool | Auto Reply to Comments &amp; DMs | dmspark.in</h1>
           <DMSparkGoogleLogo size="xl" showIcon={true} layout="vertical" />
         </div>
 
