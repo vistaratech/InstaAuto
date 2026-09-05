@@ -1,8 +1,9 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { TopNavbar } from "@/components/layout/top-navbar"
 import { useInstagramSession } from "@/hooks/use-instagram-session"
+import { WelcomeScreen } from "@/components/ui/welcome-screen"
 import { Loader2, Compass, Copy, Check, MoreVertical, AlertTriangle } from "lucide-react"
 import { useRouter } from "next/navigation"
 
@@ -16,6 +17,21 @@ export default function DashboardLayout({
     const [profilePictureUrl, setProfilePictureUrl] = useState<string | undefined>(undefined)
     const [isInAppBrowser, setIsInAppBrowser] = useState(false)
     const [copied, setCopied] = useState(false)
+    const [showWelcome, setShowWelcome] = useState(false)
+
+    // Show welcome screen for first-time connections
+    useEffect(() => {
+        if (!userId || !username) return
+        const welcomed = sessionStorage.getItem("dmspark_welcomed")
+        if (!welcomed) {
+            setShowWelcome(true)
+        }
+    }, [userId, username])
+
+    const handleWelcomeComplete = useCallback(() => {
+        sessionStorage.setItem("dmspark_welcomed", "true")
+        setShowWelcome(false)
+    }, [])
 
     // Detect Instagram App in-app browser webview
     useEffect(() => {
@@ -60,6 +76,17 @@ export default function DashboardLayout({
             <div className="flex h-screen items-center justify-center bg-background text-foreground">
                 <Loader2 className="h-8 w-8 animate-spin text-primary" />
             </div>
+        )
+    }
+
+    // Show Welcome to DMSpark screen for first-time connections
+    if (showWelcome && userId && username) {
+        return (
+            <WelcomeScreen
+                username={username}
+                userId={userId}
+                onComplete={handleWelcomeComplete}
+            />
         )
     }
 
