@@ -4,6 +4,7 @@ import { Suspense, useEffect, useState } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
 import { GoogleSearchHome } from "@/components/layout/google-home"
 import { SeoContent } from "@/components/layout/seo-content"
+import { InstagramConnectAnimation } from "@/components/ui/instagram-connect-animation"
 import { Loader2, AlertCircle } from "lucide-react"
 
 function HomeContent() {
@@ -36,12 +37,7 @@ function HomeContent() {
   }, [searchParams, router])
 
   if (processing) {
-    return (
-      <div className="flex flex-col h-screen items-center justify-center bg-background text-foreground gap-4">
-        <Loader2 className="h-8 w-8 animate-spin text-[#1a73e8]" />
-        <p className="text-sm text-muted-foreground">Connecting your Instagram account...</p>
-      </div>
-    )
+    return <InstagramConnectAnimation />
   }
 
   if (error) {
